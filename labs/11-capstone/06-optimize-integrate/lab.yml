@@ -1,0 +1,12 @@
+id: 11.06-optimize-integrate
+course: 11-capstone
+lesson: 06
+title: Optimize and integrate
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
