@@ -1,0 +1,12 @@
+id: 02.01-raster-beam
+course: 02-raster-timing
+lesson: 01
+title: Raster beam observation
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
