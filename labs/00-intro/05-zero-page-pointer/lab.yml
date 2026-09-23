@@ -1,0 +1,14 @@
+id: 00.05-zero-page-pointer
+course: 00-intro
+lesson: 14
+title: Zero-page pointer
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+artifacts:
+  - build/zero-page-pointer.prg
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
