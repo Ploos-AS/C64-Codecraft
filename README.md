@@ -2,7 +2,7 @@
 
 **From Zero to Demo Coder**
 
-C64 Codecraft is an assembly-first course for learning the Commodore 64 from the hardware up and progressing toward competent demoscene coding.
+C64 Codecraft is a machine-code/assembly course for absolute beginners. It starts with zero assumed 6502/6510 experience and builds, step by step, toward competent C64 demoscene coding. The demoscene is not a late optional module: scene thinking, visual feedback, timing, cycles, bytes and hardware consequences give the entire course its flavour from the first assembly lessons.
 
 ## Core principles
 
@@ -16,7 +16,7 @@ C64 Codecraft is an assembly-first course for learning the Commodore 64 from the
 - **Editor independent:** VSCodium is recommended, not required.
 - **OCI is a reproducible toolbox, not an abstraction layer.**
 
-No prior machine-code experience is required. Fundamental concepts are introduced briefly and practically; deeper CPU-computer fundamentals belong in projects such as EduCPU rather than being duplicated here.
+No prior machine-code, assembly, hexadecimal or CPU-programming experience is required. The course must explain the fundamentals before relying on them. EduCPU may be used as an optional deeper dive into CPU design, but it is never a prerequisite.
 
 ## Course direction
 
