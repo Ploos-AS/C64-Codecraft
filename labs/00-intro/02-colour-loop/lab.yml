@@ -1,0 +1,14 @@
+id: 00.02-colour-loop
+course: 00-intro
+lesson: 09
+title: Colour loop
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+artifacts:
+  - build/colour-loop.prg
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
