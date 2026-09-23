@@ -14,6 +14,9 @@ start:
  sta ptr
  lda #>source
  sta ptr+1
+ lda #0
+ sta phase
+ sta temp
  ldy #0
 copy:
  lda (ptr),y
