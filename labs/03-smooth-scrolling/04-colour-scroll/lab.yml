@@ -1,0 +1,12 @@
+id: 03.04-colour-scroll
+course: 03-smooth-scrolling
+lesson: 04
+title: Colour scrolling
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
