@@ -1,0 +1,12 @@
+id: 03.01-d016-fine-x
+course: 03-smooth-scrolling
+lesson: 01
+title: D016 fine X scroll
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
