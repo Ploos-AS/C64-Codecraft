@@ -1,0 +1,12 @@
+id: 08.04-tables-precalc
+course: 08-6510-optimization
+lesson: 04
+title: Tables and precalculation
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
