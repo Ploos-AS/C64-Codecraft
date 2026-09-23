@@ -24,10 +24,10 @@ jobs:
       - name: Install lab toolchain
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends git ca-certificates make 64tass
+          apt-get install -y --no-install-recommends git ca-certificates make 64tass python3
       - uses: actions/checkout@v4
-      - name: Check lab structure
-        run: python3 --version || apt-get update && apt-get install -y --no-install-recommends python3
+      - name: Check Python
+        run: python3 --version
       - name: Validate lab metadata/layout
         run: python3 tools/check_labs.py
       - name: Assemble all labs
