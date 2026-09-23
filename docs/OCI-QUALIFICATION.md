@@ -1,27 +1,46 @@
 # OCI qualification
 
-## M0 candidate: Alpine Linux
+## Alpine qualification result
 
-C64 Codecraft follows an Alpine-first policy, but the base image is accepted only after CI proves that the required course toolchain is practical and maintainable.
+Alpine 3.22 was tested first, in accordance with the Ploos Alpine-first policy.
 
-The first qualification candidate includes:
+**Result: FAIL as the practical C64 Codecraft base.**
+
+The GitHub Actions qualification run showed that the Alpine 3.22 repositories used by the image do not provide the core course packages:
+
+- 64tass
+- ACME
+- cc65
+- VICE
+
+The full image additionally lacked Exomizer.
+
+These are not peripheral dependencies: they are the real assemblers/emulator/scene tools the course intends to teach directly. Building and maintaining a parallel source-packaging layer merely to preserve an Alpine base would add project-specific infrastructure around tools that should remain the focus.
+
+Therefore C64 Codecraft uses the documented fallback: **Debian slim**.
+
+This is a maintainability decision, not a change to the ASM-first/toolbox architecture.
+
+## Debian qualification candidate
+
+The Debian 13 slim candidate includes:
 
 - 64tass
 - ACME
 - cc65/ca65
 - VICE
-- Java runtime for the later KickAssembler integration
+- Java runtime for later KickAssembler integration
 - Python and Make
 
-The full candidate additionally carries broader build/scene utilities.
+The full candidate adds broader build and scene utilities, including Exomizer where available.
 
 ## Gates
 
-1. Both OCI definitions build.
-2. `c64cc doctor` can inspect the installed toolchain.
+1. Both Debian OCI definitions build.
+2. Internal tool diagnostics confirm the expected native tools.
 3. The canonical 64tass smoke program assembles inside the minimal image.
 4. VICE is present before emulator automation is enabled.
 5. KickAssembler is added only with a reproducible, license-compatible acquisition mechanism.
-6. If Alpine fails due to package availability or upstream compatibility, document the failure and qualify Debian slim rather than patching around it indefinitely.
+6. A deterministic VICE runtime smoke test passes.
 
-Passing image build alone does not complete M0. A deterministic VICE smoke test remains a separate gate.
+Passing image build alone does not complete M0.
