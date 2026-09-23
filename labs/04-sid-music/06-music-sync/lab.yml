@@ -1,0 +1,12 @@
+id: 04.06-music-sync
+course: 04-sid-music
+lesson: 06
+title: Music sync events
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
