@@ -1,0 +1,12 @@
+id: 11.03-first-playable
+course: 11-capstone
+lesson: 03
+title: First playable build
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
