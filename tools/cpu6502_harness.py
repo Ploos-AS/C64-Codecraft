@@ -52,6 +52,9 @@ class CPU:
             self.a = result; self.set_zn(self.a)
         elif op == 0x49:  # EOR #imm
             self.a ^= self.fetch(); self.set_zn(self.a)
+        elif op == 0xb1:  # LDA (zp),Y
+            zp = self.fetch(); lo = self.mem[zp]; hi = self.mem[(zp + 1) & 0xff]
+            self.a = self.mem[(((hi << 8) | lo) + self.y) & 0xffff]; self.set_zn(self.a)
         elif op == 0xbd:
             lo, hi = self.fetch(), self.fetch()
             self.a = self.mem[(((hi << 8) | lo) + self.x) & 0xffff]; self.set_zn(self.a)
