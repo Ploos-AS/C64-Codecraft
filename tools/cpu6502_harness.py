@@ -107,6 +107,12 @@ class CPU:
         elif op == 0xe0:
             v = self.fetch(); r = (self.x - v) & 0xff
             self.p = (self.p & ~0x83) | (1 if self.x >= v else 0) | (0x80 if r & 0x80 else 0) | (0x02 if r == 0 else 0)
+        elif op == 0x4c:  # JMP abs
+            lo, hi = self.fetch(), self.fetch(); self.pc = (hi << 8) | lo
+        elif op == 0xb0:  # BCS
+            off = self.fetch()
+            if self.p & 0x01:
+                self.pc = (self.pc + (off - 256 if off & 0x80 else off)) & 0xffff
         elif op == 0xd0:
             off = self.fetch()
             if not self.p & 0x02:
