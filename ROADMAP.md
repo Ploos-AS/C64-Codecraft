@@ -5,42 +5,48 @@
 - [x] Project identity and mission
 - [x] Markdown source-of-truth policy
 - [x] Editor-independent architecture
+- [x] ASM-first / hardware-first / scene-credible policy
+- [x] Explicit no-framework/no-private-dialect policy
 - [x] Multi-assembler policy
 - [x] VICE reference-emulator policy
 - [ ] Qualify OCI base: Alpine first, Debian slim fallback
-- [ ] Build minimal and full OCI images
-- [ ] Implement c64cc skeleton
+- [ ] Build minimal and full OCI toolboxes
 - [ ] Assemble first 64tass example
 - [ ] Run first automated VICE smoke test
+- [ ] Add direct ACME and KickAssembler examples/qualification
 - [ ] Documentation validation
 - [ ] GitHub Pages build
 - [ ] PDF/EPUB build
 - [ ] CI green
 
-## M1 — Machine Code Foundations
+## M1 — 6510 Machine Code Foundations
 
-Binary/hex, C64 memory map, 6510 registers and flags, addressing modes, loads/stores, arithmetic, branches, loops, subroutines, stack and zero page.
+Only the fundamentals needed to become productive are repeated here: binary/hex, registers, flags and addressing. Move quickly into real 6510 ASM, loads/stores, arithmetic, branches, loops, subroutines, stack and zero page. Introduce cycles, bytes and trade-offs from the start.
 
-## M2 — VIC-II Foundations
+## M2 — The C64 as a Machine
 
-Screen/color RAM, character modes, VIC banks, custom character sets, sprites, bitmap and scrolling.
+Memory map, banking, KERNAL/BASIC interaction, VIC-II, CIA and the practical hardware model a demo coder needs.
 
-## M3 — Interrupts and Timing
+## M3 — VIC-II Graphics
 
-IRQ/NMI, raster interrupts, cycle counting, badlines, sprite DMA, PAL/NTSC and stable raster foundations.
+Screen/color RAM, character modes, VIC banks, custom character sets, sprites, bitmap, scrolling and graphics memory organization.
 
-## M4 — SID and Demo Architecture
+## M4 — Interrupts and Timing
 
-SID fundamentals, music init/play, IRQ playback, memory layout, synchronization and multi-part architecture.
+IRQ/NMI, raster interrupts, cycle counting, badlines, bus contention, sprite DMA, PAL/NTSC and stable raster. Timing is a continuation of earlier lessons, not a new concept introduced here.
 
-## M5 — Demo Effects
+## M5 — SID and Demo Architecture
 
-Raster bars, scrollers, multiplexers, sine tables, FLD and progressively more timing-sensitive effects.
+SID fundamentals, real music init/play routines, IRQ playback, memory placement, synchronization, loaders and multi-part organization.
 
-## M6 — Advanced Demo Coding
+## M6 — Demo Effects
 
-Cycle-exact programming, open borders, advanced VIC-II techniques, self-modifying code, undocumented opcodes where appropriate, compression and size/speed optimization.
+Raster bars, scrollers, sine effects, sprite multiplexing, FLD and progressively more demanding VIC-II techniques.
 
-## M7 — Final Demo
+## M7 — Advanced Scene Coding
 
-Design, implement, debug, optimize, package and release a complete C64 demo.
+Cycle-exact programming, stable raster techniques, open borders, advanced VIC-II behavior, self-modifying code, undocumented opcodes where appropriate, precalculation, compression and size/speed/memory trade-offs.
+
+## M8 — Final Demo
+
+Design, implement, debug, optimize, package and release a complete C64 demo using ordinary scene-compatible tooling and workflows.
