@@ -8,6 +8,8 @@ value=$fb
 e:.word 0
 *=$0810
 start:
+ lda #3
+ sta value
  lda value
  asl
  asl
