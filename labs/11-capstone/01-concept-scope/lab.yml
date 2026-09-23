@@ -1,0 +1,12 @@
+id: 11.01-concept-scope
+course: 11-capstone
+lesson: 01
+title: Capstone concept and scope
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
