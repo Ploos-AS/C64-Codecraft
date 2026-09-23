@@ -1,0 +1,12 @@
+id: 11.09-postmortem
+course: 11-capstone
+lesson: 09
+title: Capstone postmortem
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
