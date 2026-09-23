@@ -1,0 +1,12 @@
+id: 10.04-scene-tools
+course: 10-production-craft
+lesson: 04
+title: Scene-tool integration
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
