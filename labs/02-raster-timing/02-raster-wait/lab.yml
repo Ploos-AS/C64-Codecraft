@@ -1,0 +1,12 @@
+id: 02.02-raster-wait
+course: 02-raster-timing
+lesson: 02
+title: Raster-line wait
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
