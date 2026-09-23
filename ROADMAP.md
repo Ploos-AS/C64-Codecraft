@@ -9,9 +9,9 @@
 - [x] Explicit no-framework/no-private-dialect policy
 - [x] Multi-assembler policy
 - [x] VICE reference-emulator policy
-- [ ] Qualify OCI base: Alpine first, Debian slim fallback
-- [ ] Build minimal and full OCI toolboxes
-- [ ] Assemble first 64tass example
+- [x] Qualify OCI base: Alpine first, Debian slim fallback
+- [x] Build minimal and full OCI toolboxes
+- [x] Assemble first 64tass example
 - [ ] Run first automated VICE smoke test
 - [ ] Add direct ACME and KickAssembler examples/qualification
 - [ ] Documentation validation
