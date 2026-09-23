@@ -70,6 +70,7 @@ def main():
         assembler = scalar(text, "assembler")
         assemble = scalar(text, "assemble")
         deterministic_bytes = scalar(text, "deterministic_bytes")
+        cpu_state = scalar(text, "cpu_state")
         emulator_state = scalar(text, "emulator_state")
 
         course_dir = lab.parent.name
@@ -117,6 +118,10 @@ def main():
             errors.append(f"{meta.relative_to(ROOT)}: verification.assemble must be true")
         if deterministic_bytes != "true":
             errors.append(f"{meta.relative_to(ROOT)}: verification.deterministic_bytes must be true")
+        if cpu_state is not None and cpu_state not in {"true", "false"}:
+            errors.append(f"{meta.relative_to(ROOT)}: verification.cpu_state must be true or false when present")
+        if cpu_state == "true" and not (lab / "runtime_test.py").exists():
+            errors.append(f"{meta.relative_to(ROOT)}: cpu_state=true requires runtime_test.py")
         if emulator_state not in {"true", "false"}:
             errors.append(f"{meta.relative_to(ROOT)}: verification.emulator_state must be true or false")
 
