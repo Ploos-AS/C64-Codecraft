@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'tools'))
+from cpu6502_harness import CPU, load_prg
+
+prg = Path(__file__).parent / 'build' / 'charset-data.prg'
+cpu = CPU(mem=load_prg(prg), pc=0x0810)
+cpu.run(limit=512)
+expected = bytes([
+    0x00,0x18,0x3c,0x7e,0xff,0x7e,0x3c,0x18,
+    0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,
+    0xff,0x81,0x81,0x81,0x81,0x81,0x81,0xff,
+    0xaa,0x55,0xaa,0x55,0xaa,0x55,0xaa,0x55,
+])
+actual = bytes(cpu.mem[0xc800:0xc820])
+if actual != expected:
+    raise SystemExit(f'charset copy mismatch: {actual.hex()}')
+print(f'01.05 runtime PASS ({cpu.instructions} instructions)')
