@@ -8,6 +8,8 @@ phase=$fb
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta phase
  ldx #0
 loop:
  txa
