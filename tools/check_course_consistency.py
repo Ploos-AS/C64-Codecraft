@@ -134,7 +134,7 @@ def main():
                             errors.append(f"{rel}: prerequisite {ref!r} does not identify an existing lesson")
                             continue
                         target_course, target_lesson = ref.rsplit("/", 1)
-                        target_key = (int(target_course[:2]), int(target_lesson))
+                        target_key = (int(target_course[:2]), int(target_lesson[:2]))
                         if target_key >= current_key:
                             errors.append(f"{rel}: prerequisite {ref!r} is not earlier than this lesson")
                         if label == "EN":
