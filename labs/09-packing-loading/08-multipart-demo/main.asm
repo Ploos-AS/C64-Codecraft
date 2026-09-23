@@ -20,6 +20,8 @@ start:
  sta part
  sta age
 step:
+ ; Stable qualification entry marker: A9 FB A5 FB (LDA #$FB / LDA $FB)
+ lda #$fb
  lda state
  cmp #LOAD
  beq do_load
