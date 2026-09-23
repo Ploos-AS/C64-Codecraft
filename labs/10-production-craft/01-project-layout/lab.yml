@@ -1,0 +1,12 @@
+id: 10.01-project-layout
+course: 10-production-craft
+lesson: 01
+title: Production project layout
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
