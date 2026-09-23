@@ -20,7 +20,11 @@ if (cpu.mem[0xfb], cpu.mem[0xfc], cpu.mem[0xfd]) != (1, 0, 0):
     raise SystemExit('initial LOAD -> INIT transition failed')
 
 # Subsequent entry at step advances the persistent state machine.
-step = 0x0822
+marker = bytes((0xa9, 0xfb, 0xa5, 0xfb))
+image = bytes(cpu.mem)
+step = image.find(marker, 0x0810)
+if step < 0:
+    raise SystemExit('multipart step marker not found')
 invoke(cpu, step)  # INIT -> RUN
 if (cpu.mem[0xfb], cpu.mem[0xfc], cpu.mem[0xfd]) != (2, 0, 0):
     raise SystemExit('INIT -> RUN transition failed')
