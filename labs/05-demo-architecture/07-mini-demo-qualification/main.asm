@@ -12,6 +12,11 @@ TARGET=$e0
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta frame
+ sta music_tick
+ sta phase
+ sta part
 leave:
  lda $d012
  cmp #TARGET
