@@ -1,0 +1,12 @@
+id: 10.05-credits-provenance
+course: 10-production-craft
+lesson: 05
+title: Credits and provenance
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
