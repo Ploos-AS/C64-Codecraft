@@ -1,4 +1,4 @@
-START=$70
+RASTER_START=$70
 COUNT=8
 *=$0801
 .word e
@@ -13,7 +13,7 @@ start:
 line:
  txa
  clc
- adc #START
+ adc #RASTER_START
 wait:
  cmp $d012
  bne wait
