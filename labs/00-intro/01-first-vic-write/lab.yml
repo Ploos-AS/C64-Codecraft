@@ -1,0 +1,14 @@
+id: 00.01-first-vic-write
+course: 00-intro
+lesson: 06
+title: First VIC-II write
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+artifacts:
+  - build/first-vic-write.prg
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
