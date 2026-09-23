@@ -7,6 +7,8 @@ on:
       - "tools/check_labs.py"
       - "tools/run_cpu_labs.py"
       - "tools/cpu6502_harness.py"
+      - "tools/test_cpu6502_harness.py"
+      - "tools/test_cpu6502_harness.py"
       - "tools/run_cpu_labs.py"
       - "tools/cpu6502_harness.py"
       - ".github/workflows/labs.yml"
@@ -42,5 +44,7 @@ jobs:
             echo "==> $dir"
             make -C "$dir" clean all
           done
+      - name: Test CPU/RAM harness
+        run: python3 tools/test_cpu6502_harness.py
       - name: Run deterministic CPU/RAM qualification
         run: python3 tools/run_cpu_labs.py
