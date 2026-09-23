@@ -131,16 +131,23 @@ def main():
                     local_prefix = path.name + "/"
                     current_key = (int(path.name[:2]), int(lesson_number))
                     for ref in prereqs:
-                        if ref not in lesson_nodes:
-                            errors.append(f"{rel}: prerequisite {ref!r} does not identify an existing lesson")
+                        resolved = ref if "/" in ref else local_prefix + ref
+                        if resolved not in lesson_nodes:
+                            errors.append(
+                                f"{rel}: prerequisite {ref!r} does not identify an existing lesson"
+                            )
                             continue
-                        target_course, target_lesson = resolved.rsplit("/", 1)
-                        target_key = (int(target_course[:2]), int(target_lesson[:2]))
+                        target_course, target_lesson_slug = resolved.rsplit("/", 1)
+                        target_lesson = target_lesson_slug[:2]
+                        target_key = (int(target_course[:2]), int(target_lesson))
                         if target_key >= current_key:
-                            errors.append(f"{rel}: prerequisite {ref!r} is not earlier than this lesson")
+                            errors.append(
+                                f"{rel}: prerequisite {ref!r} is not earlier than this lesson"
+                            )
                         if label == "EN":
-                            canonical = f"{target_course}/{target_lesson[:2]}"
-                            prereq_graph[current].append(canonical)
+                            prereq_graph[current].append(
+                                f"{target_course}/{target_lesson}"
+                            )
 
             if not (path / "README.md").exists():
                 errors.append(f"{label} course {number} missing README.md")
