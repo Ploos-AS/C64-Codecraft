@@ -1,0 +1,12 @@
+id: 01.07-char-scroll-data
+course: 01-c64-machine
+lesson: 11
+title: Character scroll data movement
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
