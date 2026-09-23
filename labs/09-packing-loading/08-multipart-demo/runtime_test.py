@@ -19,7 +19,7 @@ if (cpu.mem[0xfb], cpu.mem[0xfc], cpu.mem[0xfd]) != (1, 0, 0):
     raise SystemExit('initial LOAD -> INIT transition failed')
 
 # Subsequent entry at step advances the persistent state machine.
-step = 0x081d
+step = 0x081c
 invoke(cpu, step)  # INIT -> RUN
 if (cpu.mem[0xfb], cpu.mem[0xfc], cpu.mem[0xfd]) != (2, 0, 0):
     raise SystemExit('INIT -> RUN transition failed')
