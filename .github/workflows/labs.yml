@@ -8,14 +8,14 @@ on:
       - "tools/run_cpu_labs.py"
       - "tools/cpu6502_harness.py"
       - "tools/test_cpu6502_harness.py"
-      - "tools/test_cpu6502_harness.py"
-      - "tools/run_cpu_labs.py"
-      - "tools/cpu6502_harness.py"
       - ".github/workflows/labs.yml"
   pull_request:
     paths:
       - "labs/**"
       - "tools/check_labs.py"
+      - "tools/run_cpu_labs.py"
+      - "tools/cpu6502_harness.py"
+      - "tools/test_cpu6502_harness.py"
       - ".github/workflows/labs.yml"
 
 permissions:
