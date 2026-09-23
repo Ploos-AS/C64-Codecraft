@@ -1,0 +1,12 @@
+id: 01.06-char-animation
+course: 01-c64-machine
+lesson: 10
+title: Character animation data
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
