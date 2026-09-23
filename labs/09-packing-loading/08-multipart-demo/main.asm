@@ -19,6 +19,7 @@ start:
  lda #0
  sta part
  sta age
+step=$0826
 step:
  lda state
  cmp #LOAD
