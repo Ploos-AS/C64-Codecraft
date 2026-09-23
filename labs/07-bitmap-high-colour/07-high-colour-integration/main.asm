@@ -11,6 +11,11 @@ effect_state=$fe
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta frame
+ sta music_tick
+ sta gfx_state
+ sta effect_state
  jsr music_job
  jsr graphics_job
  jsr effect_job
