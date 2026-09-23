@@ -1,0 +1,12 @@
+id: 01.01-memory-map
+course: 01-c64-machine
+lesson: 01
+title: Memory map probe
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
