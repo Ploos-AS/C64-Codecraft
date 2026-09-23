@@ -1,5 +1,5 @@
 TARGET=$80
-DELAY=8
+DELAY_COUNT=8
 *=$0801
 .word e
 .word 10
@@ -17,10 +17,10 @@ wait:
  lda $d012
  cmp #TARGET
  bne wait
- ldx #DELAY
-delay:
+ ldx #DELAY_COUNT
+delay_loop:
  dex
- bne delay
+ bne delay_loop
  lda #7
  sta $d020
  nop
