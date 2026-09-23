@@ -1,0 +1,33 @@
+name: Course consistency
+
+on:
+  push:
+    paths:
+      - "course/**"
+      - "appendix/**"
+      - "docs/COURSE-INDEX.md"
+      - "docs/PREREQUISITES.md"
+      - "tools/check_course_consistency.py"
+      - ".github/workflows/course-consistency.yml"
+  pull_request:
+    paths:
+      - "course/**"
+      - "appendix/**"
+      - "docs/COURSE-INDEX.md"
+      - "docs/PREREQUISITES.md"
+      - "tools/check_course_consistency.py"
+      - ".github/workflows/course-consistency.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  bilingual-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Check EN/NO course structure
+        run: python3 tools/check_course_consistency.py
