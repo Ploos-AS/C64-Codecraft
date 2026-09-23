@@ -8,6 +8,8 @@ tick=$fb
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta tick
  jsr music_play
  jsr sync_update
  rts
