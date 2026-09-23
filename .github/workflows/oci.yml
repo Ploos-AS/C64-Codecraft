@@ -29,8 +29,8 @@ jobs:
             sh -lc 'make example && test -s build/hello.prg'
       - name: VICE runtime smoke test
         run: |
-          docker run --rm -v "$PWD:/work" c64-codecraft:m0 \
-            sh -lc 'timeout 20s x64sc -console -sounddev dummy -autostart build/hello.prg -moncommands tests/vice/hello.mon 2>&1 | tee build/vice-smoke.log; grep -qi "d020.*06" build/vice-smoke.log; grep -qi "d021.*0e" build/vice-smoke.log'
+          docker run --rm -v "$PWD:/work" -w /work c64-codecraft:m0 \
+            sh -lc 'test -f /work/tests/vice/hello.mon; timeout 20s x64sc -console -sounddev dummy -autostart /work/build/hello.prg -moncommands /work/tests/vice/hello.mon 2>&1 | tee /work/build/vice-smoke.log; grep -qi "d020.*06" /work/build/vice-smoke.log; grep -qi "d021.*0e" /work/build/vice-smoke.log'
 
   debian-full:
     runs-on: ubuntu-latest
