@@ -25,8 +25,23 @@ class CPU:
     def step(self):
         op = self.fetch()
         self.instructions += 1
-        if op == 0xa2:
+        if op == 0xa9:  # LDA #imm
+            self.a = self.fetch(); self.set_zn(self.a)
+        elif op == 0xa5:  # LDA zp
+            self.a = self.mem[self.fetch()]; self.set_zn(self.a)
+        elif op == 0xa6:  # LDX zp
+            self.x = self.mem[self.fetch()]; self.set_zn(self.x)
+        elif op == 0xa2:
             self.x = self.fetch(); self.set_zn(self.x)
+        elif op == 0x85:  # STA zp
+            self.mem[self.fetch()] = self.a
+        elif op == 0x8d:  # STA abs
+            lo, hi = self.fetch(), self.fetch()
+            self.mem[(hi << 8) | lo] = self.a
+        elif op == 0x0a:  # ASL A
+            carry = 1 if self.a & 0x80 else 0
+            self.a = (self.a << 1) & 0xff
+            self.p = (self.p & ~0x01) | carry; self.set_zn(self.a)
         elif op == 0xbd:
             lo, hi = self.fetch(), self.fetch()
             self.a = self.mem[(((hi << 8) | lo) + self.x) & 0xffff]; self.set_zn(self.a)
