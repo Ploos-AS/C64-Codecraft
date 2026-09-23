@@ -25,7 +25,9 @@ class CPU:
     def step(self):
         op = self.fetch()
         self.instructions += 1
-        if op == 0xa9:  # LDA #imm
+        if op == 0xa0:  # LDY #imm
+            self.y = self.fetch(); self.set_zn(self.y)
+        elif op == 0xa9:  # LDA #imm
             self.a = self.fetch(); self.set_zn(self.a)
         elif op == 0xa5:  # LDA zp
             self.a = self.mem[self.fetch()]; self.set_zn(self.a)
