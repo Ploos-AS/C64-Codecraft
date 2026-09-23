@@ -1,0 +1,12 @@
+id: 09.02-reproducible-packing
+course: 09-packing-loading
+lesson: 02
+title: Reproducible packing contract
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
