@@ -1,0 +1,9 @@
+FROM alpine:3.22
+
+RUN apk add --no-cache     64tass     acme     cc65     make     ninja     python3     py3-pip     git     curl     unzip     openjdk17-jre     vice     exomizer
+
+WORKDIR /work
+COPY tools/c64cc /usr/local/bin/c64cc
+RUN chmod +x /usr/local/bin/c64cc
+
+CMD ["c64cc", "doctor"]
