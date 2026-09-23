@@ -1,0 +1,12 @@
+id: 03.07-dycp-concept
+course: 03-smooth-scrolling
+lesson: 07
+title: DYCP column concept
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
