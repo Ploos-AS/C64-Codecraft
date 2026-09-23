@@ -10,6 +10,10 @@ transition=$fd
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta music
+ sta effect
+ sta transition
  jsr music_job
  jsr effect_job
  jsr transition_job
