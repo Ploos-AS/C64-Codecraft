@@ -9,6 +9,9 @@ age=$fc
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta phase
+ sta age
  jsr update
  jsr render
  rts
