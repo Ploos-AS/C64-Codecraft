@@ -1,0 +1,12 @@
+id: 09.04-disk-image-contract
+course: 09-packing-loading
+lesson: 04
+title: Disk-image contract
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
