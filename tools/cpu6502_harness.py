@@ -55,6 +55,30 @@ class CPU:
         elif op == 0xbd:
             lo, hi = self.fetch(), self.fetch()
             self.a = self.mem[(((hi << 8) | lo) + self.x) & 0xffff]; self.set_zn(self.a)
+        elif op == 0x84:  # STY zp
+            self.mem[self.fetch()] = self.y
+        elif op == 0x8c:  # STY abs
+            lo, hi = self.fetch(), self.fetch(); self.mem[(hi << 8) | lo] = self.y
+        elif op == 0xc0:  # CPY #imm
+            v = self.fetch(); r = (self.y - v) & 0xff
+            self.p = (self.p & ~0x83) | (1 if self.y >= v else 0) | (0x80 if r & 0x80 else 0) | (0x02 if r == 0 else 0)
+        elif op == 0xc6:  # DEC zp
+            a = self.fetch(); self.mem[a] = (self.mem[a] - 1) & 0xff; self.set_zn(self.mem[a])
+        elif op == 0xe6:  # INC zp
+            a = self.fetch(); self.mem[a] = (self.mem[a] + 1) & 0xff; self.set_zn(self.mem[a])
+        elif op == 0xc8:  # INY
+            self.y = (self.y + 1) & 0xff; self.set_zn(self.y)
+        elif op == 0x88:  # DEY
+            self.y = (self.y - 1) & 0xff; self.set_zn(self.y)
+        elif op == 0x10:  # BPL
+            off = self.fetch()
+            if not self.p & 0x80:
+                self.pc = (self.pc + (off - 256 if off & 0x80 else off)) & 0xffff
+        elif op == 0x20:  # JSR
+            lo, hi = self.fetch(), self.fetch(); ret = (self.pc - 1) & 0xffff
+            self.mem[0x100 + self.sp] = (ret >> 8) & 0xff; self.sp = (self.sp - 1) & 0xff
+            self.mem[0x100 + self.sp] = ret & 0xff; self.sp = (self.sp - 1) & 0xff
+            self.pc = (hi << 8) | lo
         elif op == 0x9d:
             lo, hi = self.fetch(), self.fetch()
             self.mem[(((hi << 8) | lo) + self.x) & 0xffff] = self.a
