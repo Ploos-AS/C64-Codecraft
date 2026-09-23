@@ -1,0 +1,12 @@
+id: 03.02-fine-plus-coarse
+course: 03-smooth-scrolling
+lesson: 02
+title: Fine plus coarse scroll
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
