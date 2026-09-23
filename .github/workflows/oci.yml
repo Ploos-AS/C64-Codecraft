@@ -29,7 +29,8 @@ jobs:
             sh -lc 'make example && test -s build/hello.prg'
       - name: Fetch redistributable Open ROMs for VICE
         run: |
-          mkdir -p build/open-roms
+          sudo mkdir -p build/open-roms
+          sudo chown -R "$(id -u):$(id -g)" build
           curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/kernal_generic.rom -o build/open-roms/kernal.rom
           curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/basic_generic.rom -o build/open-roms/basic.rom
           curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/chargen_openroms.rom -o build/open-roms/chargen.rom
