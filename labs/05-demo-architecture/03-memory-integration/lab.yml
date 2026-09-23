@@ -1,0 +1,12 @@
+id: 05.03-memory-integration
+course: 05-demo-architecture
+lesson: 03
+title: Memory ownership map
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
