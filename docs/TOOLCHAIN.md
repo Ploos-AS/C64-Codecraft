@@ -2,7 +2,7 @@
 
 ## Assemblers
 
-C64 Codecraft deliberately supports multiple assemblers.
+C64 Codecraft deliberately supports multiple real assemblers.
 
 ### Canonical beginner path
 
@@ -10,19 +10,19 @@ C64 Codecraft deliberately supports multiple assemblers.
 
 ### Scene paths
 
-**ACME** and **KickAssembler** are first-class targets because students should encounter tooling used in real C64 development and demo workflows.
+**ACME** and **KickAssembler** are first-class targets so students encounter tooling and source styles found in real C64 development and demoscene work.
 
 ### Additional path
 
-**ca65** is supported for students interested in the cc65 ecosystem and more general 6502-family development.
+**ca65** is supported for the cc65 ecosystem and broader 6502-family development.
 
-Lessons should distinguish CPU concepts from assembler-specific syntax.
+Lessons distinguish CPU/hardware concepts from assembler-specific syntax. Codecraft will not define its own assembly language or macro framework.
 
-## Emulator
+## Emulator and debugger
 
-VICE/x64sc is the reference emulator for automated course qualification.
+VICE/x64sc is the reference emulator for course qualification. The VICE monitor itself is a tool students should learn, not merely a backend hidden by scripts.
 
-The project will use VICE monitor automation for deterministic tests where practical.
+Advanced visual debugging tools may supplement VICE where useful.
 
 ## Editors
 
@@ -30,14 +30,14 @@ The course is editor-independent.
 
 - VSCodium: recommended
 - VS Code: supported
-- Vim/Neovim/Emacs/other editors: usable through the CLI workflow
+- Vim/Neovim/Emacs/other editors: supported through ordinary files and CLI tools
 
-No lesson may require an editor extension to build the canonical exercise.
+No lesson may require an editor extension.
 
-## GUI scene tools
+## Scene tools
 
-Real scene tools should be introduced where they improve the workflow. GUI-only applications may remain host-installed rather than being forced into the OCI environment.
+Established music, graphics, packing, disk-image and conversion tools should be used where appropriate. The course should teach transferable workflows rather than replacing mature scene tools with Codecraft equivalents.
 
-## Codecraft tooling
+## Project automation
 
-c64cc provides a stable teaching interface while preserving access to native commands. It must not become a private assembler, emulator or opaque build system.
+Small repository scripts are allowed for CI, publishing and deterministic tests. They are not part of a Codecraft programming platform and should not replace direct assembler/emulator commands in the curriculum.
