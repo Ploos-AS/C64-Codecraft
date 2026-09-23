@@ -68,6 +68,9 @@ def main():
         course_id = scalar(text, "course")
         lesson = scalar(text, "lesson")
         assembler = scalar(text, "assembler")
+        assemble = scalar(text, "assemble")
+        deterministic_bytes = scalar(text, "deterministic_bytes")
+        emulator_state = scalar(text, "emulator_state")
 
         course_dir = lab.parent.name
         course_match = COURSE_RE.match(course_dir)
@@ -110,6 +113,13 @@ def main():
         if assembler != "64tass":
             errors.append(f"{meta.relative_to(ROOT)}: reference lab assembler must be 64tass")
 
+        if assemble != "true":
+            errors.append(f"{meta.relative_to(ROOT)}: verification.assemble must be true")
+        if deterministic_bytes != "true":
+            errors.append(f"{meta.relative_to(ROOT)}: verification.deterministic_bytes must be true")
+        if emulator_state not in {"true", "false"}:
+            errors.append(f"{meta.relative_to(ROOT)}: verification.emulator_state must be true or false")
+
     if count == 0:
         errors.append("no labs discovered")
 
@@ -119,7 +129,7 @@ def main():
             print(f"- {error}")
         return 1
 
-    print(f"C64 Codecraft labs: PASS ({count} labs, metadata and lesson links checked)")
+    print(f"C64 Codecraft labs: PASS ({count} labs, metadata, lesson links and verification contracts checked)")
     return 0
 
 
