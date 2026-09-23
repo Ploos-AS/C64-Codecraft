@@ -10,6 +10,10 @@ part_state=$fd
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta frame
+ sta cue
+ sta part_state
  jsr cue_update
  jsr part_update
  jsr part_render
