@@ -89,7 +89,7 @@ def main():
     for course_path in en.values():
         for lesson_number, files in lesson_map(course_path).items():
             if len(files) == 1:
-                lesson_nodes[f"{course_path.name}/{lesson_number}"] = files[0]
+                lesson_nodes[f"{course_path.name}/{lesson_number}"] = files[0]\n                lesson_nodes[f"{course_path.name}/{files[0].stem}"] = files[0]
     prereq_graph = {node: [] for node in lesson_nodes}
 
     total_lessons = 0
@@ -125,7 +125,7 @@ def main():
                 if prereqs is None:
                     errors.append(f"{rel}: prerequisites must use inline list syntax [...]")
                 else:
-                    current = f"{path.name}/{lesson_number}"
+                    current = f"{path.name}/{lesson_number}"\n                    local_prefix = path.name + "/"
                     current_key = (int(path.name[:2]), int(lesson_number))
                     for ref in prereqs:
                         if ref not in lesson_nodes:
@@ -136,7 +136,7 @@ def main():
                         if target_key >= current_key:
                             errors.append(f"{rel}: prerequisite {ref!r} is not earlier than this lesson")
                         if label == "EN":
-                            prereq_graph[current].append(ref)
+                            canonical = f"{target_course}/{target_lesson}"\n                            prereq_graph[current].append(canonical)
 
             if not (path / "README.md").exists():
                 errors.append(f"{label} course {number} missing README.md")
