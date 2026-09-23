@@ -1,0 +1,12 @@
+id: 11.05-sync-flow
+course: 11-capstone
+lesson: 05
+title: Sync and flow
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
