@@ -9,6 +9,9 @@ sync=$fc
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta frame
+ sta sync
  inc frame
  lda frame
  and #15
