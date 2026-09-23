@@ -1,0 +1,12 @@
+id: 07.03-asset-pipeline
+course: 07-bitmap-high-colour
+lesson: 03
+title: Bitmap asset pipeline contract
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
