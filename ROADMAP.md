@@ -21,7 +21,9 @@
 
 ## M1 — 6510 Machine Code Foundations
 
-Only the fundamentals needed to become productive are repeated here: binary/hex, registers, flags and addressing. Move quickly into real 6510 ASM, loads/stores, arithmetic, branches, loops, subroutines, stack and zero page. Introduce cycles, bytes and trade-offs from the start.
+This milestone assumes **no previous machine-code or assembly experience**. Teach binary and hexadecimal, bits/bytes/words, addresses and memory, the CPU execution model, registers, flags and addressing modes before depending on them. Then progress through real 6510 ASM: loads/stores, arithmetic and logic, branches, loops, tables, pointers, subroutines, stack and zero page.
+
+Every topic should have an immediate C64/scene connection. Early examples should manipulate visible hardware where practical; loops lead toward animation, tables toward colour/sine tables, branches toward timing, and zero page toward real performance trade-offs. Introduce cycles, bytes and memory cost from the beginning without requiring students to master raster timing yet.
 
 ## M2 — The C64 as a Machine
 
