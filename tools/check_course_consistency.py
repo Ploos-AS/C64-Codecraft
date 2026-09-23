@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 COURSE = ROOT / "course"
 COURSE_RE = re.compile(r"^(\d{2})-(.+)$")
 LESSON_RE = re.compile(r"^(\d{2})-.*\.md$")
-REQUIRED_META = ("title", "course", "lesson", "level", "prerequisites", "labs")
+LABS_ROOT = ROOT / "labs"\n\nREQUIRED_META = ("title", "course", "lesson", "level", "prerequisites", "labs")
 
 
 def blocks(lang):
@@ -68,6 +68,16 @@ def contiguous(numbers, label, errors):
         errors.append(f"{label}: lesson sequence is {ints}, expected {expected}")
 
 
+def lab_ids():
+    ids = set()
+    for meta_file in LABS_ROOT.glob("*/*/lab.yml"):
+        for line in meta_file.read_text(encoding="utf-8").splitlines():
+            if line.startswith("id:"):
+                ids.add(line.split(":", 1)[1].strip())
+                break
+    return ids
+
+
 def main():
     errors = []
     en = blocks("en")
@@ -122,6 +132,16 @@ def main():
                     errors.append(f"{rel}: course metadata {meta.get('course')!r} != {path.name!r}")
                 if meta.get("lesson") != lesson_number:
                     errors.append(f"{rel}: lesson metadata {meta.get('lesson')!r} != {lesson_number!r}")
+
+                labs = inline_list(meta.get("labs"))
+                if labs is None:
+                    errors.append(f"{rel}: labs must use inline list syntax [...]")
+                else:
+                    for lab_ref in labs:
+                        if lab_ref not in known_lab_ids:
+                            errors.append(
+                                f"{rel}: lab {lab_ref!r} does not identify an existing lab id"
+                            )
 
                 prereqs = inline_list(meta.get("prerequisites"))
                 if prereqs is None:
