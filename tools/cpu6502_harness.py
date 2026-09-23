@@ -97,6 +97,13 @@ class CPU:
             self.x = (self.x - 1) & 0xff; self.set_zn(self.x)
         elif op == 0xe8:  # INX
             self.x = (self.x + 1) & 0xff; self.set_zn(self.x)
+        elif op == 0xc9:  # CMP #imm
+            v = self.fetch(); r = (self.a - v) & 0xff
+            self.p = (self.p & ~0x83) | (1 if self.a >= v else 0) | (0x80 if r & 0x80 else 0) | (0x02 if r == 0 else 0)
+        elif op == 0xf0:  # BEQ
+            off = self.fetch()
+            if self.p & 0x02:
+                self.pc = (self.pc + (off - 256 if off & 0x80 else off)) & 0xffff
         elif op == 0xe0:
             v = self.fetch(); r = (self.x - v) & 0xff
             self.p = (self.p & ~0x83) | (1 if self.x >= v else 0) | (0x80 if r & 0x80 else 0) | (0x02 if r == 0 else 0)
