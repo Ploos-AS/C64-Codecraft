@@ -1,0 +1,4 @@
+break 081b
+command 1 "m d020 d021"
+command 1 "quit"
+go
