@@ -86,11 +86,12 @@ def main():
                 errors.append(f"{label} course sequence is {nums}, expected {expected}")
 
     lesson_nodes = {}
-    for course_path in en.values():
-        for lesson_number, files in lesson_map(course_path).items():
-            if len(files) == 1:
-                lesson_nodes[f"{course_path.name}/{lesson_number}"] = files[0]
-                lesson_nodes[f"{course_path.name}/{files[0].stem}"] = files[0]
+    for language_blocks in (en, no):
+        for course_path in language_blocks.values():
+            for lesson_number, files in lesson_map(course_path).items():
+                if len(files) == 1:
+                    lesson_nodes[f"{course_path.name}/{lesson_number}"] = files[0]
+                    lesson_nodes[f"{course_path.name}/{files[0].stem}"] = files[0]
     prereq_graph = {node: [] for node in lesson_nodes}
 
     total_lessons = 0
