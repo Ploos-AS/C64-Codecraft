@@ -82,6 +82,7 @@ def lab_ids():
 
 def main():
     errors = []
+    known_lab_ids = lab_ids()
     en = blocks("en")
     no = blocks("no")
 
