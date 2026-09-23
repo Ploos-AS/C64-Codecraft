@@ -48,3 +48,10 @@ The full toolbox adds broader build utilities. Exomizer remains outside the M0 b
 6. A deterministic VICE runtime smoke test passes.
 
 Passing image build alone does not complete M0.
+
+
+## VICE automation interface
+
+M0 qualifies the VICE 3.9 binary remote monitor interface (`-binarymonitor` and `-binarymonitoraddress`) as the automation boundary for executable labs. The earlier `-moncommands` playback experiment was intentionally retired because its headless command/output behavior was not deterministic enough for CI assertions.
+
+The binary monitor is the planned M0.1 harness for loading programs, controlling execution, breakpoints, and reading CPU/memory/VIC-II state. M0 continues to verify the canonical 64tass PRG payload byte-for-byte independently of console formatting.
