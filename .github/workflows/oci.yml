@@ -1,0 +1,37 @@
+name: OCI qualification
+
+on:
+  push:
+    paths:
+      - "container/**"
+      - "tools/**"
+      - "examples/**"
+      - ".github/workflows/oci.yml"
+  pull_request:
+    paths:
+      - "container/**"
+      - "tools/**"
+      - "examples/**"
+      - ".github/workflows/oci.yml"
+
+jobs:
+  alpine-minimal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Alpine reference image
+        run: docker build -f container/Dockerfile -t c64-codecraft:m0 .
+      - name: Toolchain doctor
+        run: docker run --rm c64-codecraft:m0
+      - name: Assemble first course program
+        run: |
+          docker run --rm -v "$PWD:/work" c64-codecraft:m0             sh -lc 'make example && test -s build/hello.prg'
+
+  alpine-full:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build extended scene image
+        run: docker build -f container/Dockerfile.full -t c64-codecraft-full:m0 .
+      - name: Toolchain doctor
+        run: docker run --rm c64-codecraft-full:m0
