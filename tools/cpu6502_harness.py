@@ -97,6 +97,12 @@ class CPU:
             self.x = (self.x - 1) & 0xff; self.set_zn(self.x)
         elif op == 0xe8:  # INX
             self.x = (self.x + 1) & 0xff; self.set_zn(self.x)
+        elif op == 0xaa:  # TAX
+            self.x = self.a; self.set_zn(self.x)
+        elif op == 0xa8:  # TAY
+            self.y = self.a; self.set_zn(self.y)
+        elif op == 0x29:  # AND #imm
+            self.a &= self.fetch(); self.set_zn(self.a)
         elif op == 0x86:  # STX zp
             self.mem[self.fetch()] = self.x
         elif op == 0xc9:  # CMP #imm
