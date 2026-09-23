@@ -10,6 +10,7 @@ mem = load_prg(prg)
 def invoke(cpu, pc):
     cpu.pc = pc
     cpu.sp = 0xff
+    cpu.instructions = 0
     cpu.run(limit=256)
 
 # First invocation initializes the state machine then performs LOAD -> INIT.
