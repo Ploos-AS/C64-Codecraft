@@ -1,0 +1,9 @@
+build/
+dist/
+site-generated/
+*.prg
+*.d64
+*.crt
+*.sym
+*.lbl
+.DS_Store
