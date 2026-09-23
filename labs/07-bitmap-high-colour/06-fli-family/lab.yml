@@ -1,0 +1,15 @@
+id: 07.06-fli-family
+course: 07-bitmap-high-colour
+lesson: 06
+title: FLI-family tradeoff matrix
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
+notes:
+  timing_sensitive: true
+  cycle_exact_claim: false
