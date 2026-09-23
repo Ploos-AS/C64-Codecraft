@@ -1,0 +1,12 @@
+id: 09.08-multipart-demo
+course: 09-packing-loading
+lesson: 08
+title: Multipart demo state machine
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
