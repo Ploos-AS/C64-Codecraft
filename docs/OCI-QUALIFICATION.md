@@ -52,6 +52,8 @@ Passing image build alone does not complete M0.
 
 ## VICE automation interface
 
-M0 qualifies the VICE 3.9 binary remote monitor interface (`-binarymonitor` and `-binarymonitoraddress`) as the automation boundary for executable labs. The earlier `-moncommands` playback experiment was intentionally retired because its headless command/output behavior was not deterministic enough for CI assertions.
+The Debian 13 VICE 3.9 package used by the reference toolbox does not expose the expected binary-monitor command-line switches, so the binary remote monitor is **not** an M0-qualified interface in this image.
 
-The binary monitor is the planned M0.1 harness for loading programs, controlling execution, breakpoints, and reading CPU/memory/VIC-II state. M0 continues to verify the canonical 64tass PRG payload byte-for-byte independently of console formatting.
+The earlier `-moncommands` playback experiment was also rejected for CI assertions because its headless behavior was not deterministic enough for execution/state verification.
+
+M0 therefore keeps a narrower, reproducible gate: build the reference VICE package successfully and verify the canonical 64tass PRG payload byte-for-byte. A deterministic execution/state harness remains an M0.1 task and must be qualified against the actual packaged VICE capabilities before adoption.
