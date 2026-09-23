@@ -9,7 +9,9 @@ ROOT = Path(__file__).resolve().parents[1]
 COURSE = ROOT / "course"
 COURSE_RE = re.compile(r"^(\d{2})-(.+)$")
 LESSON_RE = re.compile(r"^(\d{2})-.*\.md$")
-LABS_ROOT = ROOT / "labs"\n\nREQUIRED_META = ("title", "course", "lesson", "level", "prerequisites", "labs")
+LABS_ROOT = ROOT / "labs"
+
+REQUIRED_META = ("title", "course", "lesson", "level", "prerequisites", "labs")
 
 
 def blocks(lang):
