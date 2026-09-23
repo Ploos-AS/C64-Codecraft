@@ -1,0 +1,12 @@
+id: 05.07-mini-demo-qualification
+course: 05-demo-architecture
+lesson: 07
+title: Mini-demo qualification
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
