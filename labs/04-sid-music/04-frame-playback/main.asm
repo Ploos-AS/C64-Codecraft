@@ -9,6 +9,8 @@ TARGET=$e0
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta phase
 leave:
  lda $d012
  cmp #TARGET
