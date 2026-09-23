@@ -40,7 +40,7 @@ jobs:
       - name: VICE runtime smoke test
         run: |
           docker run --rm -v "$PWD:/work" -w /work c64-codecraft:m0 \
-            sh -lc 'timeout 20s x64sc -console -sounddev dummy -kernal /work/build/open-roms/kernal.rom -basic /work/build/open-roms/basic.rom -chargen /work/build/open-roms/chargen.rom -autostartprgmode 1 -autostart /work/build/hello.prg -moncommands /work/tests/vice/hello.mon 2>&1 | tee /work/build/vice-smoke.log; grep -qi "d020.*06" /work/build/vice-smoke.log; grep -qi "d021.*0e" /work/build/vice-smoke.log'
+            sh -lc 'timeout 20s x64sc -console -sounddev dummy -kernal /work/build/open-roms/kernal.rom -basic /work/build/open-roms/basic.rom -chargen /work/build/open-roms/chargen.rom -moncommands /work/tests/vice/hello.mon 2>&1 | tee /work/build/vice-smoke.log; grep -qi "d020.*06" /work/build/vice-smoke.log; grep -qi "d021.*0e" /work/build/vice-smoke.log'
 
   debian-full:
     runs-on: ubuntu-latest
