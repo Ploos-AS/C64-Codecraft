@@ -1,0 +1,12 @@
+id: 04.02-first-voice
+course: 04-sid-music
+lesson: 02
+title: First SID voice
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
