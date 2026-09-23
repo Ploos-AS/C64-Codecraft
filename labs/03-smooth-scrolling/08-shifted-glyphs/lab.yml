@@ -1,0 +1,12 @@
+id: 03.08-shifted-glyphs
+course: 03-smooth-scrolling
+lesson: 08
+title: Shifted glyph variants
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
