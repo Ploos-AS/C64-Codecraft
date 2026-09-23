@@ -1,0 +1,12 @@
+id: 08.09-optimization-pass
+course: 08-6510-optimization
+lesson: 09
+title: Measured optimization pass
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
