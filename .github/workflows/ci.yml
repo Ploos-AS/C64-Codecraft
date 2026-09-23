@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  source-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check source layout
+        run: |
+          test -f README.md
+          test -f ROADMAP.md
+          test -f CONTRIBUTING.md
+          test -f docs/ARCHITECTURE.md
+          test -f docs/CURRICULUM.md
+          test -f course/en/00-intro/README.md
+          test -f course/no/00-intro/README.md
+          test -f examples/hello-64tass/main.asm
+          test -f tools/c64cc
+      - name: Shell syntax
+        run: sh -n tools/c64cc
+      - name: Ensure generated output is not tracked
+        run: |
+          ! git ls-files | grep -E '^(build|dist|site-generated)/'
+
+  m0-tooling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: M0 tooling status
+        run: |
+          sh tools/c64cc help
+          echo "Assembler/VICE qualification is tracked as the next M0 gate."
