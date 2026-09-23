@@ -1,0 +1,12 @@
+id: 03.05-raster-scheduled-state
+course: 03-smooth-scrolling
+lesson: 05
+title: Raster-scheduled scroller state
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
