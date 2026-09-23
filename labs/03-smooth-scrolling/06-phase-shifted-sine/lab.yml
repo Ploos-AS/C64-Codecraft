@@ -1,0 +1,12 @@
+id: 03.06-phase-shifted-sine
+course: 03-smooth-scrolling
+lesson: 06
+title: Phase-shifted sine data
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
