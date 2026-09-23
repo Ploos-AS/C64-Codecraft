@@ -1,0 +1,12 @@
+id: 04.03-init-play-contract
+course: 04-sid-music
+lesson: 03
+title: Init/play contract
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
