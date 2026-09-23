@@ -42,6 +42,16 @@ class CPU:
             carry = 1 if self.a & 0x80 else 0
             self.a = (self.a << 1) & 0xff
             self.p = (self.p & ~0x01) | carry; self.set_zn(self.a)
+        elif op == 0x18:  # CLC
+            self.p &= ~0x01
+        elif op == 0x69:  # ADC #imm (binary mode)
+            v = self.fetch(); total = self.a + v + (self.p & 1)
+            result = total & 0xff
+            overflow = (~(self.a ^ v) & (self.a ^ result) & 0x80) != 0
+            self.p = (self.p & ~0x41) | (1 if total > 0xff else 0) | (0x40 if overflow else 0)
+            self.a = result; self.set_zn(self.a)
+        elif op == 0x49:  # EOR #imm
+            self.a ^= self.fetch(); self.set_zn(self.a)
         elif op == 0xbd:
             lo, hi = self.fetch(), self.fetch()
             self.a = self.mem[(((hi << 8) | lo) + self.x) & 0xffff]; self.set_zn(self.a)
