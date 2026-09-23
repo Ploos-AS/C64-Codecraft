@@ -1,0 +1,15 @@
+id: 06.02-sprite-dma-probe
+course: 06-advanced-vicii
+lesson: 02
+title: Sprite DMA observation
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
+notes:
+  timing_sensitive: true
+  cycle_exact_claim: false
