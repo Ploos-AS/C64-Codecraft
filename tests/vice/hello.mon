@@ -1,5 +1,3 @@
 load "/work/build/hello.prg" 0
 break 081a
-command 1 "m d020 d021"
-command 1 "quit"
 g 0810
