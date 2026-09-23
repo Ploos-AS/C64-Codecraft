@@ -5,6 +5,10 @@ on:
     paths:
       - "labs/**"
       - "tools/check_labs.py"
+      - "tools/run_cpu_labs.py"
+      - "tools/cpu6502_harness.py"
+      - "tools/run_cpu_labs.py"
+      - "tools/cpu6502_harness.py"
       - ".github/workflows/labs.yml"
   pull_request:
     paths:
@@ -39,4 +43,4 @@ jobs:
             make -C "$dir" clean all
           done
       - name: Run deterministic CPU/RAM qualification
-        run: python3 labs/09-packing-loading/07-part-contracts/runtime_test.py
+        run: python3 tools/run_cpu_labs.py
