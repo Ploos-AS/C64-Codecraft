@@ -1,0 +1,12 @@
+id: 01.03-vic-bank-d018
+course: 01-c64-machine
+lesson: 05
+title: VIC bank and D018 observation
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
