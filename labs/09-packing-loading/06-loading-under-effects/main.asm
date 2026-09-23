@@ -11,6 +11,11 @@ music_tick=$fe
 e:.word 0
 *=$0810
 start:
+ lda #0
+ sta frame
+ sta load_progress
+ sta effect_phase
+ sta music_tick
  jsr music_job
  jsr effect_job
  jsr loader_job
