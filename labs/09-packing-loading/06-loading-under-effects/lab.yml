@@ -1,0 +1,12 @@
+id: 09.06-loading-under-effects
+course: 09-packing-loading
+lesson: 06
+title: Loading-under-effects contract
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
