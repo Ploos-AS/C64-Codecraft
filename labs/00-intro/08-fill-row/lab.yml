@@ -1,0 +1,12 @@
+id: 00.8-fill-row
+course: 00-intro
+lesson: 17
+title: Fill a screen row
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
