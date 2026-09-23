@@ -1,0 +1,33 @@
+#!/bin/sh
+set -eu
+
+cmd="${1:-help}"
+
+case "$cmd" in
+  doctor)
+    echo "C64 Codecraft environment"
+    for tool in 64tass acme x64sc java python3; do
+      if command -v "$tool" >/dev/null 2>&1; then
+        printf 'OK   %s\n' "$tool"
+      else
+        printf 'MISS %s\n' "$tool"
+      fi
+    done
+    ;;
+  help|-h|--help)
+    cat <<'EOF'
+c64cc - C64 Codecraft course tooling
+
+Commands:
+  doctor    inspect the local toolchain
+  help      show this help
+
+Planned:
+  build, run, debug, test
+EOF
+    ;;
+  *)
+    echo "c64cc: unknown command: $cmd" >&2
+    exit 2
+    ;;
+esac
