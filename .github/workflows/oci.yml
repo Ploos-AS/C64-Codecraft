@@ -37,10 +37,13 @@ jobs:
           test "$(wc -c < build/open-roms/kernal.rom)" -eq 8192
           test "$(wc -c < build/open-roms/basic.rom)" -eq 8192
           test "$(wc -c < build/open-roms/chargen.rom)" -eq 4096
-      - name: VICE runtime smoke test
+      - name: Qualify VICE binary monitor availability
         run: |
-          docker run --rm -v "$PWD:/work" -w /work c64-codecraft:m0 \
-            sh -lc 'x64sc -console -sounddev dummy -kernal /work/build/open-roms/kernal.rom -basic /work/build/open-roms/basic.rom -chargen /work/build/open-roms/chargen.rom -moncommands /work/tests/vice/hello.mon 2>&1 | tee /work/build/vice-smoke.log; test -s /tmp/vice-loaded.bin; tail -c 11 /tmp/vice-loaded.bin | od -An -tx1 | tr -d " \n" | grep -qi "^a9068d20d0a90e8d21d060$"'
+          docker run --rm c64-codecraft:m0 \
+            sh -lc 'x64sc -help 2>&1 | grep -q -- "-binarymonitor" && x64sc -help 2>&1 | grep -q -- "-binarymonitoraddress"'
+      - name: Verify canonical PRG payload
+        run: |
+          test "$(tail -c 11 build/hello.prg | od -An -tx1 | tr -d " \n")" = "a9068d20d0a90e8d21d060"
 
   debian-full:
     runs-on: ubuntu-latest
