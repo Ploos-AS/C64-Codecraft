@@ -1,0 +1,12 @@
+id: 02.05-badline-observation
+course: 02-raster-timing
+lesson: 05
+title: Badline observation
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
