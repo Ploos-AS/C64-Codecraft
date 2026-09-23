@@ -27,10 +27,19 @@ jobs:
         run: |
           docker run --rm -v "$PWD:/work" c64-codecraft:m0 \
             sh -lc 'make example && test -s build/hello.prg'
+      - name: Fetch redistributable Open ROMs for VICE
+        run: |
+          mkdir -p build/open-roms
+          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/kernal_generic.rom -o build/open-roms/kernal.rom
+          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/basic_generic.rom -o build/open-roms/basic.rom
+          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/chargen_openroms.rom -o build/open-roms/chargen.rom
+          test "$(wc -c < build/open-roms/kernal.rom)" -eq 8192
+          test "$(wc -c < build/open-roms/basic.rom)" -eq 8192
+          test "$(wc -c < build/open-roms/chargen.rom)" -eq 4096
       - name: VICE runtime smoke test
         run: |
           docker run --rm -v "$PWD:/work" -w /work c64-codecraft:m0 \
-            sh -lc 'test -f /work/tests/vice/hello.mon; timeout 20s x64sc -console -sounddev dummy -autostart /work/build/hello.prg -moncommands /work/tests/vice/hello.mon 2>&1 | tee /work/build/vice-smoke.log; grep -qi "d020.*06" /work/build/vice-smoke.log; grep -qi "d021.*0e" /work/build/vice-smoke.log'
+            sh -lc 'timeout 20s x64sc -console -sounddev dummy -kernal /work/build/open-roms/kernal.rom -basic /work/build/open-roms/basic.rom -chargen /work/build/open-roms/chargen.rom -autostart /work/build/hello.prg -moncommands /work/tests/vice/hello.mon 2>&1 | tee /work/build/vice-smoke.log; grep -qi "d020.*06" /work/build/vice-smoke.log; grep -qi "d021.*0e" /work/build/vice-smoke.log'
 
   debian-full:
     runs-on: ubuntu-latest
