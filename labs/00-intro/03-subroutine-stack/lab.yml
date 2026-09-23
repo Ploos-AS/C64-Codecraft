@@ -1,0 +1,14 @@
+id: 00.03-subroutine-stack
+course: 00-intro
+lesson: 10
+title: Subroutines and stack
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+artifacts:
+  - build/subroutine-stack.prg
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
