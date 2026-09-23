@@ -1,0 +1,12 @@
+id: 04.01-sid-register-map
+course: 04-sid-music
+lesson: 01
+title: SID register map
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
