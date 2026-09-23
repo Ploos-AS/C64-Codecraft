@@ -1,0 +1,14 @@
+id: 00.07-screen-and-colour
+course: 00-intro
+lesson: 16
+title: Screen and colour RAM
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+artifacts:
+  - build/screen-and-colour.prg
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
