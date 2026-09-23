@@ -1,0 +1,15 @@
+id: 06.03-fld-observation
+course: 06-advanced-vicii
+lesson: 03
+title: FLD preparation probe
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
+notes:
+  timing_sensitive: true
+  cycle_exact_claim: false
