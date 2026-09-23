@@ -1,0 +1,12 @@
+id: 01.05-charset-data
+course: 01-c64-machine
+lesson: 09
+title: Custom charset data block
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
