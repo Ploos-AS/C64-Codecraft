@@ -1,0 +1,12 @@
+id: 01.08-first-sprite
+course: 01-c64-machine
+lesson: 12
+title: First sprite
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
