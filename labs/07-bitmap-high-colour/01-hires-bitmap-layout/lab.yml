@@ -1,0 +1,12 @@
+id: 07.01-hires-bitmap-layout
+course: 07-bitmap-high-colour
+lesson: 01
+title: Hires bitmap layout
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
