@@ -1,0 +1,12 @@
+id: 08.03-page-boundaries
+course: 08-6510-optimization
+lesson: 03
+title: Page-boundary experiment
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
