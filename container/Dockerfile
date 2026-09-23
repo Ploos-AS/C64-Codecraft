@@ -1,6 +1,15 @@
-FROM alpine:3.22
+FROM debian:13-slim
 
-RUN apk add --no-cache     64tass     acme     cc65     make     python3     openjdk17-jre-headless     vice
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      64tass \
+      acme \
+      cc65 \
+      make \
+      python3 \
+      default-jre-headless \
+      vice \
+ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /work
 COPY tools/c64cc /usr/local/bin/c64cc
