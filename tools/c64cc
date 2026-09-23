@@ -1,12 +1,13 @@
 #!/bin/sh
+# Internal repository/CI helper. This is not a student-facing build framework.
 set -eu
 
 cmd="${1:-help}"
 
 case "$cmd" in
   doctor)
-    echo "C64 Codecraft environment"
-    for tool in 64tass acme x64sc java python3; do
+    echo "C64 Codecraft toolchain diagnostics"
+    for tool in 64tass acme ca65 x64sc java python3; do
       if command -v "$tool" >/dev/null 2>&1; then
         printf 'OK   %s\n' "$tool"
       else
@@ -16,18 +17,17 @@ case "$cmd" in
     ;;
   help|-h|--help)
     cat <<'EOF'
-c64cc - C64 Codecraft course tooling
+c64cc - internal C64 Codecraft repository diagnostics
 
 Commands:
-  doctor    inspect the local toolchain
+  doctor    inspect tools used by CI/course qualification
   help      show this help
 
-Planned:
-  build, run, debug, test
+Students use the real assemblers, VICE and scene tools directly.
 EOF
     ;;
   *)
-    echo "c64cc: unknown command: $cmd" >&2
+    echo "c64cc: unknown internal command: $cmd" >&2
     exit 2
     ;;
 esac
