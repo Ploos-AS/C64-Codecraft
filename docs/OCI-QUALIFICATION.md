@@ -21,9 +21,13 @@ Therefore C64 Codecraft uses the documented fallback: **Debian slim**.
 
 This is a maintainability decision, not a change to the ASM-first/toolbox architecture.
 
-## Debian qualification candidate
+## Debian qualification result
 
-The Debian 13 slim candidate includes:
+**Result: PASS for the M0 OCI/toolchain gates.**
+
+GitHub Actions confirmed that both the minimal and full Debian 13 slim toolboxes build, internal diagnostics run, and the canonical 64tass example assembles to a non-empty PRG inside the minimal toolbox.
+
+The Debian 13 slim toolbox includes:
 
 - 64tass
 - ACME
@@ -32,7 +36,7 @@ The Debian 13 slim candidate includes:
 - Java runtime for later KickAssembler integration
 - Python and Make
 
-The full candidate adds broader build and scene utilities, including Exomizer where available.
+The full toolbox adds broader build utilities. Exomizer remains outside the M0 base until a clean reproducible packaging path is qualified.
 
 ## Gates
 
