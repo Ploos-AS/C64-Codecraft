@@ -1,0 +1,40 @@
+name: Labs
+
+on:
+  push:
+    paths:
+      - "labs/**"
+      - "tools/check_labs.py"
+      - ".github/workflows/labs.yml"
+  pull_request:
+    paths:
+      - "labs/**"
+      - "tools/check_labs.py"
+      - ".github/workflows/labs.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:13-slim
+    steps:
+      - name: Install lab toolchain
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates make 64tass
+      - uses: actions/checkout@v4
+      - name: Check lab structure
+        run: python3 --version || apt-get update && apt-get install -y --no-install-recommends python3
+      - name: Validate lab metadata/layout
+        run: python3 tools/check_labs.py
+      - name: Assemble all labs
+        run: |
+          set -eu
+          for makefile in labs/*/*/Makefile; do
+            dir="$(dirname "$makefile")"
+            echo "==> $dir"
+            make -C "$dir" clean all
+          done
