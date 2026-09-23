@@ -1,4 +1,3 @@
 load "/work/build/hello.prg" 0
-m 0810 081a
-m d020 d021
+save "/work/build/vice-loaded.bin" 0 0810 081b
 quit
