@@ -1,0 +1,15 @@
+id: 02.10-raster-splits
+course: 02-raster-timing
+lesson: 10
+title: Raster splits
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
+notes:
+  timing_sensitive: true
+  cycle_exact_claim: false
