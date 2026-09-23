@@ -1,0 +1,12 @@
+id: 05.02-frame-budget
+course: 05-demo-architecture
+lesson: 02
+title: Frame budget accounting
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
