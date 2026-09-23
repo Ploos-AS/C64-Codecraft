@@ -134,12 +134,12 @@ def main():
                         if ref not in lesson_nodes:
                             errors.append(f"{rel}: prerequisite {ref!r} does not identify an existing lesson")
                             continue
-                        target_course, target_lesson = ref.rsplit("/", 1)
+                        target_course, target_lesson = resolved.rsplit("/", 1)
                         target_key = (int(target_course[:2]), int(target_lesson[:2]))
                         if target_key >= current_key:
                             errors.append(f"{rel}: prerequisite {ref!r} is not earlier than this lesson")
                         if label == "EN":
-                            canonical = f"{target_course}/{target_lesson}"
+                            canonical = f"{target_course}/{target_lesson[:2]}"
                             prereq_graph[current].append(canonical)
 
             if not (path / "README.md").exists():
