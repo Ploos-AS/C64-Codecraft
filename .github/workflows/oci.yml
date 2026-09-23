@@ -15,23 +15,23 @@ on:
       - ".github/workflows/oci.yml"
 
 jobs:
-  alpine-minimal:
+  debian-minimal:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build Alpine reference image
+      - name: Build Debian reference toolbox
         run: docker build -f container/Dockerfile -t c64-codecraft:m0 .
-      - name: Toolchain doctor
+      - name: Toolchain diagnostics
         run: docker run --rm c64-codecraft:m0
-      - name: Assemble first course program
+      - name: Assemble first course program with native 64tass
         run: |
           docker run --rm -v "$PWD:/work" c64-codecraft:m0             sh -lc 'make example && test -s build/hello.prg'
 
-  alpine-full:
+  debian-full:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build extended scene image
+      - name: Build extended scene toolbox
         run: docker build -f container/Dockerfile.full -t c64-codecraft-full:m0 .
-      - name: Toolchain doctor
+      - name: Toolchain diagnostics
         run: docker run --rm c64-codecraft-full:m0
