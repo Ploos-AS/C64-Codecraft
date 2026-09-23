@@ -1,0 +1,14 @@
+id: 00.06-indirect-indexed
+course: 00-intro
+lesson: 15
+title: Indirect indexed addressing
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+artifacts:
+  - build/indirect-indexed.prg
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
