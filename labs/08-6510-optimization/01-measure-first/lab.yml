@@ -1,0 +1,12 @@
+id: 08.01-measure-first
+course: 08-6510-optimization
+lesson: 01
+title: Measure before optimizing
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
