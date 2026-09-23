@@ -1,0 +1,12 @@
+id: 09.03-memory-safe-depacking
+course: 09-packing-loading
+lesson: 03
+title: Memory-safe depacking plan
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
