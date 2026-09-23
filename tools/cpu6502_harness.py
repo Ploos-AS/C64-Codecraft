@@ -93,7 +93,9 @@ class CPU:
         elif op == 0x9d:
             lo, hi = self.fetch(), self.fetch()
             self.mem[(((hi << 8) | lo) + self.x) & 0xffff] = self.a
-        elif op == 0xe8:
+        elif op == 0xca:  # DEX
+            self.x = (self.x - 1) & 0xff; self.set_zn(self.x)
+        elif op == 0xe8:  # INX
             self.x = (self.x + 1) & 0xff; self.set_zn(self.x)
         elif op == 0xe0:
             v = self.fetch(); r = (self.x - v) & 0xff
@@ -102,8 +104,12 @@ class CPU:
             off = self.fetch()
             if not self.p & 0x02:
                 self.pc = (self.pc + (off - 256 if off & 0x80 else off)) & 0xffff
-        elif op == 0x60:
-            return False
+        elif op == 0x60:  # RTS; empty stack means harness stop
+            if self.sp == 0xff:
+                return False
+            self.sp = (self.sp + 1) & 0xff; lo = self.mem[0x100 + self.sp]
+            self.sp = (self.sp + 1) & 0xff; hi = self.mem[0x100 + self.sp]
+            self.pc = (((hi << 8) | lo) + 1) & 0xffff
         else:
             raise RuntimeError(f'unsupported opcode {op:02x} at {(self.pc - 1) & 0xffff:04x}')
         return True
