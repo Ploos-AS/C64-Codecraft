@@ -1,0 +1,12 @@
+id: 10.02-assembler-dialects
+course: 10-production-craft
+lesson: 02
+title: Assembler dialect literacy
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
