@@ -1,0 +1,12 @@
+id: 04.04-frame-playback
+course: 04-sid-music
+lesson: 04
+title: Frame-scheduled playback
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
