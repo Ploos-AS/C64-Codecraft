@@ -1,0 +1,12 @@
+id: 07.04-bitmap-raster-splits
+course: 07-bitmap-high-colour
+lesson: 04
+title: Bitmap raster-split model
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
