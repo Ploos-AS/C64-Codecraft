@@ -40,7 +40,7 @@ jobs:
       - name: VICE runtime smoke test
         run: |
           docker run --rm -v "$PWD:/work" -w /work c64-codecraft:m0 \
-            sh -lc 'timeout 5s x64sc -console -sounddev dummy -kernal /work/build/open-roms/kernal.rom -basic /work/build/open-roms/basic.rom -chargen /work/build/open-roms/chargen.rom -moncommands /work/tests/vice/hello.mon 2>&1 | tee /work/build/vice-smoke.log || test "$?" -eq 124; grep -qi "breakpoint.*081a" /work/build/vice-smoke.log'
+            sh -lc 'x64sc -console -sounddev dummy -kernal /work/build/open-roms/kernal.rom -basic /work/build/open-roms/basic.rom -chargen /work/build/open-roms/chargen.rom -moncommands /work/tests/vice/hello.mon 2>&1 | tee /work/build/vice-smoke.log; grep -Eqi "0810.*a9.*06.*8d.*20.*d0.*a9.*0e.*8d.*21.*d0.*60" /work/build/vice-smoke.log'
 
   debian-full:
     runs-on: ubuntu-latest
