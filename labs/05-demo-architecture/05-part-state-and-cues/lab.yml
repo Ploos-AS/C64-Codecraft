@@ -1,0 +1,12 @@
+id: 05.05-part-state-and-cues
+course: 05-demo-architecture
+lesson: 05
+title: Part state and cues
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
