@@ -28,7 +28,7 @@ if (cpu.mem[0xfb], cpu.mem[0xfc], cpu.mem[0xfd]) != (2, 0, 0):
 for _ in range(14):
     invoke(cpu, step)
 if (cpu.mem[0xfb], cpu.mem[0xfc], cpu.mem[0xfd]) != (2, 0, 14):
-    raise SystemExit('RUN age progression failed')
+    raise SystemExit(f'RUN age progression failed: state={cpu.mem[0xfb]} part={cpu.mem[0xfc]} age={cpu.mem[0xfd]}')
 
 invoke(cpu, step)  # age 15, still RUN
 if (cpu.mem[0xfb], cpu.mem[0xfc], cpu.mem[0xfd]) != (2, 0, 15):
