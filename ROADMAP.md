@@ -12,12 +12,12 @@
 - [x] Qualify OCI base: Alpine first, Debian slim fallback
 - [x] Build minimal and full OCI toolboxes
 - [x] Assemble first 64tass example
-- [ ] Run first automated VICE smoke test
+- [ ] Run first automated VICE execution/state smoke test (M0.1; packaged VICE interface still to qualify)
 - [ ] Add direct ACME and KickAssembler examples/qualification
 - [ ] Documentation validation
 - [ ] GitHub Pages build
 - [ ] PDF/EPUB build
-- [ ] CI green
+- [x] Foundation CI/OCI gates green
 
 ## M1 — 6510 Machine Code Foundations
 
