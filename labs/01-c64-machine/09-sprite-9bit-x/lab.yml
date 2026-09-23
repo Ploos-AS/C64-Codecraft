@@ -1,0 +1,12 @@
+id: 01.09-sprite-9bit-x
+course: 01-c64-machine
+lesson: 13
+title: Sprite 9-bit X position
+assembler: 64tass
+target:
+  machine: c64
+  video: any
+verification:
+  assemble: true
+  deterministic_bytes: true
+  emulator_state: false
