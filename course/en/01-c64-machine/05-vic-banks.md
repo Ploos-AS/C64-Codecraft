@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 05
 level: beginner
 prerequisites: [04-meet-the-cias]
-labs: [vic-bank-map]
+labs: [01.03-vic-bank-d018]
 ---
 
 # VIC-II 16 KiB banks

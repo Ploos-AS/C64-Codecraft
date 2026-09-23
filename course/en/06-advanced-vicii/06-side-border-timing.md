@@ -4,7 +4,7 @@ course: 06-advanced-vicii
 lesson: 06
 level: advanced
 prerequisites: [05-opening-borders]
-labs: [side-border-timing]
+labs: [06.06-side-border-timing]
 ---
 # Side-border timing
 A side-border effect requires register activity inside a narrow horizontal timing window. Raster-line synchronization alone is therefore insufficient: the critical write must occur at the intended cycle phase.

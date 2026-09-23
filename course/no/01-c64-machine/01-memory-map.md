@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 01
 level: beginner
 prerequisites: [00-intro/18-tabellstyrt-screen]
-labs: [memory-map]
+labs: [01.01-memory-map]
 ---
 
 # 64 KiB memory map

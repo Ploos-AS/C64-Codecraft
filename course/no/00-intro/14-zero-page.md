@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 14
 level: absolute-beginner
 prerequisites: [13-adresseringsmodi]
-labs: [zero-page]
+labs: [00.05-zero-page-pointer]
 ---
 
 # Zero page — verdifullt lavt minne

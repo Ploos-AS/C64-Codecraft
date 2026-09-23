@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 06
 level: intermediate
 prerequisites: [05-badlines]
-labs: [border-timing-probe]
+labs: [02.06-border-timing-probe]
 ---
 # Border som timing probe
 En border-colour-write gir et synlig merke for når kode kjører relativt til raster.

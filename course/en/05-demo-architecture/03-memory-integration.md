@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 03
 level: advanced
 prerequisites: [02-frame-budget]
-labs: [integrated-memory-map]
+labs: [05.03-memory-integration]
 ---
 # Integrate the memory map
 Now place code and data together: main code, IRQ code, zero-page state, music/player, screen matrices, charset/DYCP data, sprite frames, tables and buffers.

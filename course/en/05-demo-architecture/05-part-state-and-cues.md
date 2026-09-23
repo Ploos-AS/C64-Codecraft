@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 05
 level: advanced
 prerequisites: [04-irq-chain]
-labs: [part-cues]
+labs: [05.05-part-state-and-cues]
 ---
 # Part state and music cues
 Keep musical events separate from low-level effect implementation.

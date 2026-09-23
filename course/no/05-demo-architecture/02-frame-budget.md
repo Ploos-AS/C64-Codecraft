@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 02
 level: advanced
 prerequisites: [01-part-design]
-labs: [frame-budget]
+labs: [05.02-frame-budget]
 ---
 # Bygg frame budget
 List alle recurring jobs og hvor de kan kjøre: IRQ entry/exit, music play, rasterbar writes, scroller fine update, periodisk coarse update, sprite movement/animation, cue handling og deferred preparation.

@@ -4,7 +4,7 @@ course: 07-bitmap-high-colour
 lesson: 01
 level: advanced
 prerequisites: [06-advanced-vicii/07-composing-vicii-tricks]
-labs: [hires-bitmap]
+labs: [07.01-hires-bitmap-layout]
 ---
 # Hires bitmap mode
 Bitmap mode changes how VIC-II interprets display memory. Instead of selecting character glyphs for each screen cell, bitmap data supplies pixel patterns while screen memory contributes colour information.

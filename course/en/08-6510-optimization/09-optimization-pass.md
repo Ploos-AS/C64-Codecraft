@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 09
 level: advanced
 prerequisites: [08-size-vs-speed]
-labs: [optimization-pass]
+labs: [08.09-optimization-pass]
 ---
 # A complete optimization pass
 Return to a real effect from the mini-demo or advanced VIC-II work.

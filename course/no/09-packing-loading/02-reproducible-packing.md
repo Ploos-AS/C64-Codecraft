@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 02
 level: advanced
 prerequisites: [01-hvorfor-pakke]
-labs: [reproducible-packing]
+labs: [09.02-reproducible-packing]
 ---
 # Reproducible packing
 Et build skal dokumentere nøyaktig hvordan packed data ble produsert:

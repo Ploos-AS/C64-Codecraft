@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 02
 level: advanced
 prerequisites: [01-why-pack]
-labs: [reproducible-packing]
+labs: [09.02-reproducible-packing]
 ---
 # Reproducible packing
 A build should record exactly how packed data was produced:

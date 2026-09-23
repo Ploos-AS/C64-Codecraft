@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 04
 level: intermediate
 prerequisites: [03-text-stream]
-labs: [colour-scroller]
+labs: [03.04-colour-scroll]
 ---
 # Colour in the scroller
 Screen RAM and colour RAM are separate. If the visual design expects colour to move with character cells, the effect must update both representations deliberately.

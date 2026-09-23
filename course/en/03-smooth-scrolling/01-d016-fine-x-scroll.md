@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 01
 level: intermediate
 prerequisites: [02-raster-timing/10-raster-splits]
-labs: [fine-x-scroll]
+labs: [03.01-d016-fine-x]
 ---
 # $D016 fine X scrolling
 The low three X-scroll bits in $D016 let VIC-II shift character display horizontally by sub-character steps. Other bits in $D016 control unrelated display features, so preserve them.

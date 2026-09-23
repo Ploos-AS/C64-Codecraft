@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 02
 level: beginner
 prerequisites: [01-memory-map]
-labs: [banking-observation]
+labs: [01.02-banking]
 ---
 
 # Banking med $00 og $01

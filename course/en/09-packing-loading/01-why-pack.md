@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 01
 level: advanced
 prerequisites: [08-6510-optimization/09-optimization-pass]
-labs: [packing-baseline]
+labs: [09.01-why-pack]
 ---
 # Why pack demo data?
 Packing reduces stored size by transforming code or assets into a compressed representation plus a depacking step.

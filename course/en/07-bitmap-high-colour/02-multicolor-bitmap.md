@@ -4,7 +4,7 @@ course: 07-bitmap-high-colour
 lesson: 02
 level: advanced
 prerequisites: [01-hires-bitmap]
-labs: [multicolor-bitmap]
+labs: [07.02-multicolor-bitmap-data]
 ---
 # Multicolor bitmap mode
 Multicolor bitmap interprets pixel data in two-bit groups. This provides more colour selections within each 8x8 cell at the cost of horizontal resolution.

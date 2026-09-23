@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 05
 level: capstone
 prerequisites: [04-effects-og-assets]
-labs: [capstone-sync]
+labs: [11.05-sync-flow]
 ---
 # Music sync og flow
 Gjør cues til production structure.

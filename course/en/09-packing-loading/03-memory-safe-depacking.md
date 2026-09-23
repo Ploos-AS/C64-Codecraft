@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 03
 level: advanced
 prerequisites: [02-reproducible-packing]
-labs: [depacking-map]
+labs: [09.03-memory-safe-depacking]
 ---
 # Memory-safe depacking
 A depacker reads compressed input, writes expanded output and executes code while both representations may temporarily coexist.

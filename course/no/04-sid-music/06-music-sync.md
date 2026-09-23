@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 06
 level: intermediate
 prerequisites: [05-pal-ntsc-playback]
-labs: [music-sync]
+labs: [04.06-music-sync]
 ---
 # Synkroniser visuals til music
 Visual synchronization trenger en pålitelig source for musical state.

@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 01
 level: beginner
 prerequisites: [00-intro/18-table-driven-screen]
-labs: [memory-map]
+labs: [01.01-memory-map]
 ---
 
 # The 64 KiB memory map

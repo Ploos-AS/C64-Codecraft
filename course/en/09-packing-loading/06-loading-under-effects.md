@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 06
 level: advanced
 prerequisites: [05-loader-basics]
-labs: [loading-under-effects]
+labs: [09.06-loading-under-effects]
 ---
 # Loading while the demo continues
 A seamless transition may require music or a visual effect to remain alive while data for the next part is loaded.

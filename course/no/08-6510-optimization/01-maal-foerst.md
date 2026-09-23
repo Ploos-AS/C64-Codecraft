@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 01
 level: advanced
 prerequisites: [07-bitmap-high-colour/07-high-colour-integration]
-labs: [optimization-baseline]
+labs: [08.01-measure-first]
 ---
 # Mål før du optimaliserer
 Velg en virkelig hot path fra en tidligere effect. Noter instruction path, cycles under relevante conditions, code/data-bytes, call frequency og timing deadline.

@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 04
 level: beginner
 prerequisites: [03-vic-ii-register-map]
-labs: [cia-map]
+labs: []
 ---
 
 # Meet CIA1 and CIA2

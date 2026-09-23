@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 04
 level: intermediate
 prerequisites: [03-first-raster-irq]
-labs: [cycle-budget]
+labs: [02.04-cycle-budget-probe]
 ---
 # Cycle budgets
 Instruction-cycle counts now become a budget. For a specific VIC-II model a raster line has a fixed timing structure, while VIC-II can also take bus time from the CPU.

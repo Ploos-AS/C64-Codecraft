@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 06
 level: absolute-beginner
 prerequisites: [05-lda-immediate]
-labs: [first-border-colour]
+labs: [00.01-first-vic-write]
 ---
 
 # STA and your first visible C64 result

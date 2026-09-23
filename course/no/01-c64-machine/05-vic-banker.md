@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 05
 level: beginner
 prerequisites: [04-moet-cia]
-labs: [vic-bank-map]
+labs: [01.03-vic-bank-d018]
 ---
 
 # VIC-II sine 16 KiB-banker

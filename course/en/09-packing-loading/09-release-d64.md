@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 09
 level: advanced
 prerequisites: [08-multipart-demo]
-labs: [release-d64]
+labs: [09.09-release-d64]
 ---
 # Qualify the release disk
 A release image should be reproducible and testable from the repository.

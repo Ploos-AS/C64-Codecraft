@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 08
 level: advanced
 prerequisites: [07-undocumented-opcodes]
-labs: [size-speed-tradeoff]
+labs: [08.08-size-vs-speed]
 ---
 # Size, speed and production constraints
 Fastest is not always best. A 4K intro, a one-file demo part and a disk-loaded multipart production can have very different constraints.

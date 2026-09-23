@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 06
 level: beginner
 prerequisites: [05-vic-banker]
-labs: [d018-decode]
+labs: []
 ---
 
 # $D018 — plassering av screen og charset

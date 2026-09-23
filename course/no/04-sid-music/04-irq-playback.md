@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 04
 level: intermediate
 prerequisites: [03-init-og-play]
-labs: [irq-music-playback]
+labs: [04.04-frame-playback]
 ---
 # Schedule music playback
 En music play routine trenger pålitelig cadence. Raster IRQ kan gi denne cadence samtidig som den deltar i visual frame schedule.

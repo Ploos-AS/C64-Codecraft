@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 03
 level: intermediate
 prerequisites: [02-fine-pluss-coarse]
-labs: [scroll-text-stream]
+labs: [03.03-text-stream]
 ---
 # Gi scrolleren en text stream
 En scroller trenger state utenfor den synlige raden: pointer eller index inn i message-data.

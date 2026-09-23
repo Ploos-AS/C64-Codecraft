@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 03
 level: advanced
 prerequisites: [02-zero-page-strategy]
-labs: [page-boundaries]
+labs: [08.03-page-boundaries]
 ---
 # Page boundaries and deterministic timing
 Some indexed memory accesses can incur an extra cycle when the effective address crosses a page boundary. Branch timing also depends on whether a taken branch crosses a page.

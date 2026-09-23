@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 04
 level: intermediate
 prerequisites: [03-foerste-raster-irq]
-labs: [cycle-budget]
+labs: [02.04-cycle-budget-probe]
 ---
 # Cycle budgets
 Instruction-cycle-tall blir nå et budsjett. For en bestemt VIC-II-modell har en raster line fast timing-struktur, mens VIC-II også kan ta bus-tid fra CPU-en.

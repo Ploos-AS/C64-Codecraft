@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 03
 level: intermediate
 prerequisites: [02-fine-plus-coarse]
-labs: [scroll-text-stream]
+labs: [03.03-text-stream]
 ---
 # Feed the scroller a text stream
 A scroller needs state beyond the visible row: a pointer or index into message data.

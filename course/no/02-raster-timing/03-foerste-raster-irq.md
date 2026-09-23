@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 03
 level: intermediate
 prerequisites: [02-d011-d012]
-labs: [first-raster-irq]
+labs: [02.03-irq-contract]
 ---
 # Din første raster IRQ
 En VIC-II raster interrupt kan be om CPU-oppmerksomhet ved en programmert raster line.

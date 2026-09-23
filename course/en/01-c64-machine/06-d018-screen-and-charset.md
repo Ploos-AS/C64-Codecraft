@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 06
 level: beginner
 prerequisites: [05-vic-banks]
-labs: [d018-decode]
+labs: []
 ---
 
 # $D018 — locating screen and character data

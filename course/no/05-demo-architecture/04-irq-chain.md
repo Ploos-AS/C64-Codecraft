@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 04
 level: advanced
 prerequisites: [03-memory-integration]
-labs: [part-irq-chain]
+labs: [05.04-irq-chain-model]
 ---
 # Bygg partens IRQ chain
 Gjør raster-planen om til scheduled handlers.

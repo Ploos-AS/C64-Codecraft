@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 01
 level: intermediate
 prerequisites: [03-smooth-scrolling/10-dycp-optimalisering]
-labs: [sid-register-map]
+labs: [04.01-sid-register-map]
 ---
 # Møt SID
 C64 SID er en programmerbar sound chip med tre voices samt shared filter- og volume/control-funksjoner. Hovedområdet starter ved $D400.

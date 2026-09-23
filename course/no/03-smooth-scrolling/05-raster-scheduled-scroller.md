@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 05
 level: intermediate
 prerequisites: [04-colour-scrolling]
-labs: [raster-scroller]
+labs: [03.05-raster-scheduled-state]
 ---
 # En raster-scheduled smooth scroller
 Nå kombinerer vi blokkene til én effekt:

@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 09
 level: intermediate
 prerequisites: [08-stable-raster]
-labs: [first-rasterbar]
+labs: [02.09-first-rasterbar]
 ---
 # Your first controlled rasterbar
 A rasterbar changes a colour register at controlled raster positions. The beginner version can change $D020 or $D021 across successive lines using a colour table.

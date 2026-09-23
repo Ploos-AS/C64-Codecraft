@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 08
 level: beginner
 prerequisites: [07-demo-memory-plan]
-labs: [custom-character]
+labs: [01.04-custom-character]
 ---
 
 # Your first custom character

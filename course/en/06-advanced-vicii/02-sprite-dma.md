@@ -4,7 +4,7 @@ course: 06-advanced-vicii
 lesson: 02
 level: advanced
 prerequisites: [01-sprite-multiplexing]
-labs: [sprite-dma-timing]
+labs: [06.02-sprite-dma-probe]
 ---
 # Sprite DMA and CPU time
 Visible sprites require VIC-II memory fetches. Those fetches compete with the CPU for bus time, so the CPU budget is not constant across a line when sprite DMA is active.

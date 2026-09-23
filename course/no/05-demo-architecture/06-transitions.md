@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 06
 level: advanced
 prerequisites: [05-part-state-og-cues]
-labs: [part-transitions]
+labs: [05.06-transitions]
 ---
 # Entry, exit og transitions
 En demo-part trenger definerte grenser.

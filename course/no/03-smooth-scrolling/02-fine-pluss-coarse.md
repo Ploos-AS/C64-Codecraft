@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 02
 level: intermediate
 prerequisites: [01-d016-fine-x-scroll]
-labs: [fine-coarse-scroll]
+labs: [03.02-fine-plus-coarse]
 ---
 # Fine pluss coarse scrolling
 En kontinuerlig character scroller har to rytmer.

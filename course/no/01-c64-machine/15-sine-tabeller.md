@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 15
 level: beginner
 prerequisites: [14-sprite-movement-tabeller]
-labs: [sine-table]
+labs: [01.10-sine-movement]
 ---
 
 # Sine tables og precalculation

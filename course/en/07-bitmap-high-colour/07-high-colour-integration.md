@@ -4,7 +4,7 @@ course: 07-bitmap-high-colour
 lesson: 07
 level: advanced
 prerequisites: [06-fli-family]
-labs: [high-colour-integration]
+labs: [07.07-high-colour-integration]
 ---
 # Integrate high-colour graphics
 A high-colour raster routine may consume much of the frame and impose strong memory placement rules. Integration therefore begins with the timing and memory contracts, not with adding features until something breaks.

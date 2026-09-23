@@ -4,7 +4,7 @@ course: 10-production-craft
 lesson: 06
 level: advanced
 prerequisites: [05-credits-and-provenance]
-labs: [release-craft]
+labs: [10.06-release-craft]
 ---
 # Release craft
 A finished binary still needs a clear release package.

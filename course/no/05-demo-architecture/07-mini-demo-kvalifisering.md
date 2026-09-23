@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 07
 level: advanced
 prerequisites: [06-transitions]
-labs: [mini-demo-qualification]
+labs: [05.07-mini-demo-qualification]
 ---
 # Kvalifiser mini-demo-parten
 Den integrerte parten har nå nok bevegelige deler til at «det så riktig ut én gang» ikke er en nyttig acceptance test.

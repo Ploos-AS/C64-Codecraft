@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 06
 level: intermediate
 prerequisites: [05-raster-scheduled-scroller]
-labs: [phase-shifted-sine]
+labs: [03.06-phase-shifted-sine]
 ---
 # Phase-shifted sine motion
 One sine lookup moves one object periodically. Several lookups with different phase offsets create a wave.

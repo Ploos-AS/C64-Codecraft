@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 04
 level: capstone
 prerequisites: [03-first-playable]
-labs: [capstone-effects]
+labs: [11.04-effects-assets]
 ---
 # Effects and assets
 Implement the production's chosen effects because they support the concept, not because the course mentioned them.

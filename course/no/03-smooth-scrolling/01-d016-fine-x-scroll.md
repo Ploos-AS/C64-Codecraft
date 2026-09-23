@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 01
 level: intermediate
 prerequisites: [02-raster-timing/10-raster-splits]
-labs: [fine-x-scroll]
+labs: [03.01-d016-fine-x]
 ---
 # $D016 fine X scrolling
 De lave tre X-scroll-bitene i $D016 lar VIC-II flytte character-display horisontalt i sub-character-steg. Andre bits i $D016 styrer andre display features og må bevares.

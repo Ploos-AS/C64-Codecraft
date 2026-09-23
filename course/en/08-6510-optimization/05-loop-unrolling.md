@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 05
 level: advanced
 prerequisites: [04-tables-and-precalculation]
-labs: [loop-unrolling]
+labs: [08.05-loop-unrolling]
 ---
 # Loop unrolling
 A loop spends time on control: index updates, comparisons and branches. Unrolling duplicates the body so fewer control operations execute.

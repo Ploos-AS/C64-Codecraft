@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 07
 level: intermediate
 prerequisites: [06-border-som-timing-probe]
-labs: [irq-jitter]
+labs: [02.07-irq-jitter-probe]
 ---
 # IRQ jitter
 En raster IRQ ber om service ved en definert videoposisjon, men CPU-en starter ikke nødvendigvis første handler-instruksjon på nøyaktig samme cycle hver gang.

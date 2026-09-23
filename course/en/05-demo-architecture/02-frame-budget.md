@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 02
 level: advanced
 prerequisites: [01-part-design]
-labs: [frame-budget]
+labs: [05.02-frame-budget]
 ---
 # Build the frame budget
 List every recurring job and where it may execute: IRQ entry/exit, music play, rasterbar writes, scroller fine update, occasional coarse update, sprite movement and animation, cue handling and deferred preparation.

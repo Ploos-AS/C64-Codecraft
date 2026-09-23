@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 13
 level: absolute-beginner
 prerequisites: [12-first-colour-table]
-labs: [addressing-modes]
+labs: []
 ---
 
 # Addressing modes — same instruction, different source

@@ -4,7 +4,7 @@ course: 06-advanced-vicii
 lesson: 05
 level: advanced
 prerequisites: [04-line-crunching]
-labs: [border-opening]
+labs: [06.05-opening-borders]
 ---
 # Åpne borders
 Normal C64-display har border-regions styrt av VIC-II display sequencing. Nøye timede endringer i display-control state kan påvirke når border state etableres eller slippes, slik at graphics kan bli synlig i områder som normalt dekkes av border.

@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 07
 level: intermediate
 prerequisites: [06-phase-shifted-sine]
-labs: [dycp-paper-design]
+labs: [03.07-dycp-concept]
 ---
 # DYCP-konseptet
 **DYCP** betyr *Different Y Character Positions*. I stedet for at alle characters i scrolleren deler samme vertikale baseline kan hvert tegn vises på forskjellig Y-posisjon, ofte langs en bølge.

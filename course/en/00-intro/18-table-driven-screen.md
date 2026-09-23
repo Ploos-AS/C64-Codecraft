@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 18
 level: absolute-beginner
 prerequisites: [17-fill-a-screen-row]
-labs: [table-screen-effect]
+labs: [00.09-table-driven-screen]
 ---
 
 # A table-driven screen effect

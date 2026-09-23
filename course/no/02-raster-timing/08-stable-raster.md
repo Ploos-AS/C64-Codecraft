@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 08
 level: intermediate
 prerequisites: [07-irq-jitter]
-labs: [stable-raster]
+labs: [02.08-stable-raster-method]
 ---
 # Mot en stable raster
 En stable raster-rutine skiller to oppgaver:

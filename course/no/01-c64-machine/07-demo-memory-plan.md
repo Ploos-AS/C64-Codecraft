@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 07
 level: beginner
 prerequisites: [06-d018-screen-og-charset]
-labs: [memory-plan]
+labs: []
 ---
 
 # Planlegg minnet før effekten

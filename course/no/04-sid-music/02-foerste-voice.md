@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 02
 level: intermediate
 prerequisites: [01-moet-sid]
-labs: [first-sid-voice]
+labs: [04.02-first-voice]
 ---
 # Én SID voice
 For å forstå en player senere styrer vi først én voice direkte.

@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 13
 level: beginner
 prerequisites: [12-first-sprite]
-labs: [sprite-position]
+labs: [01.09-sprite-9bit-x]
 ---
 
 # Sprite movement and 9-bit X

@@ -4,7 +4,7 @@ course: 10-production-craft
 lesson: 05
 level: advanced
 prerequisites: [04-scene-tools]
-labs: [credits-provenance]
+labs: [10.05-credits-provenance]
 ---
 # Credits, licenses og provenance
 Scene culture verdsetter credit, og et public source repository trenger også tydelig legal provenance.

@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 04
 level: capstone
 prerequisites: [03-first-playable]
-labs: [capstone-effects]
+labs: [11.04-effects-assets]
 ---
 # Effects og assets
 Implementer productionens valgte effects fordi de støtter konseptet, ikke fordi kurset nevnte dem.

@@ -4,7 +4,7 @@ course: 10-production-craft
 lesson: 04
 level: advanced
 prerequisites: [03-debugger-workflow]
-labs: [scene-tools]
+labs: [10.04-scene-tools]
 ---
 # Arbeid med scene-tools
 En production kan kombinere command-line assemblers med spesialiserte graphics-, music- og debugging-tools.

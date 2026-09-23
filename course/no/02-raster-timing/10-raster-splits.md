@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 10
 level: intermediate
 prerequisites: [09-foerste-rasterbar]
-labs: [raster-splits]
+labs: [02.10-raster-splits]
 ---
 # Raster splits og IRQ scheduling
 En raster split endrer display state på valgt vertikal posisjon slik at forskjellige regioner i samme frame kan bruke forskjellige innstillinger.

@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 05
 level: intermediate
 prerequisites: [04-irq-playback]
-labs: [playback-cadence]
+labs: [04.05-playback-rate-model]
 ---
 # PAL, NTSC og playback cadence
 En tune kan forvente calls knyttet til en bestemt video/frame rate eller annen timing source. PAL og NTSC har ikke identisk frame timing.

@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 02
 level: advanced
 prerequisites: [01-maal-foerst]
-labs: [zero-page-strategy]
+labs: [08.02-zero-page-strategy]
 ---
 # Zero-page strategy
 Zero page gir kortere og ofte raskere addressing forms og kreves av viktige indirect addressing modes. Men zero-page-space er delt, begrenset og kan også brukes av operating environment eller integrerte players.

@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 01
 level: intermediate
 prerequisites: [03-smooth-scrolling/10-dycp-optimization]
-labs: [sid-register-map]
+labs: [04.01-sid-register-map]
 ---
 # Meet the SID
 The C64 SID is a programmable sound chip with three voices plus shared filter and volume/control facilities. Its main register area begins at $D400.

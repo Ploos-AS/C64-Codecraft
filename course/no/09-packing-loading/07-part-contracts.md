@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 07
 level: advanced
 prerequisites: [06-loading-under-effects]
-labs: [multipart-contracts]
+labs: [09.07-part-contracts]
 ---
 # Contracts mellom demo-parts
 Hver part skal deklarere hva den trenger ved entry og hva den garanterer ved exit.

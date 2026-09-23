@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 13
 level: absolute-beginner
 prerequisites: [12-foerste-fargetabell]
-labs: [addressing-modes]
+labs: []
 ---
 
 # Adresseringsmodi — samme instruksjon, forskjellig kilde

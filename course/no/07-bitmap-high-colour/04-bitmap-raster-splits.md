@@ -4,7 +4,7 @@ course: 07-bitmap-high-colour
 lesson: 04
 level: advanced
 prerequisites: [03-asset-pipeline]
-labs: [bitmap-raster-splits]
+labs: [07.04-bitmap-raster-splits]
 ---
 # Raster splits i bitmap graphics
 Et bitmap tvinger ikke én display state for hele framen. Raster-scheduled writes kan endre valgt VIC-II-state mellom regioner.

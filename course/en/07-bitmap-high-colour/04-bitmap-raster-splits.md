@@ -4,7 +4,7 @@ course: 07-bitmap-high-colour
 lesson: 04
 level: advanced
 prerequisites: [03-asset-pipeline]
-labs: [bitmap-raster-splits]
+labs: [07.04-bitmap-raster-splits]
 ---
 # Raster splits inside bitmap graphics
 A bitmap does not force one display state for the entire frame. Raster-scheduled writes can change selected VIC-II state between regions.

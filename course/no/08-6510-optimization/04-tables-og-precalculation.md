@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 04
 level: advanced
 prerequisites: [03-page-boundaries]
-labs: [precalculation-tradeoffs]
+labs: [08.04-tables-precalc]
 ---
 # Tables og precalculation
 6510 er ofte raskest når dyre decisions allerede er tatt.

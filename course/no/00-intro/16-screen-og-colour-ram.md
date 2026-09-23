@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 16
 level: absolute-beginner
 prerequisites: [15-pointers-og-indirect-y]
-labs: [first-screen-write]
+labs: [00.07-screen-and-colour]
 ---
 
 # Screen RAM og colour RAM

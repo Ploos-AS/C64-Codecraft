@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 07
 level: capstone
 prerequisites: [06-optimize-og-integrate]
-labs: [capstone-qualification]
+labs: [11.07-qualification]
 ---
 # Kvalifisering
 Oppgi hva releasen støtter.

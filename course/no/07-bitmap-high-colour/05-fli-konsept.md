@@ -4,7 +4,7 @@ course: 07-bitmap-high-colour
 lesson: 05
 level: advanced
 prerequisites: [04-bitmap-raster-splits]
-labs: [fli-model]
+labs: [07.05-fli-concept]
 ---
 # FLI-konseptet
 FLI (*Flexible Line Interpretation*) er en family-defining idé: nøye timede VIC-II registerendringer påvirker display-fetch behaviour slik at colour/display-information kan oppdateres oftere enn i vanlig bitmap-oppsett.

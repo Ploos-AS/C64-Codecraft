@@ -4,7 +4,7 @@ course: 06-advanced-vicii
 lesson: 01
 level: advanced
 prerequisites: [05-demo-architecture/07-mini-demo-qualification]
-labs: [sprite-multiplexer]
+labs: [06.01-sprite-multiplex-model]
 ---
 # Sprite multiplexing
 The VIC-II exposes eight hardware sprites, but those sprite units can be reused at different vertical positions during one frame.

@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 09
 level: capstone
 prerequisites: [08-release]
-labs: [capstone-postmortem]
+labs: [11.09-postmortem]
 ---
 # Demo-koder postmortem
 Etter release skriver du engineering story.

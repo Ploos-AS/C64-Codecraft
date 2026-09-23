@@ -4,7 +4,7 @@ course: 07-bitmap-high-colour
 lesson: 02
 level: advanced
 prerequisites: [01-hires-bitmap]
-labs: [multicolor-bitmap]
+labs: [07.02-multicolor-bitmap-data]
 ---
 # Multicolor bitmap mode
 Multicolor bitmap tolker pixel-data i to-bit groups. Det gir flere colour selections innenfor hver 8x8-cell mot lavere horizontal resolution.

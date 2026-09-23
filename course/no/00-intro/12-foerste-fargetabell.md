@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 12
 level: absolute-beginner
 prerequisites: [11-indeksert-adressering-og-tabeller]
-labs: [colour-table]
+labs: []
 ---
 
 # Din første datadrevne fargeeffekt

@@ -4,7 +4,7 @@ course: 07-bitmap-high-colour
 lesson: 06
 level: advanced
 prerequisites: [05-fli-konsept]
-labs: [fli-family-comparison]
+labs: [07.06-fli-family]
 ---
 # FLI-family trade-offs
 Det finnes ikke én universell high-colour-løsning. FLI-relaterte teknikker og senere variants gjør forskjellige kompromisser mellom colour freedom, visible artifacts, border behaviour, CPU availability, memory layout og converter support.

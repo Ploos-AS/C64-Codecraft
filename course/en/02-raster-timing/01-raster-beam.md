@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 01
 level: intermediate
 prerequisites: [01-c64-machine/17-sprite-animation]
-labs: [raster-observation]
+labs: [02.01-raster-beam]
 ---
 # Think in raster lines
 VIC-II builds the video image over time. Raster position advances through scan lines and then starts a new frame. A register write can therefore affect different parts of one frame depending on when it occurs.

@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 11
 level: beginner
 prerequisites: [10-character-animasjon]
-labs: [coarse-scroll]
+labs: [01.07-char-scroll-data]
 ---
 
 # Coarse character scrolling

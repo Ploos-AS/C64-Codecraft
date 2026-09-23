@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 08
 level: advanced
 prerequisites: [07-part-contracts]
-labs: [multipart-demo]
+labs: [09.08-multipart-demo]
 ---
 # Sett sammen en multipart demo
 En multipart demo er nå en sekvens av eksplisitte states:

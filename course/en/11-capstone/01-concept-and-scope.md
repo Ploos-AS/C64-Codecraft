@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 01
 level: capstone
 prerequisites: [10-production-craft/07-production-review]
-labs: [capstone-brief]
+labs: [11.01-concept-scope]
 ---
 # Concept and scope
 Start with a production idea, not a technology checklist.

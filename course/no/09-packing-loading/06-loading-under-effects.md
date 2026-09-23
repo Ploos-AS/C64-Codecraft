@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 06
 level: advanced
 prerequisites: [05-loader-basics]
-labs: [loading-under-effects]
+labs: [09.06-loading-under-effects]
 ---
 # Loading mens demoen fortsetter
 En seamless transition kan kreve at music eller en visual effect lever videre mens data til neste part lastes.

@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 03
 level: beginner
 prerequisites: [02-banking-00-01]
-labs: [vic-register-map]
+labs: []
 ---
 
 # VIC-II as a register block

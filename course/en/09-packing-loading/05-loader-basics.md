@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 05
 level: advanced
 prerequisites: [04-disk-image]
-labs: [loader-contract]
+labs: [09.05-loader-basics]
 ---
 # Loader basics and contracts
 A loader moves data from storage into the memory layout required by the production.

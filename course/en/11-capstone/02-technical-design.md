@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 02
 level: capstone
 prerequisites: [01-concept-and-scope]
-labs: [capstone-design]
+labs: [11.02-technical-design]
 ---
 # Technical design
 Create the engineering maps before the production grows.

@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 09
 level: intermediate
 prerequisites: [08-stable-raster]
-labs: [first-rasterbar]
+labs: [02.09-first-rasterbar]
 ---
 # Din første kontrollerte rasterbar
 En rasterbar endrer et colour register på kontrollerte rasterposisjoner. Nybegynnerversjonen kan endre $D020 eller $D021 over flere linjer fra en colour table.

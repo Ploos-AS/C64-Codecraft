@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 06
 level: capstone
 prerequisites: [05-sync-og-flow]
-labs: [capstone-optimization]
+labs: [11.06-optimize-integrate]
 ---
 # Optimize den integrerte produksjonen
 Optimaliser nå produksjonen som faktisk finnes.

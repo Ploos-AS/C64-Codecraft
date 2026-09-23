@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 01
 level: advanced
 prerequisites: [07-bitmap-high-colour/07-high-colour-integration]
-labs: [optimization-baseline]
+labs: [08.01-measure-first]
 ---
 # Measure before optimizing
 Choose a real hot path from an earlier effect. Record its instruction path, cycles under relevant conditions, bytes of code/data, call frequency and timing deadline.

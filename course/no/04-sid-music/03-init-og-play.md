@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 03
 level: intermediate
 prerequisites: [02-foerste-voice]
-labs: [music-init-play]
+labs: [04.03-init-play-contract]
 ---
 # Music init og play routines
 Mange C64 music players eksponerer et lite machine-code-interface: initialization entry point som kalles én gang og play entry point som kalles gjentatte ganger med nødvendig rate.

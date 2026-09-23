@@ -4,7 +4,7 @@ course: 06-advanced-vicii
 lesson: 03
 level: advanced
 prerequisites: [02-sprite-dma]
-labs: [fld]
+labs: [06.03-fld-observation]
 ---
 # FLD — flexible line distance
 FLD (*Flexible Line Distance*) manipulerer VIC-II vertical display timing slik at character rows kan forskyves og gi kontrollerte vertikale gaps/movement.

@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 17
 level: absolute-beginner
 prerequisites: [16-screen-og-colour-ram]
-labs: [screen-row]
+labs: [00.08-fill-row]
 ---
 
 # Fyll en screen-rad

@@ -4,7 +4,7 @@ course: 10-production-craft
 lesson: 02
 level: advanced
 prerequisites: [01-project-layout]
-labs: [assembler-dialects]
+labs: [10.02-assembler-dialects]
 ---
 # Read real assembler dialects
 The 6510 instruction set is the machine; assembler syntax is a tool interface.

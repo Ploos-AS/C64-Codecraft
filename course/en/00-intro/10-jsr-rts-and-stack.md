@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 10
 level: absolute-beginner
 prerequisites: [09-first-colour-loop]
-labs: [first-subroutine]
+labs: [00.03-subroutine-stack]
 ---
 
 # JSR, RTS and the stack

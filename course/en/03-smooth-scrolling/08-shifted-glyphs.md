@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 08
 level: intermediate
 prerequisites: [07-dycp-concept]
-labs: [shifted-glyphs]
+labs: [03.08-shifted-glyphs]
 ---
 # Build vertically shifted glyphs
 An 8x8 glyph is eight row bytes. Moving its visible pixels vertically means choosing where those source rows appear in a larger destination window.

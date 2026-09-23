@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 05
 level: advanced
 prerequisites: [04-disk-image]
-labs: [loader-contract]
+labs: [09.05-loader-basics]
 ---
 # Loader basics og contracts
 En loader flytter data fra storage til memory layout produksjonen trenger.

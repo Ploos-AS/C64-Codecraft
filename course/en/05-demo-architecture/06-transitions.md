@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 06
 level: advanced
 prerequisites: [05-part-state-and-cues]
-labs: [part-transitions]
+labs: [05.06-transitions]
 ---
 # Entry, exit and transitions
 A demo part needs defined boundaries.

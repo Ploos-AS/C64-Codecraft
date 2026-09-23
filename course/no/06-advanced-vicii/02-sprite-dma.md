@@ -4,7 +4,7 @@ course: 06-advanced-vicii
 lesson: 02
 level: advanced
 prerequisites: [01-sprite-multiplexing]
-labs: [sprite-dma-timing]
+labs: [06.02-sprite-dma-probe]
 ---
 # Sprite DMA og CPU-tid
 Synlige sprites krever VIC-II memory fetches. Disse konkurrerer med CPU-en om bus time, så CPU-budget er ikke konstant over en line når sprite DMA er aktiv.

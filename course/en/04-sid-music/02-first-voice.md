@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 02
 level: intermediate
 prerequisites: [01-meet-the-sid]
-labs: [first-sid-voice]
+labs: [04.02-first-voice]
 ---
 # One SID voice
 To understand a player later, first control one voice directly.

@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 07
 level: advanced
 prerequisites: [06-self-modifying-code]
-labs: [undocumented-opcodes]
+labs: [08.07-undocumented-opcodes]
 ---
 # Undocumented opcodes
 The NMOS 6510 has instruction encodings beyond the documented instruction set. Some have historically been used in C64 software and demos because a useful combined operation can save bytes or cycles.

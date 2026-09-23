@@ -4,7 +4,7 @@ course: 06-advanced-vicii
 lesson: 07
 level: advanced
 prerequisites: [06-side-border-timing]
-labs: [advanced-vicii-composition]
+labs: [06.07-composing-vicii-tricks]
 ---
 # Kombiner avanserte VIC-II effects
 En teknikk som virker alene kan feile når en annen effect endrer DMA, register state eller tilgjengelige cycles.

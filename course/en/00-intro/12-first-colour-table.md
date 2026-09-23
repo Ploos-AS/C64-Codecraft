@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 12
 level: absolute-beginner
 prerequisites: [11-indexed-addressing-and-tables]
-labs: [colour-table]
+labs: []
 ---
 
 # Your first data-driven colour effect

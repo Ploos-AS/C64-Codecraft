@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 05
 level: intermediate
 prerequisites: [04-cycle-budgets]
-labs: [badline-observation]
+labs: [02.05-badline-observation]
 ---
 # Badlines og VIC-II bus-tid
 I normale character display modes gjør VIC-II periodisk ekstra memory fetches for display-data. Disse **badlines** reduserer CPU-tiden på de aktuelle rasterlinjene.

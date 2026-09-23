@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 03
 level: capstone
 prerequisites: [02-technical-design]
-labs: [capstone-skeleton]
+labs: [11.03-first-playable]
 ---
 # First playable build
 Lag en stygg, men komplett path gjennom produksjonen.

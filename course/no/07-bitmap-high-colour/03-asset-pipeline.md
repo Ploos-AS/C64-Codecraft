@@ -4,7 +4,7 @@ course: 07-bitmap-high-colour
 lesson: 03
 level: advanced
 prerequisites: [02-multicolor-bitmap]
-labs: [bitmap-pipeline]
+labs: [07.03-asset-pipeline]
 ---
 # En reproducible graphics pipeline
 Reelle productions skriver sjelden tusenvis av bitmap-bytes manuelt. Artwork lages eller konverteres med eksterne tools og assembleres deretter inn i produksjonen.

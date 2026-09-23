@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 11
 level: absolute-beginner
 prerequisites: [10-jsr-rts-and-stack]
-labs: [first-table]
+labs: [00.04-table-indexing]
 ---
 
 # Indexed addressing and tables

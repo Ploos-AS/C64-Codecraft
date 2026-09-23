@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 14
 level: beginner
 prerequisites: [13-sprite-positioning]
-labs: [sprite-movement-table]
+labs: []
 ---
 
 # Sprite movement tables

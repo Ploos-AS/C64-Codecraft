@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 09
 level: intermediate
 prerequisites: [08-shifted-glyphs]
-labs: [first-dycp]
+labs: [03.09-first-dycp]
 ---
 # Bygg første DYCP
 Nå kombinerer vi fire systemer:

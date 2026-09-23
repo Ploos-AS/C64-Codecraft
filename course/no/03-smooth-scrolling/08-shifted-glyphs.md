@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 08
 level: intermediate
 prerequisites: [07-dycp-konsept]
-labs: [shifted-glyphs]
+labs: [03.08-shifted-glyphs]
 ---
 # Bygg vertically shifted glyphs
 Et 8x8 glyph består av åtte row-bytes. Å flytte synlige pixels vertikalt betyr å velge hvor source rows havner i et større destination-vindu.

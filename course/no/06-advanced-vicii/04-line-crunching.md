@@ -4,7 +4,7 @@ course: 06-advanced-vicii
 lesson: 04
 level: advanced
 prerequisites: [03-fld]
-labs: [line-crunch]
+labs: [06.04-line-crunch-probe]
 ---
 # Line crunching
 Line-crunch-effects påvirker bevisst VIC-II display sequencing på snevert definerte rastertidspunkt.

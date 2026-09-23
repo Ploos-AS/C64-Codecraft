@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 10
 level: beginner
 prerequisites: [09-custom-charset]
-labs: [character-animation]
+labs: [01.06-char-animation]
 ---
 
 # Character animation

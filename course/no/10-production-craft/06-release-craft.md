@@ -4,7 +4,7 @@ course: 10-production-craft
 lesson: 06
 level: advanced
 prerequisites: [05-credits-og-provenance]
-labs: [release-craft]
+labs: [10.06-release-craft]
 ---
 # Release craft
 En ferdig binary trenger fortsatt en tydelig release package.

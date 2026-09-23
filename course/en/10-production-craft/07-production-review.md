@@ -4,7 +4,7 @@ course: 10-production-craft
 lesson: 07
 level: advanced
 prerequisites: [06-release-craft]
-labs: [production-review]
+labs: [10.07-production-review]
 ---
 # Production review
 Before the final project, review the teaching production as another coder would.

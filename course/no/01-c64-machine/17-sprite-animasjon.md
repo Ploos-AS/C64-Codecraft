@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 17
 level: beginner
 prerequisites: [16-multicolor-sprites]
-labs: [sprite-animation]
+labs: [01.12-sprite-animation]
 ---
 
 # Sprite-animasjon som data

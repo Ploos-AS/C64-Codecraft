@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 04
 level: advanced
 prerequisites: [03-page-boundaries]
-labs: [precalculation-tradeoffs]
+labs: [08.04-tables-precalc]
 ---
 # Tables and precalculation
 The 6510 is often fastest when expensive decisions have already been made.

@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 04
 level: intermediate
 prerequisites: [03-text-stream]
-labs: [colour-scroller]
+labs: [03.04-colour-scroll]
 ---
 # Colour i scrolleren
 Screen RAM og colour RAM er separate. Hvis designet krever at colour følger character-cellene må effekten oppdatere begge representasjonene bevisst.

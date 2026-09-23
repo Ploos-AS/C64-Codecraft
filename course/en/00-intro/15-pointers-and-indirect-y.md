@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 15
 level: absolute-beginner
 prerequisites: [14-zero-page]
-labs: [first-pointer]
+labs: [00.06-indirect-indexed]
 ---
 
 # Pointers and indirect indexed addressing

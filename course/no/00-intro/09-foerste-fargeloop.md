@@ -4,7 +4,7 @@ course: 00-intro
 lesson: 09
 level: absolute-beginner
 prerequisites: [08-compare-og-branch]
-labs: [colour-loop]
+labs: [00.02-colour-loop]
 ---
 
 # Din første fargeloop

@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 01
 level: advanced
 prerequisites: [04-sid-music/06-music-sync]
-labs: [part-design]
+labs: [05.01-part-design]
 ---
 # Design a demo part
 Before writing the integration code, define the part.

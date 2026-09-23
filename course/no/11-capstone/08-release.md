@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 08
 level: capstone
 prerequisites: [07-kvalifisering]
-labs: [capstone-release]
+labs: [11.08-release]
 ---
 # Ship demoen
 Lag final release fra en clean, identifisert source revision.

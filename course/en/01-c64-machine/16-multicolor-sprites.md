@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 16
 level: beginner
 prerequisites: [15-sine-tables]
-labs: [multicolor-sprite]
+labs: [01.11-multicolor-sprite]
 ---
 
 # Multicolor sprites

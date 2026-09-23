@@ -4,7 +4,7 @@ course: 10-production-craft
 lesson: 01
 level: advanced
 prerequisites: [09-packing-loading/09-release-d64]
-labs: [production-layout]
+labs: [10.01-project-layout]
 ---
 # Organiser en virkelig production
 En større demo trenger source tree som gjør ownership synlig.

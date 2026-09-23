@@ -4,7 +4,7 @@ course: 11-capstone
 lesson: 08
 level: capstone
 prerequisites: [07-qualification]
-labs: [capstone-release]
+labs: [11.08-release]
 ---
 # Ship the demo
 Create the final release from a clean, identified source revision.

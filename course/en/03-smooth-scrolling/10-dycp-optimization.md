@@ -4,7 +4,7 @@ course: 03-smooth-scrolling
 lesson: 10
 level: intermediate
 prerequisites: [09-first-dycp]
-labs: [dycp-optimization]
+labs: [03.10-dycp-optimization]
 ---
 # Optimize the DYCP
 Optimization starts with the measured bottleneck.

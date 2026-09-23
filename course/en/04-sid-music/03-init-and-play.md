@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 03
 level: intermediate
 prerequisites: [02-first-voice]
-labs: [music-init-play]
+labs: [04.03-init-play-contract]
 ---
 # Music init and play routines
 Many C64 music players expose a small machine-code interface: an initialization entry point called once and a play entry point called repeatedly at the required rate.

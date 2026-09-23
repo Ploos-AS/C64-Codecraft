@@ -4,7 +4,7 @@ course: 10-production-craft
 lesson: 03
 level: advanced
 prerequisites: [02-assembler-dialects]
-labs: [debugger-workflow]
+labs: [10.03-debugger-workflow]
 ---
 # Debug with symbols and the VICE monitor
 Low-level debugging becomes much faster when addresses have names.

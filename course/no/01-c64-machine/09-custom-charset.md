@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 09
 level: beginner
 prerequisites: [08-foerste-custom-character]
-labs: [small-custom-charset]
+labs: [01.05-charset-data]
 ---
 
 # Bygg et lite custom charset

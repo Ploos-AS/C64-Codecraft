@@ -4,7 +4,7 @@ course: 05-demo-architecture
 lesson: 07
 level: advanced
 prerequisites: [06-transitions]
-labs: [mini-demo-qualification]
+labs: [05.07-mini-demo-qualification]
 ---
 # Qualify the mini-demo part
 The integrated part now contains enough moving pieces that "it looked okay once" is not a useful acceptance test.

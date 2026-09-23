@@ -4,7 +4,7 @@ course: 09-packing-loading
 lesson: 04
 level: advanced
 prerequisites: [03-memory-safe-depacking]
-labs: [d64-build]
+labs: [09.04-disk-image-contract]
 ---
 # Build a reproducible disk image
 A disk image is a build artifact, not a manually curated mystery file.

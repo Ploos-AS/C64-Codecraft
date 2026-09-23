@@ -4,7 +4,7 @@ course: 01-c64-machine
 lesson: 12
 level: beginner
 prerequisites: [11-character-scrolling]
-labs: [first-sprite]
+labs: [01.08-first-sprite]
 ---
 
 # Your first hardware sprite

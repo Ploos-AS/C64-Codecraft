@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 02
 level: advanced
 prerequisites: [01-measure-first]
-labs: [zero-page-strategy]
+labs: [08.02-zero-page-strategy]
 ---
 # Zero-page strategy
 Zero page provides shorter and often faster addressing forms, and it is required for important indirect addressing modes. But zero-page space is shared, finite and may also be used by the operating environment or integrated players.

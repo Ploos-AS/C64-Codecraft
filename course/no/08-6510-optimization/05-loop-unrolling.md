@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 05
 level: advanced
 prerequisites: [04-tables-og-precalculation]
-labs: [loop-unrolling]
+labs: [08.05-loop-unrolling]
 ---
 # Loop unrolling
 En loop bruker tid på control: index updates, comparisons og branches. Unrolling dupliserer body slik at færre control operations kjøres.

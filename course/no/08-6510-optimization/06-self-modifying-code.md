@@ -4,7 +4,7 @@ course: 08-6510-optimization
 lesson: 06
 level: advanced
 prerequisites: [05-loop-unrolling]
-labs: [self-modifying-code]
+labs: [08.06-self-modifying-code]
 ---
 # Self-modifying code
 På C64 ligger code normalt i writable RAM. En routine kan derfor endre operand eller opcode i sin egen instruction stream.

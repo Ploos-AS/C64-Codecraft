@@ -4,7 +4,7 @@ course: 04-sid-music
 lesson: 04
 level: intermediate
 prerequisites: [03-init-and-play]
-labs: [irq-music-playback]
+labs: [04.04-frame-playback]
 ---
 # Schedule music playback
 A music play routine needs a reliable cadence. A raster IRQ can provide that cadence while also participating in the visual frame schedule.

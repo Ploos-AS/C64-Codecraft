@@ -4,7 +4,7 @@ course: 02-raster-timing
 lesson: 08
 level: intermediate
 prerequisites: [07-irq-jitter]
-labs: [stable-raster]
+labs: [02.08-stable-raster-method]
 ---
 # Toward a stable raster
 A stable raster routine separates two jobs:
