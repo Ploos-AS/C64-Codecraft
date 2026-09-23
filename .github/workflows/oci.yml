@@ -25,7 +25,12 @@ jobs:
         run: docker run --rm c64-codecraft:m0
       - name: Assemble first course program with native 64tass
         run: |
-          docker run --rm -v "$PWD:/work" c64-codecraft:m0             sh -lc 'make example && test -s build/hello.prg'
+          docker run --rm -v "$PWD:/work" c64-codecraft:m0 \
+            sh -lc 'make example && test -s build/hello.prg'
+      - name: VICE runtime smoke test
+        run: |
+          docker run --rm -v "$PWD:/work" c64-codecraft:m0 \
+            sh -lc 'timeout 20s x64sc -console -sounddev dummy -autostart build/hello.prg -moncommands tests/vice/hello.mon 2>&1 | tee build/vice-smoke.log; grep -qi "d020.*06" build/vice-smoke.log; grep -qi "d021.*0e" build/vice-smoke.log'
 
   debian-full:
     runs-on: ubuntu-latest
