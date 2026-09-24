@@ -31,4 +31,14 @@ except RuntimeError as exc:
 else:
     raise SystemExit('unsupported-opcode fail-closed self-test failed')
 
-print('CPU/RAM harness self-tests: PASS (positive, negative assertion, fail-closed opcode)')
+io_mem = bytearray(65536)
+io_mem[0:3] = bytes([0x8d, 0x20, 0xd0])  # STA $D020
+try:
+    CPU(mem=io_mem, pc=0, a=1).run(limit=1)
+except RuntimeError as exc:
+    if 'C64 I/O write d020' not in str(exc):
+        raise
+else:
+    raise SystemExit('C64 I/O fail-closed self-test failed')
+
+print('CPU/RAM harness self-tests: PASS (positive, negative assertion, fail-closed opcode/I/O)')
