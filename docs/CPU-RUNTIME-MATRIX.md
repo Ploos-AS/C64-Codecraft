@@ -2,7 +2,7 @@
 
 This file tracks the bulk audit for deterministic CPU/RAM qualification.
 `cpu_state` means execution in the repository's deterministic 6502/6510 harness;
-it does not imply VIC-II/SID/CIA/VICE qualification.
+it does not imply VIC-II/SID/CIA/VICE qualification. The harness fails closed on CPU-visible accesses to the C64 I/O window $D000-$DFFF, including effective addresses reached through indexed and indirect addressing.
 
 ## Qualified
 
