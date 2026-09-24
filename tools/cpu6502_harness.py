@@ -75,6 +75,9 @@ class CPU:
             self.a = self.mem[(((hi << 8) | lo) + self.x) & 0xffff]; self.set_zn(self.a)
         elif op == 0x84:  # STY zp
             self.mem[self.fetch()] = self.y
+        elif op == 0x91:  # STA (zp),Y
+            zp = self.fetch(); base = self.mem[zp] | (self.mem[(zp + 1) & 0xff] << 8)
+            self.mem[(base + self.y) & 0xffff] = self.a
         elif op == 0x99:  # STA abs,Y
             lo, hi = self.fetch(), self.fetch()
             self.mem[(((hi << 8) | lo) + self.y) & 0xffff] = self.a
