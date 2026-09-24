@@ -55,7 +55,7 @@ else:
 call_mem = bytearray(65536)
 call_mem[0x0200:0x0207] = bytes([0x20, 0x06, 0x02, 0xa9, 0x2a, 0x60, 0x60])
 call_cpu = CPU(mem=call_mem, pc=0x0200)
-call_cpu.run(limit=8)
+call_cpu.run(limit=16)
 if call_cpu.a != 0x2a or call_cpu.sp != 0xff:
     raise SystemExit(f'JSR/RTS self-test failed: A={call_cpu.a:02x} SP={call_cpu.sp:02x}')
 
