@@ -32,7 +32,7 @@ jobs:
           set -eu
           mkdir -p build
           sudo chown -R "$(id -u):$(id -g)" build
-          docker run --rm c64-codecraft:m0 sh -lc '
+          docker run --rm -v "$PWD/build/open-roms:/roms:ro" c64-codecraft:m0 sh -lc '
             set +e
             x64sc -version > /tmp/version.txt 2>&1
             x64sc -help > /tmp/help.txt 2>&1
@@ -48,11 +48,21 @@ jobs:
             test "$rc" -eq 124
           ' | tee build/vice-capabilities.txt
           test -s build/vice-capabilities.txt
+      - name: Fetch redistributable Open ROMs for VICE
+        run: |
+          sudo mkdir -p build/open-roms
+          sudo chown -R "$(id -u):$(id -g)" build
+          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/kernal_generic.rom -o build/open-roms/kernal.rom
+          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/basic_generic.rom -o build/open-roms/basic.rom
+          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/chargen_openroms.rom -o build/open-roms/chargen.rom
+          test "$(wc -c < build/open-roms/kernal.rom)" -eq 8192
+          test "$(wc -c < build/open-roms/basic.rom)" -eq 8192
+          test "$(wc -c < build/open-roms/chargen.rom)" -eq 4096
       - name: Prove VICE binary-monitor TCP socket
         run: |
           docker run --rm c64-codecraft:m0 sh -lc '
             set -eu
-            timeout 8s x64sc -binarymonitor -binarymonitoraddress ip4://127.0.0.1:6502 -console >/tmp/vice.log 2>&1 &
+            timeout 8s x64sc -binarymonitor -binarymonitoraddress ip4://127.0.0.1:6502 -console -kernal /roms/kernal.rom -basic /roms/basic.rom -chargen /roms/chargen.rom >/tmp/vice.log 2>&1 &
             vice_pid=$!
             trap "kill $vice_pid 2>/dev/null || true" EXIT
             set +e
@@ -98,16 +108,6 @@ jobs:
         with:
           name: vice-capabilities
           path: build/vice-capabilities.txt
-      - name: Fetch redistributable Open ROMs for VICE
-        run: |
-          sudo mkdir -p build/open-roms
-          sudo chown -R "$(id -u):$(id -g)" build
-          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/kernal_generic.rom -o build/open-roms/kernal.rom
-          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/basic_generic.rom -o build/open-roms/basic.rom
-          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/chargen_openroms.rom -o build/open-roms/chargen.rom
-          test "$(wc -c < build/open-roms/kernal.rom)" -eq 8192
-          test "$(wc -c < build/open-roms/basic.rom)" -eq 8192
-          test "$(wc -c < build/open-roms/chargen.rom)" -eq 4096
       - name: Verify canonical PRG payload
         run: |
           test "$(tail -c 11 build/hello.prg | od -An -tx1 | tr -d " \\n")" = "a9068d20d0a90e8d21d060"
