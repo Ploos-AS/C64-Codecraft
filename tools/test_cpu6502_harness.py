@@ -18,9 +18,19 @@ actual = bytes(cpu.mem[0xc000:0xc010])
 if actual != expected:
     raise SystemExit('positive harness self-test failed')
 
+def assert_bytes(label, actual, expected):
+    if actual != expected:
+        raise AssertionError(f'{label}: {actual.hex()} != {expected.hex()}')
+
+assert_bytes('positive RAM assertion', actual, expected)
+
 wrong = bytearray(expected)
 wrong[0] ^= 0xff
-if actual == bytes(wrong):
+try:
+    assert_bytes('intentional mismatch', actual, bytes(wrong))
+except AssertionError:
+    pass
+else:
     raise SystemExit('negative assertion self-test failed to detect mismatch')
 
 try:
