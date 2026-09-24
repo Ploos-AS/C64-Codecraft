@@ -8,7 +8,10 @@ prg = Path(__file__).parent / 'build' / 'loop-unrolling.prg'
 cpu = CPU(mem=load_prg(prg), pc=0x0810)
 cpu.run(limit=512)
 expected = bytes([0x18,0x3c,0x7e,0xff,0xff,0x7e,0x3c,0x18])
-actual = bytes(cpu.mem[0xc000:0xc000+len(expected)])
-if actual != expected:
-    raise SystemExit(f'RAM assertion failed: {actual.hex()} != {expected.hex()}')
+looped = bytes(cpu.mem[0xc000:0xc000+len(expected)])
+unrolled = bytes(cpu.mem[0xc010:0xc010+len(expected)])
+if looped != expected:
+    raise SystemExit(f'looped RAM assertion failed: {looped.hex()} != {expected.hex()}')
+if unrolled != expected:
+    raise SystemExit(f'unrolled RAM assertion failed: {unrolled.hex()} != {expected.hex()}')
 print('05-loop-unrolling runtime PASS')
