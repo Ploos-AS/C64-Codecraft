@@ -34,7 +34,7 @@ jobs:
       - name: Install lab toolchain
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends git ca-certificates make 64tass python3
+          apt-get install -y --no-install-recommends git ca-certificates make 64tass vice python3
       - uses: actions/checkout@v4
       - name: Check Python
         run: python3 --version
