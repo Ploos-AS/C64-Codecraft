@@ -22,6 +22,12 @@ class CPU:
     def set_zn(self, v):
         self.p = (self.p & ~0x82) | (0x80 if v & 0x80 else 0) | (0x02 if v == 0 else 0)
 
+    def read(self, addr):
+        addr &= 0xffff
+        if 0xd000 <= addr <= 0xdfff:
+            raise RuntimeError(f'C64 I/O read {addr:04x} is outside CPU/RAM qualification')
+        return self.mem[addr]
+
     def write(self, addr, value):
         addr &= 0xffff
         if 0xd000 <= addr <= 0xdfff:
@@ -36,9 +42,9 @@ class CPU:
         elif op == 0xa9:  # LDA #imm
             self.a = self.fetch(); self.set_zn(self.a)
         elif op == 0xa5:  # LDA zp
-            self.a = self.mem[self.fetch()]; self.set_zn(self.a)
+            self.a = self.read(self.fetch()); self.set_zn(self.a)
         elif op == 0xa6:  # LDX zp
-            self.x = self.mem[self.fetch()]; self.set_zn(self.x)
+            self.x = self.read(self.fetch()); self.set_zn(self.x)
         elif op == 0xa2:
             self.x = self.fetch(); self.set_zn(self.x)
         elif op == 0x85:  # STA zp
@@ -56,7 +62,7 @@ class CPU:
         elif op == 0x18:  # CLC
             self.p &= ~0x01
         elif op == 0x65:  # ADC zp
-            v = self.mem[self.fetch()]; c = self.p & 1; total = self.a + v + c; result = total & 0xff
+            v = self.read(self.fetch()); c = self.p & 1; total = self.a + v + c; result = total & 0xff
             overflow = (~(self.a ^ v) & (self.a ^ result) & 0x80) != 0
             self.p = (self.p & ~0x41) | (1 if total > 0xff else 0) | (0x40 if overflow else 0)
             self.a = result; self.set_zn(self.a)
@@ -69,20 +75,20 @@ class CPU:
         elif op == 0x49:  # EOR #imm
             self.a ^= self.fetch(); self.set_zn(self.a)
         elif op == 0xb1:  # LDA (zp),Y
-            zp = self.fetch(); lo = self.mem[zp]; hi = self.mem[(zp + 1) & 0xff]
-            self.a = self.mem[(((hi << 8) | lo) + self.y) & 0xffff]; self.set_zn(self.a)
+            zp = self.fetch(); lo = self.read(zp); hi = self.read((zp + 1) & 0xff)
+            self.a = self.read((((hi << 8) | lo) + self.y) & 0xffff); self.set_zn(self.a)
         elif op == 0xad:  # LDA abs
             lo, hi = self.fetch(), self.fetch()
-            self.a = self.mem[(hi << 8) | lo]; self.set_zn(self.a)
+            self.a = self.read((hi << 8) | lo); self.set_zn(self.a)
         elif op == 0xb9:  # LDA abs,Y
             lo, hi = self.fetch(), self.fetch(); self.a = self.mem[(((hi << 8) | lo) + self.y) & 0xffff]; self.set_zn(self.a)
         elif op == 0xbd:
             lo, hi = self.fetch(), self.fetch()
-            self.a = self.mem[(((hi << 8) | lo) + self.x) & 0xffff]; self.set_zn(self.a)
+            self.a = self.read((((hi << 8) | lo) + self.x) & 0xffff); self.set_zn(self.a)
         elif op == 0x84:  # STY zp
             self.mem[self.fetch()] = self.y
         elif op == 0x91:  # STA (zp),Y
-            zp = self.fetch(); base = self.mem[zp] | (self.mem[(zp + 1) & 0xff] << 8)
+            zp = self.fetch(); base = self.read(zp) | (self.read((zp + 1) & 0xff) << 8)
             self.write((base + self.y) & 0xffff, self.a)
         elif op == 0x99:  # STA abs,Y
             lo, hi = self.fetch(), self.fetch()
@@ -93,9 +99,9 @@ class CPU:
             v = self.fetch(); r = (self.y - v) & 0xff
             self.p = (self.p & ~0x83) | (1 if self.y >= v else 0) | (0x80 if r & 0x80 else 0) | (0x02 if r == 0 else 0)
         elif op == 0xc6:  # DEC zp
-            a = self.fetch(); self.mem[a] = (self.mem[a] - 1) & 0xff; self.set_zn(self.mem[a])
+            a = self.fetch(); self.write(a, (self.read(a) - 1) & 0xff); self.set_zn(self.read(a))
         elif op == 0xe6:  # INC zp
-            a = self.fetch(); self.mem[a] = (self.mem[a] + 1) & 0xff; self.set_zn(self.mem[a])
+            a = self.fetch(); self.write(a, (self.read(a) + 1) & 0xff); self.set_zn(self.read(a))
         elif op == 0xc8:  # INY
             self.y = (self.y + 1) & 0xff; self.set_zn(self.y)
         elif op == 0x88:  # DEY
