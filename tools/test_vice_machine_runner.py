@@ -18,6 +18,7 @@ from vice_machine_runner import (
     find_vice,
     qualify,
     require_state_backend,
+    ViceMonitorTranscriptBackend,
 )
 
 profile = MachineProfile()
@@ -83,6 +84,21 @@ with tempfile.TemporaryDirectory() as tmp:
         )
         if result["backend"] != "contract-test" or result["observation"] != observed:
             raise SystemExit("backend integration result changed unexpectedly")
+
+transcript = """
+>D000:D020 05 00 12 34
+C:D800: 01 02 03 04
+"""
+parsed = ViceMonitorTranscriptBackend.parse_memory(transcript)
+if parsed[0xD020] != 0x05 or parsed[0xD021] != 0x00 or parsed[0xD800] != 0x01:
+    raise SystemExit("VICE monitor transcript parser produced wrong memory state")
+
+try:
+    ViceMonitorTranscriptBackend.parse_memory("monitor prompt only")
+except QualificationUnavailable:
+    pass
+else:
+    raise SystemExit("empty monitor transcript did not fail closed")
 
 print(
     "VICE machine-runner contract tests: PASS "
