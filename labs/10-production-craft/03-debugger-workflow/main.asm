@@ -12,7 +12,7 @@ copy:
  lda data,x
  sta $c000,x
  inx
- cpx #7
+ cpx #8
  bne copy
  rts
 data:
