@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import shutil
 import subprocess
+from typing import Protocol
 
 
 class QualificationUnavailable(RuntimeError):
@@ -34,6 +35,17 @@ class MachineObservation:
     memory: dict[int, int] = field(default_factory=dict)
     registers: dict[str, int] = field(default_factory=dict)
     stop_reason: str = ""
+
+
+class StateBackend(Protocol):
+    """Transport boundary for a qualified emulator-state implementation."""
+
+    name: str
+
+    def observe(
+        self, *, binary: str, prg: Path, profile: MachineProfile
+    ) -> MachineObservation:
+        ...
 
 
 def find_vice(binary="x64sc"):
@@ -76,20 +88,41 @@ def assert_memory(observation: MachineObservation, expected: dict[int, int]):
             )
 
 
-def require_state_backend():
-    raise QualificationUnavailable(
-        "no qualified machine-readable VICE state backend is configured; "
-        "emulator_state must remain false"
-    )
+def require_state_backend(backend=None):
+    if backend is None:
+        raise QualificationUnavailable(
+            "no qualified machine-readable VICE state backend is configured; "
+            "emulator_state must remain false"
+        )
+    if not callable(getattr(backend, "observe", None)):
+        raise QualificationUnavailable("configured state backend has no observe()")
+    return backend
 
 
-def qualify(prg: Path, profile=MachineProfile()):
+def qualify(
+    prg: Path,
+    expected_memory: dict[int, int] | None = None,
+    profile=MachineProfile(),
+    backend: StateBackend | None = None,
+):
     if not prg.is_file():
         raise FileNotFoundError(prg)
     binary = find_vice(profile.emulator)
     version = vice_version(binary)
-    require_state_backend()
-    return {"emulator": binary, "version": version, "profile": profile}
+    state_backend = require_state_backend(backend)
+    observation = state_backend.observe(binary=binary, prg=prg, profile=profile)
+    if not isinstance(observation, MachineObservation):
+        raise QualificationUnavailable(
+            "state backend returned an invalid observation object"
+        )
+    assert_memory(observation, expected_memory or {})
+    return {
+        "emulator": binary,
+        "version": version,
+        "profile": profile,
+        "backend": state_backend.name,
+        "observation": observation,
+    }
 
 
 if __name__ == "__main__":
