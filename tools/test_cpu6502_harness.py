@@ -68,4 +68,27 @@ dex_cpu.run(limit=4)
 if dex_cpu.x != 0 or not (dex_cpu.p & 0x02) or (dex_cpu.p & 0x80):
     raise SystemExit(f'DEX self-test failed: X={dex_cpu.x:02x} P={dex_cpu.p:02x}')
 
-print('CPU/RAM harness self-tests: PASS (state, JSR/RTS, DEX, fail-closed opcode/I/O read/write)')
+# Indexed addressing into C64 I/O must also fail closed.
+indexed_io = bytearray(65536)
+indexed_io[0:5] = bytes([0xa2, 0x20, 0xbd, 0xf2, 0xcf])  # LDX #$20; LDA $CFF2,X -> $D012
+try:
+    CPU(mem=indexed_io, pc=0).run(limit=2)
+except RuntimeError as exc:
+    if 'C64 I/O read d012' not in str(exc):
+        raise
+else:
+    raise SystemExit('indexed C64 I/O read fail-closed self-test failed')
+
+indirect_io = bytearray(65536)
+indirect_io[0:4] = bytes([0xa0, 0x12, 0xb1, 0xfb])  # LDY #$12; LDA ($FB),Y
+indirect_io[0xfb] = 0x00
+indirect_io[0xfc] = 0xd0
+try:
+    CPU(mem=indirect_io, pc=0).run(limit=2)
+except RuntimeError as exc:
+    if 'C64 I/O read d012' not in str(exc):
+        raise
+else:
+    raise SystemExit('indirect C64 I/O read fail-closed self-test failed')
+
+print('CPU/RAM harness self-tests: PASS (state, JSR/RTS, DEX, fail-closed direct/indexed/indirect I/O)')
