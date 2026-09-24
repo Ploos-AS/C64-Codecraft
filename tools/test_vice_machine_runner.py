@@ -3,6 +3,7 @@
 
 from pathlib import Path
 import sys
+import tempfile
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +16,7 @@ from vice_machine_runner import (
     QualificationUnavailable,
     assert_memory,
     find_vice,
+    qualify,
     require_state_backend,
 )
 
@@ -58,7 +60,31 @@ except QualificationUnavailable as exc:
 else:
     raise SystemExit("missing-state-backend fail-closed test failed")
 
+
+class ContractBackend:
+    name = "contract-test"
+
+    def observe(self, *, binary, prg, profile):
+        if binary != "/usr/bin/x64sc" or profile.video != "PAL":
+            raise SystemExit("runner did not pass backend context")
+        return observed
+
+
+with tempfile.TemporaryDirectory() as tmp:
+    prg = Path(tmp) / "lab.prg"
+    prg.write_bytes(b"\x01\x08")
+    with patch("vice_machine_runner.find_vice", return_value="/usr/bin/x64sc"), patch(
+        "vice_machine_runner.vice_version", return_value="VICE 3.9"
+    ):
+        result = qualify(
+            prg,
+            expected_memory={0xD020: 0x05, 0xD021: 0x00},
+            backend=ContractBackend(),
+        )
+        if result["backend"] != "contract-test" or result["observation"] != observed:
+            raise SystemExit("backend integration result changed unexpectedly")
+
 print(
     "VICE machine-runner contract tests: PASS "
-    "(profile, binary, positive/negative/missing-state assertions, backend)"
+    "(profile, binary, assertions, fail-closed state, backend integration)"
 )
