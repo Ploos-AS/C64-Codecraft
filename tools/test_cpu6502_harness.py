@@ -36,7 +36,7 @@ io_mem[0:3] = bytes([0x8d, 0x20, 0xd0])  # STA $D020
 try:
     CPU(mem=io_mem, pc=0, a=1).run(limit=1)
 except RuntimeError as exc:
-    if 'C64 I/O write d020' not in str(exc):
+    if 'C64 I/O access d020' not in str(exc):
         raise
 else:
     raise SystemExit('C64 I/O fail-closed self-test failed')
@@ -46,7 +46,7 @@ io_read_mem[0:3] = bytes([0xad, 0x12, 0xd0])  # LDA $D012
 try:
     CPU(mem=io_read_mem, pc=0).run(limit=1)
 except RuntimeError as exc:
-    if 'C64 I/O read d012' not in str(exc):
+    if 'C64 I/O access d012' not in str(exc):
         raise
 else:
     raise SystemExit('C64 I/O read fail-closed self-test failed')
