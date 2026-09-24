@@ -51,4 +51,21 @@ except RuntimeError as exc:
 else:
     raise SystemExit('C64 I/O read fail-closed self-test failed')
 
-print('CPU/RAM harness self-tests: PASS (positive, negative assertion, fail-closed opcode/I/O read/write)')
+# JSR/RTS must preserve an initially empty stack and resume after the call.
+call_mem = bytearray(65536)
+call_mem[0x0200:0x0206] = bytes([0x20, 0x05, 0x02, 0xa9, 0x2a, 0x60])
+call_mem[0x0205] = 0x60
+call_cpu = CPU(mem=call_mem, pc=0x0200)
+call_cpu.run(limit=8)
+if call_cpu.a != 0x2a or call_cpu.sp != 0xff:
+    raise SystemExit(f'JSR/RTS self-test failed: A={call_cpu.a:02x} SP={call_cpu.sp:02x}')
+
+# DEX must wrap and set N/Z deterministically.
+dex_mem = bytearray(65536)
+dex_mem[0:4] = bytes([0xa2, 0x01, 0xca, 0x60])
+dex_cpu = CPU(mem=dex_mem, pc=0)
+dex_cpu.run(limit=4)
+if dex_cpu.x != 0 or not (dex_cpu.p & 0x02) or (dex_cpu.p & 0x80):
+    raise SystemExit(f'DEX self-test failed: X={dex_cpu.x:02x} P={dex_cpu.p:02x}')
+
+print('CPU/RAM harness self-tests: PASS (state, JSR/RTS, DEX, fail-closed opcode/I/O read/write)')
