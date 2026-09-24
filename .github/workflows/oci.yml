@@ -48,6 +48,32 @@ jobs:
             test "$rc" -eq 124
           ' | tee build/vice-capabilities.txt
           test -s build/vice-capabilities.txt
+      - name: Prove VICE binary-monitor TCP socket
+        run: |
+          docker run --rm c64-codecraft:m0 sh -lc '
+            set -eu
+            timeout 8s x64sc -binarymonitor -binarymonitoraddress ip4://127.0.0.1:6502 -console >/tmp/vice.log 2>&1 &
+            vice_pid=$!
+            trap "kill $vice_pid 2>/dev/null || true" EXIT
+            python3 - <<"PY"
+          import socket
+          import time
+
+          deadline = time.monotonic() + 5
+          last_error = None
+          while time.monotonic() < deadline:
+              try:
+                  with socket.create_connection(("127.0.0.1", 6502), timeout=0.5):
+                      print("VICE binary monitor TCP socket accepted a connection")
+                      break
+              except OSError as exc:
+                  last_error = exc
+                  time.sleep(0.1)
+          else:
+              raise SystemExit(f"binary monitor socket unavailable: {last_error}")
+          PY
+          '
+
       - name: Upload VICE capability evidence
         uses: actions/upload-artifact@v4
         with:
