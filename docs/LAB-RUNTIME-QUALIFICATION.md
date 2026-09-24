@@ -33,11 +33,16 @@ Each qualified lab will declare:
 The harness must fail on timeout, unsupported I/O access, unexpected control
 flow, or assertion mismatch.
 
-## Initial qualification candidates
+## CPU/RAM qualification status
 
-Start with simple labs that already have deterministic RAM outcomes, such as
-table indexing, indirect addressing and optimization examples. Do not begin
-with raster, SID, banking, sprite, bitmap or loader labs.
+M0.1 is operational. Qualified labs opt in with `verification.cpu_state: true`
+and provide `runtime_test.py`; `tools/run_cpu_labs.py` discovers and executes
+them in CI. The current audited set is tracked in `docs/CPU-RUNTIME-MATRIX.md`.
+
+The harness is intentionally CPU/RAM-only. CPU-visible accesses to the C64 I/O
+window `$D000-$DFFF` fail closed, including effective addresses reached through
+indexed or indirect addressing. VIC-II, SID, CIA, raster timing and other
+hardware semantics therefore cannot accidentally pass as ordinary RAM behavior.
 
 ## C64 hardware path
 
@@ -50,10 +55,14 @@ interface is solved and independently qualified.
 
 ## Gate
 
-M0.1 is complete only when at least one representative CPU/RAM lab:
+M0.1 is complete. The gate requires representative CPU/RAM labs to:
 
 1. assembles in CI;
 2. executes from a declared deterministic initial state;
 3. terminates through the declared stop condition;
 4. has machine-readable post-state assertions;
-5. fails CI when an expected result is intentionally changed.
+5. fail CI when an expected result is intentionally changed.
+
+The harness self-test exercises both the positive assertion path and an
+intentional mismatch through the same assertion helper, as well as unsupported
+opcodes and fail-closed C64 I/O access.
