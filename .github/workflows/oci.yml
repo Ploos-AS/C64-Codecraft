@@ -30,8 +30,7 @@ jobs:
       - name: Probe packaged VICE monitor capabilities
         run: |
           set -eu
-          mkdir -p build
-          docker run --rm c64-codecraft:m0 sh -lc '
+          mkdir -p build\n          sudo chown -R "$(id -u):$(id -g)" build\n          docker run --rm c64-codecraft:m0 sh -lc '
             set +e
             x64sc -version > /tmp/version.txt 2>&1
             x64sc -help > /tmp/help.txt 2>&1
