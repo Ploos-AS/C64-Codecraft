@@ -73,7 +73,7 @@ indexed_io[0:5] = bytes([0xa2, 0x20, 0xbd, 0xf2, 0xcf])  # LDX #$20; LDA $CFF2,X
 try:
     CPU(mem=indexed_io, pc=0).run(limit=2)
 except RuntimeError as exc:
-    if 'C64 I/O read d012' not in str(exc):
+    if 'C64 I/O access d012' not in str(exc):
         raise
 else:
     raise SystemExit('indexed C64 I/O read fail-closed self-test failed')
@@ -85,7 +85,7 @@ indirect_io[0xfc] = 0xd0
 try:
     CPU(mem=indirect_io, pc=0).run(limit=2)
 except RuntimeError as exc:
-    if 'C64 I/O read d012' not in str(exc):
+    if 'C64 I/O access d012' not in str(exc):
         raise
 else:
     raise SystemExit('indirect C64 I/O read fail-closed self-test failed')
