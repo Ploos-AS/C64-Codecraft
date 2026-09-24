@@ -50,7 +50,7 @@ class ViceMonitorTranscriptBackend:
 
     name = "vice-monitor-transcript"
     _MEMORY_LINE = re.compile(
-        r"^\s*(?:>[A-Za-z0-9]+:)?(?P<address>[0-9A-Fa-f]{4})"
+        r"^\s*(?:(?:>[A-Za-z0-9]+:)|(?:[A-Za-z0-9]+:))?(?P<address>[0-9A-Fa-f]{4})"
         r"(?:\s+|:)\s*(?P<bytes>(?:[0-9A-Fa-f]{2}(?:\s+|$))+)"
     )
 
