@@ -91,4 +91,15 @@ except RuntimeError as exc:
 else:
     raise SystemExit('indirect C64 I/O read fail-closed self-test failed')
 
-print('CPU/RAM harness self-tests: PASS (state, JSR/RTS, DEX, fail-closed direct/indexed/indirect I/O)')
+for addr in (0x0000, 0x0001):
+    port_read = bytearray(65536)
+    port_read[0x0200:0x0203] = bytes([0xad, addr & 0xff, 0x00])  # LDA $0000/$0001
+    try:
+        CPU(mem=port_read, pc=0x0200).run(limit=1)
+    except RuntimeError as exc:
+        if '6510 processor-port access' not in str(exc):
+            raise
+    else:
+        raise SystemExit(f'6510 processor-port read {addr:04x} fail-closed self-test failed')
+
+print('CPU/RAM harness self-tests: PASS (state, stack, flags, C64 I/O and 6510 port fail-closed)')
