@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
-"""Fail-closed M0.2 VICE machine-runner contract.
-
-The runner keeps emulator transport separate from assertion semantics. A
-backend may only return observations it can prove; missing observations fail
-closed instead of being treated as zero/default state.
-"""
+"""Fail-closed M0.2 VICE machine-runner contract."""
 
 from dataclasses import dataclass, field
 from pathlib import Path
+import re
 import shutil
 import subprocess
 from typing import Protocol
@@ -30,22 +26,58 @@ class MachineProfile:
 
 @dataclass(frozen=True)
 class MachineObservation:
-    """Machine-readable state returned by a qualified emulator backend."""
-
     memory: dict[int, int] = field(default_factory=dict)
     registers: dict[str, int] = field(default_factory=dict)
     stop_reason: str = ""
 
 
 class StateBackend(Protocol):
-    """Transport boundary for a qualified emulator-state implementation."""
-
     name: str
 
     def observe(
         self, *, binary: str, prg: Path, profile: MachineProfile
     ) -> MachineObservation:
         ...
+
+
+class ViceMonitorTranscriptBackend:
+    """Parser/transport prototype for a textual VICE monitor transcript.
+
+    Transport is deliberately opt-in: until a packaged VICE invocation is
+    qualified, observe() fails closed. parse_memory() can be independently
+    tested against captured monitor output without claiming emulator support.
+    """
+
+    name = "vice-monitor-transcript"
+    _MEMORY_LINE = re.compile(
+        r"^\s*(?:>[A-Za-z0-9]+:)?(?P<address>[0-9A-Fa-f]{4})"
+        r"(?:\s+|:)\s*(?P<bytes>(?:[0-9A-Fa-f]{2}(?:\s+|$))+)"
+    )
+
+    @classmethod
+    def parse_memory(cls, transcript: str) -> dict[int, int]:
+        memory = {}
+        for line in transcript.splitlines():
+            match = cls._MEMORY_LINE.match(line)
+            if not match:
+                continue
+            address = int(match.group("address"), 16)
+            for token in match.group("bytes").split():
+                if address > 0xFFFF:
+                    break
+                memory[address] = int(token, 16)
+                address += 1
+        if not memory:
+            raise QualificationUnavailable(
+                "VICE monitor transcript contained no machine-readable memory"
+            )
+        return memory
+
+    def observe(self, *, binary: str, prg: Path, profile: MachineProfile):
+        raise QualificationUnavailable(
+            "VICE monitor transcript transport is not qualified for the "
+            "packaged emulator; parser exists but emulator_state must remain false"
+        )
 
 
 def find_vice(binary="x64sc"):
@@ -70,8 +102,6 @@ def vice_version(binary):
 
 
 def assert_memory(observation: MachineObservation, expected: dict[int, int]):
-    """Assert byte values while failing closed for unobserved addresses."""
-
     for address, value in expected.items():
         if not 0 <= address <= 0xFFFF:
             raise ValueError(f"invalid C64 address: {address:#x}")
