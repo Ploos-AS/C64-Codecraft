@@ -41,4 +41,14 @@ except RuntimeError as exc:
 else:
     raise SystemExit('C64 I/O fail-closed self-test failed')
 
-print('CPU/RAM harness self-tests: PASS (positive, negative assertion, fail-closed opcode/I/O)')
+io_read_mem = bytearray(65536)
+io_read_mem[0:3] = bytes([0xad, 0x12, 0xd0])  # LDA $D012
+try:
+    CPU(mem=io_read_mem, pc=0).run(limit=1)
+except RuntimeError as exc:
+    if 'C64 I/O read d012' not in str(exc):
+        raise
+else:
+    raise SystemExit('C64 I/O read fail-closed self-test failed')
+
+print('CPU/RAM harness self-tests: PASS (positive, negative assertion, fail-closed opcode/I/O read/write)')
