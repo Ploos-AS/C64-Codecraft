@@ -62,7 +62,7 @@ jobs:
         run: |
           docker run --rm c64-codecraft:m0 sh -lc '
             set -eu
-            timeout 8s x64sc -binarymonitor -binarymonitoraddress ip4://127.0.0.1:6502 -console -kernal /roms/kernal.rom -basic /roms/basic.rom -chargen /roms/chargen.rom >/tmp/vice.log 2>&1 &
+            timeout 8s xvfb-run -a x64sc -binarymonitor -binarymonitoraddress ip4://127.0.0.1:6502 -console -kernal /roms/kernal.rom -basic /roms/basic.rom -chargen /roms/chargen.rom >/tmp/vice.log 2>&1 &
             vice_pid=$!
             trap "kill $vice_pid 2>/dev/null || true" EXIT
             set +e
