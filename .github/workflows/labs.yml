@@ -33,6 +33,7 @@ jobs:
     steps:
       - name: Install lab toolchain
         run: |
+          sed -i 's/Components: main/Components: main contrib/' /etc/apt/sources.list.d/debian.sources
           apt-get update
           apt-get install -y --no-install-recommends git ca-certificates make 64tass vice python3
       - uses: actions/checkout@v4
