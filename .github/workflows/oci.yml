@@ -37,7 +37,10 @@ jobs:
             x64sc -version > /tmp/version.txt 2>&1
             x64sc -help > /tmp/help.txt 2>&1
             cat /tmp/version.txt
-            grep -Ei "monitor|remote|binary|console|headless|limitcycles|autostart" /tmp/help.txt || true
+            printf '%s\n' '--- monitor CLI probe ---'
+            grep -Ei "monitor|remote|binary|console|headless|limitcycles|autostart|initbreak" /tmp/help.txt || true
+            printf '%s\n' '--- monitor resource probe ---'
+            x64sc -default -dumpconfig 2>&1 | grep -Ei "Monitor(Server|ServerAddress)|BinaryMonitor(Server|ServerAddress)|NativeMonitor" || true
           ' | tee build/vice-capabilities.txt
           test -s build/vice-capabilities.txt
       - name: Upload VICE capability evidence
