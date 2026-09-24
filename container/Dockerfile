@@ -8,6 +8,7 @@ RUN sed -i 's/Components: main/Components: main contrib/' /etc/apt/sources.list.
       cc65 \
       make \
       python3 \
+      xvfb \
       default-jre-headless \
       vice \
  && rm -rf /var/lib/apt/lists/*
