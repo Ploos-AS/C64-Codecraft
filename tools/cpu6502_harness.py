@@ -22,17 +22,19 @@ class CPU:
     def set_zn(self, v):
         self.p = (self.p & ~0x82) | (0x80 if v & 0x80 else 0) | (0x02 if v == 0 else 0)
 
-    def read(self, addr):
+    def ram_addr(self, addr):
         addr &= 0xffff
+        if addr in (0x0000, 0x0001):
+            raise RuntimeError(f'6510 processor-port access {addr:04x} is outside CPU/RAM qualification')
         if 0xd000 <= addr <= 0xdfff:
-            raise RuntimeError(f'C64 I/O read {addr:04x} is outside CPU/RAM qualification')
-        return self.mem[addr]
+            raise RuntimeError(f'C64 I/O access {addr:04x} is outside CPU/RAM qualification')
+        return addr
+
+    def read(self, addr):
+        return self.mem[self.ram_addr(addr)]
 
     def write(self, addr, value):
-        addr &= 0xffff
-        if 0xd000 <= addr <= 0xdfff:
-            raise RuntimeError(f'C64 I/O write {addr:04x} is outside CPU/RAM qualification')
-        self.mem[addr] = value & 0xff
+        self.mem[self.ram_addr(addr)] = value & 0xff
 
     def step(self):
         op = self.fetch()
