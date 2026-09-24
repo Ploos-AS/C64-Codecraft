@@ -55,6 +55,7 @@ jobs:
             timeout 8s x64sc -binarymonitor -binarymonitoraddress ip4://127.0.0.1:6502 -console >/tmp/vice.log 2>&1 &
             vice_pid=$!
             trap "kill $vice_pid 2>/dev/null || true" EXIT
+            set +e
             python3 - <<"PY"
           import socket
           import time
@@ -74,9 +75,18 @@ jobs:
               raise SystemExit(1)
           PY
           rc=$?
+          set -e
           if [ "$rc" -ne 0 ]; then
             printf "%s\\n" "--- VICE startup log ---"
             cat /tmp/vice.log || true
+            printf "%s\\n" "--- VICE process ---"
+            if kill -0 "$vice_pid" 2>/dev/null; then
+              echo "VICE process is still alive"
+              ps -p "$vice_pid" -o pid=,stat=,args= || true
+            else
+              echo "VICE process exited before socket became available"
+              wait "$vice_pid" || echo "VICE exit=$?"
+            fi
             printf "%s\\n" "--- listening sockets ---"
             (command -v ss >/dev/null && ss -ltnp) || true
             exit "$rc"
