@@ -57,8 +57,7 @@ jobs:
           test "$(wc -c < build/open-roms/chargen.rom)" -eq 4096
       - name: Verify canonical PRG payload
         run: |
-          test "$(tail -c 11 build/hello.prg | od -An -tx1 | tr -d " 
-")" = "a9068d20d0a90e8d21d060"
+          test "$(tail -c 11 build/hello.prg | od -An -tx1 | tr -d " \\n")" = "a9068d20d0a90e8d21d060"
 
   debian-full:
     runs-on: ubuntu-latest
