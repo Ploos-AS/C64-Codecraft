@@ -27,6 +27,23 @@ jobs:
         run: |
           docker run --rm -v "$PWD:/work" c64-codecraft:m0 \
             sh -lc 'make example && test -s build/hello.prg'
+      - name: Probe packaged VICE monitor capabilities
+        run: |
+          set -eu
+          mkdir -p build
+          docker run --rm c64-codecraft:m0 sh -lc '
+            set +e
+            x64sc -version > /tmp/version.txt 2>&1
+            x64sc -help > /tmp/help.txt 2>&1
+            cat /tmp/version.txt
+            grep -Ei "monitor|remote|binary|console|headless|limitcycles|autostart" /tmp/help.txt || true
+          ' | tee build/vice-capabilities.txt
+          test -s build/vice-capabilities.txt
+      - name: Upload VICE capability evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vice-capabilities
+          path: build/vice-capabilities.txt
       - name: Fetch redistributable Open ROMs for VICE
         run: |
           sudo mkdir -p build/open-roms
