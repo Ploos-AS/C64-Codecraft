@@ -70,8 +70,17 @@ jobs:
                   last_error = exc
                   time.sleep(0.1)
           else:
-              raise SystemExit(f"binary monitor socket unavailable: {last_error}")
+              print(f"binary monitor socket unavailable: {last_error}")
+              raise SystemExit(1)
           PY
+          rc=$?
+          if [ "$rc" -ne 0 ]; then
+            printf "%s\\n" "--- VICE startup log ---"
+            cat /tmp/vice.log || true
+            printf "%s\\n" "--- listening sockets ---"
+            (command -v ss >/dev/null && ss -ltnp) || true
+            exit "$rc"
+          fi
           '
 
       - name: Upload VICE capability evidence
