@@ -22,6 +22,12 @@ class CPU:
     def set_zn(self, v):
         self.p = (self.p & ~0x82) | (0x80 if v & 0x80 else 0) | (0x02 if v == 0 else 0)
 
+    def write(self, addr, value):
+        addr &= 0xffff
+        if 0xd000 <= addr <= 0xdfff:
+            raise RuntimeError(f'C64 I/O write {addr:04x} is outside CPU/RAM qualification')
+        self.mem[addr] = value & 0xff
+
     def step(self):
         op = self.fetch()
         self.instructions += 1
@@ -36,10 +42,10 @@ class CPU:
         elif op == 0xa2:
             self.x = self.fetch(); self.set_zn(self.x)
         elif op == 0x85:  # STA zp
-            self.mem[self.fetch()] = self.a
+            self.write(self.fetch(), self.a)
         elif op == 0x8d:  # STA abs
             lo, hi = self.fetch(), self.fetch()
-            self.mem[(hi << 8) | lo] = self.a
+            self.write((hi << 8) | lo, self.a)
         elif op == 0x4a:  # LSR A
             carry = self.a & 1; self.a >>= 1
             self.p = (self.p & ~0x01) | carry; self.set_zn(self.a)
@@ -77,12 +83,12 @@ class CPU:
             self.mem[self.fetch()] = self.y
         elif op == 0x91:  # STA (zp),Y
             zp = self.fetch(); base = self.mem[zp] | (self.mem[(zp + 1) & 0xff] << 8)
-            self.mem[(base + self.y) & 0xffff] = self.a
+            self.write((base + self.y) & 0xffff, self.a)
         elif op == 0x99:  # STA abs,Y
             lo, hi = self.fetch(), self.fetch()
-            self.mem[(((hi << 8) | lo) + self.y) & 0xffff] = self.a
+            self.write((((hi << 8) | lo) + self.y) & 0xffff, self.a)
         elif op == 0x8c:  # STY abs
-            lo, hi = self.fetch(), self.fetch(); self.mem[(hi << 8) | lo] = self.y
+            lo, hi = self.fetch(), self.fetch(); self.write((hi << 8) | lo, self.y)
         elif op == 0xc0:  # CPY #imm
             v = self.fetch(); r = (self.y - v) & 0xff
             self.p = (self.p & ~0x83) | (1 if self.y >= v else 0) | (0x80 if r & 0x80 else 0) | (0x02 if r == 0 else 0)
@@ -105,7 +111,7 @@ class CPU:
             self.pc = (hi << 8) | lo
         elif op == 0x9d:
             lo, hi = self.fetch(), self.fetch()
-            self.mem[(((hi << 8) | lo) + self.x) & 0xffff] = self.a
+            self.write((((hi << 8) | lo) + self.x) & 0xffff, self.a)
         elif op == 0xca:  # DEX
             self.x = (self.x - 1) & 0xff; self.set_zn(self.x)
         elif op == 0xe8:  # INX
@@ -119,7 +125,7 @@ class CPU:
         elif op == 0x29:  # AND #imm
             self.a &= self.fetch(); self.set_zn(self.a)
         elif op == 0x86:  # STX zp
-            self.mem[self.fetch()] = self.x
+            self.write(self.fetch(), self.x)
         elif op == 0xc9:  # CMP #imm
             v = self.fetch(); r = (self.a - v) & 0xff
             self.p = (self.p & ~0x83) | (1 if self.a >= v else 0) | (0x80 if r & 0x80 else 0) | (0x02 if r == 0 else 0)
