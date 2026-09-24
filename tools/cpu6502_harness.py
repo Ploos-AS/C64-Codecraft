@@ -65,6 +65,8 @@ class CPU:
         elif op == 0xad:  # LDA abs
             lo, hi = self.fetch(), self.fetch()
             self.a = self.mem[(hi << 8) | lo]; self.set_zn(self.a)
+        elif op == 0xb9:  # LDA abs,Y
+            lo, hi = self.fetch(), self.fetch(); self.a = self.mem[(((hi << 8) | lo) + self.y) & 0xffff]; self.set_zn(self.a)
         elif op == 0xbd:
             lo, hi = self.fetch(), self.fetch()
             self.a = self.mem[(((hi << 8) | lo) + self.x) & 0xffff]; self.set_zn(self.a)
