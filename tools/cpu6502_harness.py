@@ -24,8 +24,6 @@ class CPU:
 
     def ram_addr(self, addr):
         addr &= 0xffff
-        if addr in (0x0000, 0x0001):
-            raise RuntimeError(f'6510 processor-port access {addr:04x} is outside CPU/RAM qualification')
         if 0xd000 <= addr <= 0xdfff:
             raise RuntimeError(f'C64 I/O access {addr:04x} is outside CPU/RAM qualification')
         return addr
