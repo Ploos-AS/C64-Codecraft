@@ -53,6 +53,32 @@ The old monitor-command experiment is not a qualified assertion mechanism.
 Hardware-sensitive labs therefore remain `emulator_state: false` until that
 interface is solved and independently qualified.
 
+## M0.2 C64 hardware/emulator qualification contract
+
+M0.2 adds a separate machine-level path; it does not extend the CPU/RAM harness
+with partial VIC-II/SID/CIA behavior.
+
+A hardware-qualified lab must declare its machine assumptions and observable
+contract. The runner must provide:
+
+- a pinned emulator/version and ROM provenance;
+- an explicit PAL/NTSC machine profile where timing matters;
+- deterministic program loading and entry;
+- a bounded run/stop condition;
+- machine-readable assertions for the hardware state actually under test;
+- fail-closed handling when required emulator state cannot be observed;
+- no proprietary Commodore ROMs committed to the repository.
+
+Qualification classes are tracked separately: VIC-II register/state, raster and
+timing, SID, CIA, banking/6510 port, color RAM, and disk/loader behavior. A lab
+must not receive `emulator_state: true` merely because it boots or produces a
+screenshot.
+
+The first M0.2 target should be a small non-cycle-exact VIC-II register lab
+before raster/badline/DMA-sensitive work. This gives the machine runner a
+deterministic state assertion without conflating it with video-output
+qualification.
+
 ## Gate
 
 M0.1 is complete. The gate requires representative CPU/RAM labs to:
