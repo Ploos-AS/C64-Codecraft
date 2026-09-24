@@ -44,7 +44,8 @@ jobs:
             printf '%s\n' '--- direct binary-monitor startup probe ---'
             timeout 2s x64sc -binarymonitor -binarymonitoraddress ip4://127.0.0.1:6502 -console 2>&1 || rc=$?
             rc=${rc:-0}
-            test "$rc" -eq 0 -o "$rc" -eq 124
+            printf 'binary-monitor probe exit=%s\\n' "$rc"
+            test "$rc" -eq 124
           ' | tee build/vice-capabilities.txt
           test -s build/vice-capabilities.txt
       - name: Upload VICE capability evidence
