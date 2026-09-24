@@ -40,6 +40,9 @@ class CPU:
         elif op == 0x8d:  # STA abs
             lo, hi = self.fetch(), self.fetch()
             self.mem[(hi << 8) | lo] = self.a
+        elif op == 0x4a:  # LSR A
+            carry = self.a & 1; self.a >>= 1
+            self.p = (self.p & ~0x01) | carry; self.set_zn(self.a)
         elif op == 0x0a:  # ASL A
             carry = 1 if self.a & 0x80 else 0
             self.a = (self.a << 1) & 0xff
