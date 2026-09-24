@@ -97,6 +97,8 @@ class CPU:
             self.x = (self.x - 1) & 0xff; self.set_zn(self.x)
         elif op == 0xe8:  # INX
             self.x = (self.x + 1) & 0xff; self.set_zn(self.x)
+        elif op == 0x8a:  # TXA
+            self.a = self.x; self.set_zn(self.a)
         elif op == 0xaa:  # TAX
             self.x = self.a; self.set_zn(self.x)
         elif op == 0xa8:  # TAY
