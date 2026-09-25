@@ -9,6 +9,7 @@ RUN sed -i 's/Components: main/Components: main contrib/' /etc/apt/sources.list.
       make \
       python3 \
       xvfb \
+      xauth \
       default-jre-headless \
       vice \
  && rm -rf /var/lib/apt/lists/*
