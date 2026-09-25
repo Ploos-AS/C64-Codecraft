@@ -49,6 +49,8 @@ class ViceBinaryMonitorProtocol:
     STX = 0x02
     API_VERSION = 0x02
     MEM_GET = 0x01
+    CHECKPOINT_SET = 0x12
+    EXIT = 0xAA
 
     @classmethod
     def memory_get_request(cls, start: int, end: int, request_id: int = 1) -> bytes:
@@ -60,6 +62,26 @@ class ViceBinaryMonitorProtocol:
             + struct.pack("<II", len(body), request_id)
             + bytes((cls.MEM_GET,))
             + body
+        )
+
+    @classmethod
+    def checkpoint_set_request(cls, address: int, request_id: int = 2) -> bytes:
+        if not 0 <= address <= 0xFFFF:
+            raise ValueError("invalid checkpoint address")
+        body = struct.pack("<HHBBBBB", address, address, 1, 1, 4, 1, 0)
+        return (
+            bytes((cls.STX, cls.API_VERSION))
+            + struct.pack("<II", len(body), request_id)
+            + bytes((cls.CHECKPOINT_SET,))
+            + body
+        )
+
+    @classmethod
+    def exit_request(cls, request_id: int = 3) -> bytes:
+        return (
+            bytes((cls.STX, cls.API_VERSION))
+            + struct.pack("<II", 0, request_id)
+            + bytes((cls.EXIT,))
         )
 
     @classmethod
@@ -87,7 +109,7 @@ class ViceBinaryMonitorProtocol:
 
 
 class ViceBinaryMonitorClient:
-    """Small synchronous transport used by the qualified M0.2 backend."""
+    """Persistent synchronous VICE binary-monitor transport."""
 
     def __init__(self, host="127.0.0.1", port=6502, timeout=2.0):
         self.host, self.port, self.timeout = host, port, timeout
@@ -102,27 +124,57 @@ class ViceBinaryMonitorClient:
             data.extend(chunk)
         return bytes(data)
 
-    def read_memory(self, start: int, end: int) -> bytes:
-        request_id = 1
-        request = ViceBinaryMonitorProtocol.memory_get_request(start, end, request_id)
+    def _packet(self, sock):
+        header = self._recv_exact(sock, 12)
+        body_len = struct.unpack_from("<I", header, 2)[0]
+        return header + self._recv_exact(sock, body_len)
+
+    @staticmethod
+    def _request_id(packet):
+        return struct.unpack_from("<I", packet, 8)[0]
+
+    def run_until(self, address: int, start: int, end: int) -> bytes:
         try:
             with socket.create_connection((self.host, self.port), self.timeout) as sock:
                 sock.settimeout(self.timeout)
-                sock.sendall(request)
+
+                # A temporary execution checkpoint gives the runner a deterministic
+                # completion point instead of guessing how long the C64 needs.
+                sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(address, 2))
                 while True:
-                    header = self._recv_exact(sock, 12)
-                    body_len = struct.unpack_from("<I", header, 2)[0]
-                    body = self._recv_exact(sock, body_len)
-                    response_id = struct.unpack_from("<I", header, 8)[0]
-                    if response_id == 0xFFFFFFFF:
+                    packet = self._packet(sock)
+                    if self._request_id(packet) == 2:
+                        if packet[7]:
+                            raise QualificationUnavailable("VICE rejected checkpoint")
+                        break
+
+                # EXIT resumes emulation until the temporary checkpoint is hit.
+                sock.sendall(ViceBinaryMonitorProtocol.exit_request(3))
+                stopped = False
+                while not stopped:
+                    packet = self._packet(sock)
+                    request_id = self._request_id(packet)
+                    response_type = packet[6]
+                    if request_id == 3 and packet[7]:
+                        raise QualificationUnavailable("VICE rejected monitor exit")
+                    if request_id == 0xFFFFFFFF and response_type == 0x62:
+                        stopped = True
+
+                request_id = 4
+                sock.sendall(
+                    ViceBinaryMonitorProtocol.memory_get_request(start, end, request_id)
+                )
+                while True:
+                    packet = self._packet(sock)
+                    if self._request_id(packet) == 0xFFFFFFFF:
                         continue
-                    if response_id != request_id:
+                    if self._request_id(packet) != request_id:
                         raise QualificationUnavailable(
                             f"unexpected VICE binary-monitor request id "
-                            f"{response_id:#010x}"
+                            f"{self._request_id(packet):#010x}"
                         )
                     return ViceBinaryMonitorProtocol.memory_get_response(
-                        header + body, request_id
+                        packet, request_id
                     )
         except (OSError, TimeoutError) as exc:
             raise QualificationUnavailable(
@@ -131,7 +183,7 @@ class ViceBinaryMonitorClient:
 
 
 class ViceBinaryMonitorBackend:
-    """Qualified VICE 3.9 binary-monitor transport for bounded memory reads."""
+    """VICE binary-monitor transport with deterministic execution stop."""
 
     name = "vice-binary-monitor"
 
@@ -142,11 +194,13 @@ class ViceBinaryMonitorBackend:
         port=6502,
         startup_timeout=5.0,
         rom_dir=None,
+        stop_address=0x0823,
     ):
         self.expected_addresses = tuple(expected_addresses)
         self.host, self.port = host, port
         self.startup_timeout = startup_timeout
         self.rom_dir = Path(rom_dir).resolve() if rom_dir is not None else None
+        self.stop_address = stop_address
 
     def observe(self, *, binary: str, prg: Path, profile: MachineProfile):
         if profile.video.upper() != "PAL":
@@ -191,19 +245,14 @@ class ViceBinaryMonitorBackend:
                         f"{output[-4000:]}"
                     )
                 try:
-                    data = client.read_memory(start, end)
+                    data = client.run_until(self.stop_address, start, end)
                     memory = {
                         address: data[address - start]
                         for address in self.expected_addresses
                     }
-                    if any(memory[address] != value for address, value in ((0xD020, 0x05), (0xD021, 0x00)) if address in memory):
-                        last_error = QualificationUnavailable(
-                            "VICE program has not reached expected VIC-II state yet"
-                        )
-                        time.sleep(0.05)
-                        continue
                     return MachineObservation(
-                        memory=memory, stop_reason="binary-monitor-memory-read"
+                        memory=memory,
+                        stop_reason=f"temporary-exec-checkpoint-{self.stop_address:#06x}",
                     )
                 except QualificationUnavailable as exc:
                     last_error = exc
