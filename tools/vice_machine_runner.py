@@ -166,12 +166,14 @@ class ViceBinaryMonitorClient:
                 )
                 while True:
                     packet = self._packet(sock)
-                    if self._request_id(packet) == 0xFFFFFFFF:
+                    response_id = self._request_id(packet)
+                    if response_id in (0xFFFFFFFF, 3):
+                        # EXIT may acknowledge after the asynchronous stopped event.
                         continue
-                    if self._request_id(packet) != request_id:
+                    if response_id != request_id:
                         raise QualificationUnavailable(
                             f"unexpected VICE binary-monitor request id "
-                            f"{self._request_id(packet):#010x}"
+                            f"{response_id:#010x}"
                         )
                     return ViceBinaryMonitorProtocol.memory_get_response(
                         packet, request_id
