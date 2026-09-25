@@ -72,3 +72,5 @@ jobs:
           python3 tools/qualify_lab_00_03.py
           make -C labs/00-intro/08-fill-row clean all
           python3 tools/qualify_lab_00_08.py
+          make -C labs/00-intro/09-table-driven-screen clean all
+          python3 tools/qualify_lab_00_09.py
