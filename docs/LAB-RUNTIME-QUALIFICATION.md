@@ -46,12 +46,9 @@ hardware semantics therefore cannot accidentally pass as ordinary RAM behavior.
 
 ## C64 hardware path
 
-VICE remains the reference C64 emulator, but Debian 13's packaged VICE 3.9 has
-not yet provided a deterministic state-control interface acceptable for CI.
-The old monitor-command experiment is not a qualified assertion mechanism.
+VICE 3.9 is the reference C64 emulator for the first qualified machine-level path. The runner uses VICE's binary monitor with redistributable Open ROMs, verifies the autostarted PRG byte-for-byte, stops execution at a deterministic checkpoint, and reads hardware state through the appropriate VICE memory bank. The old textual monitor-command experiment remains unqualified.
 
-Hardware-sensitive labs therefore remain `emulator_state: false` until that
-interface is solved and independently qualified.
+Lab 00.03 is the first hardware-sensitive lab with `emulator_state: true`. Its VIC-II border/background assertion passes in CI, and the same observed machine state is also exercised against an intentional wrong expectation to prove the assertion path fails closed.
 
 ## M0.2 C64 hardware/emulator qualification contract
 
@@ -74,10 +71,7 @@ timing, SID, CIA, banking/6510 port, color RAM, and disk/loader behavior. A lab
 must not receive `emulator_state: true` merely because it boots or produces a
 screenshot.
 
-The first M0.2 target should be a small non-cycle-exact VIC-II register lab
-before raster/badline/DMA-sensitive work. This gives the machine runner a
-deterministic state assertion without conflating it with video-output
-qualification.
+The first M0.2 target, Lab 00.03, is qualified as a small non-cycle-exact VIC-II register lab. This establishes deterministic machine-state assertion without implying raster/badline/DMA or video-output qualification.
 
 ## Gate
 
