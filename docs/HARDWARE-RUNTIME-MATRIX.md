@@ -21,7 +21,7 @@ qualified C64 emulator/hardware runner.
 | Lab | Class | Status | Reason |
 |---|---|---|---|
 | 00.03 Subroutine/stack | VIC-II state | PASS | VICE 3.9 binary-monitor assertion of $D020/$D021 readback; non-cycle-exact |
-| 00.08 Fill row | Color RAM | TODO | deterministic $D800 row result |
+| 00.08 Fill row | Color RAM | PASS | VICE 3.9 asserts screen RAM $0400/$0427 and masked 4-bit Color RAM $D800/$D827 after the 40-column fill |
 | 00.09 Table-driven screen | Color RAM | TODO | deterministic table-to-color-RAM result |
 | 07.02 Multicolor bitmap data | VIC-II + Color RAM | TODO | $D021 plus color RAM |
 | 07.04 Bitmap raster splits | Raster/timing | TODO | waits on $D012 |
