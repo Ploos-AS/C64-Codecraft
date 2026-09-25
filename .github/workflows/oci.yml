@@ -60,7 +60,7 @@ jobs:
           test "$(wc -c < build/open-roms/chargen.rom)" -eq 4096
       - name: Prove VICE binary-monitor TCP socket
         run: |
-          docker run --rm c64-codecraft:m0 sh -lc '
+          docker run --rm -v "$PWD/build/open-roms:/roms:ro" c64-codecraft:m0 sh -lc '
             set -eu
             timeout 8s xvfb-run -a x64sc -binarymonitor -binarymonitoraddress ip4://127.0.0.1:6502 -console -kernal /roms/kernal.rom -basic /roms/basic.rom -chargen /roms/chargen.rom >/tmp/vice.log 2>&1 &
             vice_pid=$!
