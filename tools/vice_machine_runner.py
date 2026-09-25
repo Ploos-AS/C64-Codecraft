@@ -51,18 +51,54 @@ class ViceBinaryMonitorProtocol:
     MEM_GET = 0x01
     CHECKPOINT_SET = 0x12
     EXIT = 0xAA
+    BANKS_AVAILABLE = 0x82
 
     @classmethod
-    def memory_get_request(cls, start: int, end: int, request_id: int = 1) -> bytes:
+    def memory_get_request(cls, start: int, end: int, request_id: int = 1, bank_id: int = 0) -> bytes:
         if not (0 <= start <= end <= 0xFFFF):
             raise ValueError("invalid memory range")
-        body = struct.pack("<BHHBH", 1, start, end, 0, 0)
+        body = struct.pack("<BHHBH", 1, start, end, 0, bank_id)
         return (
             bytes((cls.STX, cls.API_VERSION))
             + struct.pack("<II", len(body), request_id)
             + bytes((cls.MEM_GET,))
             + body
         )
+
+    @classmethod
+    def banks_available_request(cls, request_id: int = 1) -> bytes:
+        return (
+            bytes((cls.STX, cls.API_VERSION))
+            + struct.pack("<II", 0, request_id)
+            + bytes((cls.BANKS_AVAILABLE,))
+        )
+
+    @classmethod
+    def banks_available_response(cls, packet: bytes, request_id: int = 1):
+        if len(packet) < 14 or packet[6] != cls.BANKS_AVAILABLE or packet[7]:
+            raise QualificationUnavailable("invalid VICE banks-available response")
+        if struct.unpack_from("<I", packet, 8)[0] != request_id:
+            raise QualificationUnavailable("VICE banks response request-id mismatch")
+        body_len = struct.unpack_from("<I", packet, 2)[0]
+        body = packet[12:12 + body_len]
+        if len(body) < 2:
+            raise QualificationUnavailable("truncated VICE banks response")
+        count = struct.unpack_from("<H", body, 0)[0]
+        offset, banks = 2, {}
+        for _ in range(count):
+            if offset >= len(body):
+                raise QualificationUnavailable("truncated VICE bank item")
+            item_size = body[offset]
+            item = body[offset + 1:offset + 1 + item_size]
+            if len(item) != item_size or item_size < 3:
+                raise QualificationUnavailable("invalid VICE bank item")
+            bank_id = struct.unpack_from("<H", item, 0)[0]
+            name_len = item[2]
+            if 3 + name_len > len(item):
+                raise QualificationUnavailable("invalid VICE bank name")
+            banks[item[3:3 + name_len].decode("ascii", "strict").lower()] = bank_id
+            offset += 1 + item_size
+        return banks
 
     @classmethod
     def checkpoint_set_request(cls, address: int, request_id: int = 2) -> bytes:
@@ -138,6 +174,23 @@ class ViceBinaryMonitorClient:
             with socket.create_connection((self.host, self.port), self.timeout) as sock:
                 sock.settimeout(self.timeout)
 
+                sock.sendall(ViceBinaryMonitorProtocol.banks_available_request(1))
+                while True:
+                    packet = self._packet(sock)
+                    if self._request_id(packet) == 0xFFFFFFFF:
+                        continue
+                    if self._request_id(packet) != 1:
+                        raise QualificationUnavailable("unexpected VICE banks response")
+                    banks = ViceBinaryMonitorProtocol.banks_available_response(packet, 1)
+                    break
+                bank_id = banks.get("cpu")
+                if bank_id is None:
+                    bank_id = banks.get("current")
+                if bank_id is None:
+                    raise QualificationUnavailable(
+                        f"VICE exposes no CPU/current bank; available={sorted(banks)}"
+                    )
+
                 # A temporary execution checkpoint gives the runner a deterministic
                 # completion point instead of guessing how long the C64 needs.
                 sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(address, 2))
@@ -162,7 +215,7 @@ class ViceBinaryMonitorClient:
 
                 request_id = 4
                 sock.sendall(
-                    ViceBinaryMonitorProtocol.memory_get_request(start, end, request_id)
+                    ViceBinaryMonitorProtocol.memory_get_request(start, end, request_id, bank_id)
                 )
                 while True:
                     packet = self._packet(sock)
