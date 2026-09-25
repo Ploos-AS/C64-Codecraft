@@ -10,7 +10,7 @@ on:
       - "tools/test_cpu6502_harness.py"
       - "tools/vice_machine_runner.py"
       - "tools/test_vice_machine_runner.py"
-      - "tools/qualify_lab_*.py"
+      - "tools/qualify_lab_**"
       - ".github/workflows/labs.yml"
   pull_request:
     paths:
@@ -21,7 +21,7 @@ on:
       - "tools/test_cpu6502_harness.py"
       - "tools/vice_machine_runner.py"
       - "tools/test_vice_machine_runner.py"
-      - "tools/qualify_lab_*.py"
+      - "tools/qualify_lab_**"
       - ".github/workflows/labs.yml"
 
 permissions:
