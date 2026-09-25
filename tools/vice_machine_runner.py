@@ -109,16 +109,25 @@ class ViceBinaryMonitorClient:
             with socket.create_connection((self.host, self.port), self.timeout) as sock:
                 sock.settimeout(self.timeout)
                 sock.sendall(request)
-                header = self._recv_exact(sock, 12)
-                body_len = struct.unpack_from("<I", header, 2)[0]
-                body = self._recv_exact(sock, body_len)
+                while True:
+                    header = self._recv_exact(sock, 12)
+                    body_len = struct.unpack_from("<I", header, 2)[0]
+                    body = self._recv_exact(sock, body_len)
+                    response_id = struct.unpack_from("<I", header, 8)[0]
+                    if response_id == 0xFFFFFFFF:
+                        continue
+                    if response_id != request_id:
+                        raise QualificationUnavailable(
+                            f"unexpected VICE binary-monitor request id "
+                            f"{response_id:#010x}"
+                        )
+                    return ViceBinaryMonitorProtocol.memory_get_response(
+                        header + body, request_id
+                    )
         except (OSError, TimeoutError) as exc:
             raise QualificationUnavailable(
                 f"VICE binary-monitor transport failed: {exc}"
             ) from exc
-        return ViceBinaryMonitorProtocol.memory_get_response(
-            header + body, request_id
-        )
 
 
 class ViceBinaryMonitorBackend:
