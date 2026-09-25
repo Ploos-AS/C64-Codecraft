@@ -153,6 +153,7 @@ class ViceBinaryMonitorBackend:
             "-binarymonitor",
             "-binarymonitoraddress", f"ip4://{self.host}:{self.port}",
             "-console",
+            "-sounddev", "dummy",
             "-pal",
         ]
         if self.rom_dir is not None:
@@ -176,7 +177,7 @@ class ViceBinaryMonitorBackend:
                     output = process.stdout.read() if process.stdout else ""
                     raise QualificationUnavailable(
                         f"VICE exited before monitor became ready: {process.returncode}: "
-                        f"{output[-1000:]}"
+                        f"{output[-4000:]}"
                     )
                 try:
                     data = client.read_memory(start, end)
