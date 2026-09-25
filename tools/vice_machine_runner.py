@@ -132,10 +132,12 @@ class ViceBinaryMonitorBackend:
         host="127.0.0.1",
         port=6502,
         startup_timeout=5.0,
+        rom_dir=None,
     ):
         self.expected_addresses = tuple(expected_addresses)
         self.host, self.port = host, port
         self.startup_timeout = startup_timeout
+        self.rom_dir = Path(rom_dir) if rom_dir is not None else None
 
     def observe(self, *, binary: str, prg: Path, profile: MachineProfile):
         if profile.video.upper() != "PAL":
@@ -151,8 +153,14 @@ class ViceBinaryMonitorBackend:
             "-binarymonitoraddress", f"ip4://{self.host}:{self.port}",
             "-console",
             "-pal",
-            "-autostart", str(prg),
         ]
+        if self.rom_dir is not None:
+            command += [
+                "-kernal", str(self.rom_dir / "kernal.rom"),
+                "-basic", str(self.rom_dir / "basic.rom"),
+                "-chargen", str(self.rom_dir / "chargen.rom"),
+            ]
+        command += ["-autostart", str(prg)]
         process = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
         )
