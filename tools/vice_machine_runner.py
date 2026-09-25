@@ -169,7 +169,7 @@ class ViceBinaryMonitorClient:
     def _request_id(packet):
         return struct.unpack_from("<I", packet, 8)[0]
 
-    def run_until(self, address: int, start: int, end: int) -> bytes:
+    def run_until(self, address: int, start: int, end: int, prg: Path) -> bytes:
         try:
             with socket.create_connection((self.host, self.port), self.timeout) as sock:
                 sock.settimeout(self.timeout)
@@ -327,7 +327,7 @@ class ViceBinaryMonitorBackend:
                         f"{output[-4000:]}"
                     )
                 try:
-                    data = client.run_until(self.stop_address, start, end)
+                    data = client.run_until(self.stop_address, start, end, prg)
                     memory = {
                         address: data[address - start]
                         for address in self.expected_addresses
