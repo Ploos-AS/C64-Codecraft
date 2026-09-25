@@ -8,6 +8,7 @@ import shutil
 import socket
 import struct
 import subprocess
+import time
 from typing import Protocol
 
 
@@ -118,6 +119,78 @@ class ViceBinaryMonitorClient:
         return ViceBinaryMonitorProtocol.memory_get_response(
             header + body, request_id
         )
+
+
+class ViceBinaryMonitorBackend:
+    """Qualified VICE 3.9 binary-monitor transport for bounded memory reads."""
+
+    name = "vice-binary-monitor"
+
+    def __init__(
+        self,
+        expected_addresses=(0xD020, 0xD021),
+        host="127.0.0.1",
+        port=6502,
+        startup_timeout=5.0,
+    ):
+        self.expected_addresses = tuple(expected_addresses)
+        self.host, self.port = host, port
+        self.startup_timeout = startup_timeout
+
+    def observe(self, *, binary: str, prg: Path, profile: MachineProfile):
+        if profile.video.upper() != "PAL":
+            raise QualificationUnavailable(
+                f"VICE binary backend currently qualifies PAL only, got {profile.video}"
+            )
+        if not self.expected_addresses:
+            raise QualificationUnavailable("no memory addresses requested")
+        start, end = min(self.expected_addresses), max(self.expected_addresses)
+        command = [
+            "xvfb-run", "-a", binary,
+            "-binarymonitor",
+            "-binarymonitoraddress", f"ip4://{self.host}:{self.port}",
+            "-console",
+            "-pal",
+            "-autostart", str(prg),
+        ]
+        process = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+        )
+        deadline = time.monotonic() + self.startup_timeout
+        client = ViceBinaryMonitorClient(
+            self.host, self.port, timeout=min(1.0, self.startup_timeout)
+        )
+        last_error = None
+        try:
+            while time.monotonic() < deadline:
+                if process.poll() is not None:
+                    output = process.stdout.read() if process.stdout else ""
+                    raise QualificationUnavailable(
+                        f"VICE exited before monitor became ready: {process.returncode}: "
+                        f"{output[-1000:]}"
+                    )
+                try:
+                    data = client.read_memory(start, end)
+                    memory = {
+                        address: data[address - start]
+                        for address in self.expected_addresses
+                    }
+                    return MachineObservation(
+                        memory=memory, stop_reason="binary-monitor-memory-read"
+                    )
+                except QualificationUnavailable as exc:
+                    last_error = exc
+                    time.sleep(0.05)
+            raise QualificationUnavailable(
+                f"VICE binary monitor did not become readable: {last_error}"
+            )
+        finally:
+            process.terminate()
+            try:
+                process.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=2)
 
 
 class ViceMonitorTranscriptBackend:
