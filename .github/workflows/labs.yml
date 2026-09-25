@@ -84,4 +84,11 @@ jobs:
           )
           observed = result["observation"].memory
           print(f"Lab 00.03 VICE state: D020={observed[0xD020]:02x} D021={observed[0xD021]:02x}")
+          from vice_machine_runner import AssertionMismatch, assert_memory
+          try:
+              assert_memory(result["observation"], {0xD020: 0xF6})
+          except AssertionMismatch:
+              print("Lab 00.03 negative hardware assertion: PASS")
+          else:
+              raise SystemExit("intentional wrong VIC-II expectation unexpectedly passed")
           PY
