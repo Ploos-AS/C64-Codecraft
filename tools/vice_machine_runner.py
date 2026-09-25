@@ -249,7 +249,7 @@ class ViceBinaryMonitorBackend:
         port=6502,
         startup_timeout=5.0,
         rom_dir=None,
-        stop_address=0x0823,
+        stop_address=0x0822,
     ):
         self.expected_addresses = tuple(expected_addresses)
         self.host, self.port = host, port
