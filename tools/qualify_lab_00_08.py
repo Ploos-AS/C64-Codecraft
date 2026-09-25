@@ -12,7 +12,7 @@ result = qualify(
     prg,
     backend=ViceBinaryMonitorBackend(
         expected_addresses=(0x0400, 0x0427, 0xD800, 0xDBFF),
-        stop_address=0x0821,
+        stop_address=0x0822,\n        port=6503,
         rom_dir=Path("build/open-roms"),
     ),
 )
