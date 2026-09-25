@@ -154,6 +154,8 @@ class ViceBinaryMonitorBackend:
             "-binarymonitoraddress", f"ip4://{self.host}:{self.port}",
             "-console",
             "-sounddev", "dummy",
+            "-virtualdev8",
+            "-drive8type", "1541",
             "-pal",
         ]
         if self.rom_dir is not None:
