@@ -54,7 +54,7 @@ class ViceBinaryMonitorProtocol:
     def memory_get_request(cls, start: int, end: int, request_id: int = 1) -> bytes:
         if not (0 <= start <= end <= 0xFFFF):
             raise ValueError("invalid memory range")
-        body = struct.pack("<BHHBH", 0, start, end, 0, 0)
+        body = struct.pack("<BHHBH", 1, start, end, 0, 0)
         return (
             bytes((cls.STX, cls.API_VERSION))
             + struct.pack("<II", len(body), request_id)
