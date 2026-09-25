@@ -147,6 +147,7 @@ class ViceBinaryMonitorBackend:
         if not self.expected_addresses:
             raise QualificationUnavailable("no memory addresses requested")
         start, end = min(self.expected_addresses), max(self.expected_addresses)
+        prg = prg.resolve()
         command = [
             "xvfb-run", "-a", binary,
             "-binarymonitor",
