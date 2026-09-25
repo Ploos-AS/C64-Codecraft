@@ -196,6 +196,12 @@ class ViceBinaryMonitorBackend:
                         address: data[address - start]
                         for address in self.expected_addresses
                     }
+                    if any(memory[address] != value for address, value in ((0xD020, 0x05), (0xD021, 0x00)) if address in memory):
+                        last_error = QualificationUnavailable(
+                            "VICE program has not reached expected VIC-II state yet"
+                        )
+                        time.sleep(0.05)
+                        continue
                     return MachineObservation(
                         memory=memory, stop_reason="binary-monitor-memory-read"
                     )
