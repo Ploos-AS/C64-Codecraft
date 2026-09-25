@@ -155,7 +155,7 @@ class ViceBinaryMonitorBackend:
             "-console",
             "-sounddev", "dummy",
             "-virtualdev8",
-            "-drive8type", "1541",
+            "-autostartprgmode", "1",
             "-pal",
         ]
         if self.rom_dir is not None:
