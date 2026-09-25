@@ -5,6 +5,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import re
 import shutil
+import socket
+import struct
 import subprocess
 from typing import Protocol
 
@@ -38,6 +40,84 @@ class StateBackend(Protocol):
         self, *, binary: str, prg: Path, profile: MachineProfile
     ) -> MachineObservation:
         ...
+
+
+class ViceBinaryMonitorProtocol:
+    """Minimal fail-closed VICE binary-monitor protocol codec."""
+
+    STX = 0x02
+    API_VERSION = 0x02
+    MEM_GET = 0x01
+
+    @classmethod
+    def memory_get_request(cls, start: int, end: int, request_id: int = 1) -> bytes:
+        if not (0 <= start <= end <= 0xFFFF):
+            raise ValueError("invalid memory range")
+        body = struct.pack("<BHHBH", 0, start, end, 0, 0)
+        return (
+            bytes((cls.STX, cls.API_VERSION))
+            + struct.pack("<II", len(body), request_id)
+            + bytes((cls.MEM_GET,))
+            + body
+        )
+
+    @classmethod
+    def memory_get_response(cls, packet: bytes, request_id: int = 1) -> bytes:
+        if len(packet) < 12:
+            raise QualificationUnavailable("truncated VICE binary-monitor response")
+        stx, api = packet[0], packet[1]
+        body_len = struct.unpack_from("<I", packet, 2)[0]
+        response_type, error = packet[6], packet[7]
+        response_id = struct.unpack_from("<I", packet, 8)[0]
+        if stx != cls.STX or api != cls.API_VERSION:
+            raise QualificationUnavailable("invalid VICE binary-monitor response header")
+        if response_type != cls.MEM_GET or response_id != request_id or error:
+            raise QualificationUnavailable(
+                f"VICE memory response mismatch: type={response_type:#04x} "
+                f"error={error:#04x} request={response_id:#010x}"
+            )
+        if len(packet) != 12 + body_len or body_len < 2:
+            raise QualificationUnavailable("invalid VICE memory response length")
+        segment_len = struct.unpack_from("<H", packet, 12)[0]
+        data = packet[14:]
+        if segment_len != len(data):
+            raise QualificationUnavailable("VICE memory segment length mismatch")
+        return data
+
+
+class ViceBinaryMonitorClient:
+    """Small synchronous transport used by the qualified M0.2 backend."""
+
+    def __init__(self, host="127.0.0.1", port=6502, timeout=2.0):
+        self.host, self.port, self.timeout = host, port, timeout
+
+    @staticmethod
+    def _recv_exact(sock, count):
+        data = bytearray()
+        while len(data) < count:
+            chunk = sock.recv(count - len(data))
+            if not chunk:
+                raise QualificationUnavailable("VICE binary-monitor connection closed")
+            data.extend(chunk)
+        return bytes(data)
+
+    def read_memory(self, start: int, end: int) -> bytes:
+        request_id = 1
+        request = ViceBinaryMonitorProtocol.memory_get_request(start, end, request_id)
+        try:
+            with socket.create_connection((self.host, self.port), self.timeout) as sock:
+                sock.settimeout(self.timeout)
+                sock.sendall(request)
+                header = self._recv_exact(sock, 12)
+                body_len = struct.unpack_from("<I", header, 2)[0]
+                body = self._recv_exact(sock, body_len)
+        except (OSError, TimeoutError) as exc:
+            raise QualificationUnavailable(
+                f"VICE binary-monitor transport failed: {exc}"
+            ) from exc
+        return ViceBinaryMonitorProtocol.memory_get_response(
+            header + body, request_id
+        )
 
 
 class ViceMonitorTranscriptBackend:
