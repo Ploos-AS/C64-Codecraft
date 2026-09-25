@@ -19,6 +19,7 @@ from vice_machine_runner import (
     qualify,
     require_state_backend,
     ViceMonitorTranscriptBackend,
+    ViceBinaryMonitorProtocol,
 )
 
 profile = MachineProfile()
@@ -99,6 +100,32 @@ except QualificationUnavailable:
     pass
 else:
     raise SystemExit("empty monitor transcript did not fail closed")
+
+request = ViceBinaryMonitorProtocol.memory_get_request(0xD020, 0xD021, 0x12345678)
+expected_body = bytes((0x00, 0x20, 0xD0, 0x21, 0xD0, 0x00, 0x00, 0x00))
+expected_request = (
+    bytes((0x02, 0x02, 0x08, 0x00, 0x00, 0x00))
+    + bytes((0x78, 0x56, 0x34, 0x12, 0x01))
+    + expected_body
+)
+if request != expected_request:
+    raise SystemExit(f"VICE memory-get packet changed unexpectedly: {request.hex()}")
+
+response = (
+    bytes((0x02, 0x02, 0x04, 0x00, 0x00, 0x00, 0x01, 0x00))
+    + bytes((0x78, 0x56, 0x34, 0x12))
+    + bytes((0x02, 0x00, 0x05, 0x00))
+)
+if ViceBinaryMonitorProtocol.memory_get_response(response, 0x12345678) != b"\x05\x00":
+    raise SystemExit("VICE memory-get response decoded incorrectly")
+
+for broken in (response[:8], response[:-1], response[:7] + b"\x81" + response[8:]):
+    try:
+        ViceBinaryMonitorProtocol.memory_get_response(broken, 0x12345678)
+    except QualificationUnavailable:
+        pass
+    else:
+        raise SystemExit("malformed VICE binary response did not fail closed")
 
 print(
     "VICE machine-runner contract tests: PASS "
