@@ -68,3 +68,4 @@ jobs:
         run: |
           make -C labs/00-intro/03-subroutine-stack clean all
           python3 tools/qualify_lab_00_03.py
+          python3 tools/qualify_lab_00_08.py
