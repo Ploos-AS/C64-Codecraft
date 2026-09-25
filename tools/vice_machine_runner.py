@@ -191,36 +191,63 @@ class ViceBinaryMonitorClient:
                         f"VICE exposes no CPU/current bank; available={sorted(banks)}"
                     )
 
-                # Lab 00.03 layout: $0810 JSR, $0813 RTS, $0814 LDA, $0816 STA D020,\n                # $0819 JSR, $081c RTS, $081d LDA, $081f STA D021, $0822 RTS.\n                # A temporary execution checkpoint gives the runner a deterministic
-                # completion point instead of guessing how long the C64 needs.
-                sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(address, 2))
+                # Prove the autostarted PRG is actually resident before execution.
+                # PRG bytes 0-1 are the little-endian load address; compare the
+                # complete payload with VICE CPU-visible memory fail-closed.
+                prg_bytes = Path(prg).read_bytes()
+                load_address = struct.unpack_from("<H", prg_bytes, 0)[0]
+                payload = prg_bytes[2:]
+                sock.sendall(
+                    ViceBinaryMonitorProtocol.memory_get_request(
+                        load_address, load_address + len(payload) - 1, 2, bank_id
+                    )
+                )
                 while True:
                     packet = self._packet(sock)
-                    if self._request_id(packet) == 2:
+                    if self._request_id(packet) == 0xFFFFFFFF:
+                        continue
+                    if self._request_id(packet) != 2:
+                        raise QualificationUnavailable(
+                            "unexpected VICE pre-execution memory response"
+                        )
+                    loaded = ViceBinaryMonitorProtocol.memory_get_response(packet, 2)
+                    break
+                if loaded != payload:
+                    raise QualificationUnavailable(
+                        f"VICE autostart payload mismatch at {load_address:#06x}: "
+                        f"expected={payload.hex()} observed={loaded.hex()}"
+                    )
+
+                # Lab 00.03 layout: $0810 JSR, $0813 RTS, $0814 LDA, $0816 STA D020,\n                # $0819 JSR, $081c RTS, $081d LDA, $081f STA D021, $0822 RTS.\n                # A temporary execution checkpoint gives the runner a deterministic
+                # completion point instead of guessing how long the C64 needs.
+                sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(address, 3))
+                while True:
+                    packet = self._packet(sock)
+                    if self._request_id(packet) == 3:
                         if packet[7]:
                             raise QualificationUnavailable("VICE rejected checkpoint")
                         break
 
                 # EXIT resumes emulation until the temporary checkpoint is hit.
-                sock.sendall(ViceBinaryMonitorProtocol.exit_request(3))
+                sock.sendall(ViceBinaryMonitorProtocol.exit_request(4))
                 stopped = False
                 while not stopped:
                     packet = self._packet(sock)
                     request_id = self._request_id(packet)
                     response_type = packet[6]
-                    if request_id == 3 and packet[7]:
+                    if request_id == 4 and packet[7]:
                         raise QualificationUnavailable("VICE rejected monitor exit")
                     if request_id == 0xFFFFFFFF and response_type == 0x62:
                         stopped = True
 
-                request_id = 4
+                request_id = 5
                 sock.sendall(
                     ViceBinaryMonitorProtocol.memory_get_request(start, end, request_id, bank_id)
                 )
                 while True:
                     packet = self._packet(sock)
                     response_id = self._request_id(packet)
-                    if response_id in (0xFFFFFFFF, 3):
+                    if response_id in (0xFFFFFFFF, 4):
                         # EXIT may acknowledge after the asynchronous stopped event.
                         continue
                     if response_id != request_id:
