@@ -191,7 +191,7 @@ class ViceBinaryMonitorClient:
                         f"VICE exposes no CPU/current bank; available={sorted(banks)}"
                     )
 
-                # A temporary execution checkpoint gives the runner a deterministic
+                # Lab 00.03 layout: $0810 JSR, $0813 RTS, $0814 LDA, $0816 STA D020,\n                # $0819 JSR, $081c RTS, $081d LDA, $081f STA D021, $0822 RTS.\n                # A temporary execution checkpoint gives the runner a deterministic
                 # completion point instead of guessing how long the C64 needs.
                 sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(address, 2))
                 while True:
@@ -249,7 +249,7 @@ class ViceBinaryMonitorBackend:
         port=6502,
         startup_timeout=5.0,
         rom_dir=None,
-        stop_address=0x0821,
+        stop_address=0x0822,
     ):
         self.expected_addresses = tuple(expected_addresses)
         self.host, self.port = host, port
