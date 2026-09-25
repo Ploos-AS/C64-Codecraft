@@ -211,6 +211,7 @@ class ViceBinaryMonitorClient:
                             "unexpected VICE pre-execution memory response"
                         )
                     loaded = ViceBinaryMonitorProtocol.memory_get_response(packet, 2)
+                    print(f"VICE pre-exec bank={bank_id} banks={banks} load={load_address:#06x} payload={loaded.hex()}")
                     break
                 if loaded != payload:
                     raise QualificationUnavailable(
@@ -255,9 +256,9 @@ class ViceBinaryMonitorClient:
                             f"unexpected VICE binary-monitor request id "
                             f"{response_id:#010x}"
                         )
-                    return ViceBinaryMonitorProtocol.memory_get_response(
-                        packet, request_id
-                    )
+                    data = ViceBinaryMonitorProtocol.memory_get_response(packet, request_id)
+                    print(f"VICE post-exec bank={bank_id} range={start:#06x}-{end:#06x} data={data.hex()}")
+                    return data
         except (OSError, TimeoutError) as exc:
             raise QualificationUnavailable(
                 f"VICE binary-monitor transport failed: {exc}"
