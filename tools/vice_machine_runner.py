@@ -414,7 +414,7 @@ def vice_version(binary):
     return output.splitlines()[0]
 
 
-def assert_memory(observation: MachineObservation, expected: dict[int, int], masks: dict[int, int] | None = None):
+def assert_memory(\n    observation: MachineObservation,\n    expected: dict[int, int],\n    masks: dict[int, int] | None = None,\n):
     masks = masks or {}\n    for address, value in expected.items():
         if not 0 <= address <= 0xFFFF:
             raise ValueError(f"invalid C64 address: {address:#x}")
