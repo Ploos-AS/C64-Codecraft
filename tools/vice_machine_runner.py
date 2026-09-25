@@ -242,8 +242,9 @@ class ViceBinaryMonitorClient:
                         stopped = True
 
                 request_id = 5
+                state_bank_id = banks.get("io", bank_id)
                 sock.sendall(
-                    ViceBinaryMonitorProtocol.memory_get_request(start, end, request_id, bank_id)
+                    ViceBinaryMonitorProtocol.memory_get_request(start, end, request_id, state_bank_id)
                 )
                 while True:
                     packet = self._packet(sock)
@@ -257,7 +258,7 @@ class ViceBinaryMonitorClient:
                             f"{response_id:#010x}"
                         )
                     data = ViceBinaryMonitorProtocol.memory_get_response(packet, request_id)
-                    print(f"VICE post-exec bank={bank_id} range={start:#06x}-{end:#06x} data={data.hex()}")
+                    print(f"VICE post-exec bank={state_bank_id} range={start:#06x}-{end:#06x} data={data.hex()}")
                     return data
         except (OSError, TimeoutError) as exc:
             raise QualificationUnavailable(
