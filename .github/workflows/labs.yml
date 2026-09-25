@@ -79,7 +79,7 @@ jobs:
           print("Lab 00.03 expected code @0810: 20140860a9058d20d0201d0860a9008d21d060")
           result = qualify(
               prg,
-              expected_memory={0xD020: 0x05, 0xD021: 0x00},
+              expected_memory={0xD020: 0xF5, 0xD021: 0xF0},
               backend=ViceBinaryMonitorBackend(rom_dir=Path("build/open-roms")),
           )
           observed = result["observation"].memory
