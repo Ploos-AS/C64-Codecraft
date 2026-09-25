@@ -67,26 +67,4 @@ jobs:
       - name: Run Lab 00.03 VICE machine-state qualification
         run: |
           make -C labs/00-intro/03-subroutine-stack clean all
-          python3 - <<'PY'
-          from pathlib import Path
-          import sys
-          sys.path.insert(0, "tools")
-          from vice_machine_runner import ViceBinaryMonitorBackend, qualify
-
-          prg = Path("labs/00-intro/03-subroutine-stack/build/subroutine-stack.prg")
-          payload = prg.read_bytes()
-          print(f"Lab 00.03 PRG bytes: {payload.hex()}")
-          print("Lab 00.03 expected code @0810: 20140860a9058d20d0201d0860a9008d21d060")
-          result = qualify(
-              prg,
-              expected_memory={},
-              backend=ViceBinaryMonitorBackend(rom_dir=Path("build/open-roms")),
-          )
-          observed = result["observation"].memory
-          print(f"Lab 00.03 VICE state: D020={observed[0xD020]:02x} D021={observed[0xD021]:02x}")
-          from vice_machine_runner import AssertionMismatch, assert_memory\n          assert_memory(result["observation"], {0xD020: 0x05, 0xD021: 0x00}, masks={0xD020: 0x0F, 0xD021: 0x0F})\n          try:\n              assert_memory(result["observation"], {0xD020: 0x06}, masks={0xD020: 0x0F})
-          except AssertionMismatch:
-              print("Lab 00.03 negative hardware assertion: PASS")
-          else:
-              raise SystemExit("intentional wrong VIC-II expectation unexpectedly passed")
-          PY
+          python3 tools/qualify_lab_00_03.py
