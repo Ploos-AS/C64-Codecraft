@@ -414,8 +414,8 @@ def vice_version(binary):
     return output.splitlines()[0]
 
 
-def assert_memory(observation: MachineObservation, expected: dict[int, int]):
-    for address, value in expected.items():
+def assert_memory(observation: MachineObservation, expected: dict[int, int], masks: dict[int, int] | None = None):
+    masks = masks or {}\n    for address, value in expected.items():
         if not 0 <= address <= 0xFFFF:
             raise ValueError(f"invalid C64 address: {address:#x}")
         if not 0 <= value <= 0xFF:
@@ -424,10 +424,9 @@ def assert_memory(observation: MachineObservation, expected: dict[int, int]):
             raise QualificationUnavailable(
                 f"backend did not observe required address {address:#06x}"
             )
-        actual = observation.memory[address]
-        if actual != value:
+        actual = observation.memory[address]\n        mask = masks.get(address, 0xFF)\n        if not 0 <= mask <= 0xFF:\n            raise ValueError(f"invalid mask at {address:#06x}: {mask}")\n        if (actual & mask) != (value & mask):
             raise AssertionMismatch(
-                f"{address:#06x}: expected {value:#04x}, observed {actual:#04x}"
+                f"{address:#06x}: expected {value:#04x}, observed {actual:#04x}, mask {mask:#04x}"
             )
 
 
