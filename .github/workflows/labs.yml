@@ -35,7 +35,7 @@ jobs:
         run: |
           sed -i 's/Components: main/Components: main contrib/' /etc/apt/sources.list.d/debian.sources
           apt-get update
-          apt-get install -y --no-install-recommends git ca-certificates make 64tass vice python3
+          apt-get install -y --no-install-recommends git ca-certificates curl make 64tass vice python3 xvfb xauth
       - uses: actions/checkout@v4
       - name: Check Python
         run: python3 --version
@@ -55,3 +55,29 @@ jobs:
         run: python3 tools/test_vice_machine_runner.py
       - name: Run deterministic CPU/RAM qualification
         run: python3 tools/run_cpu_labs.py
+      - name: Fetch redistributable Open ROMs for VICE
+        run: |
+          mkdir -p build/open-roms
+          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/kernal_generic.rom -o build/open-roms/kernal.rom
+          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/basic_generic.rom -o build/open-roms/basic.rom
+          curl -fsSL https://raw.githubusercontent.com/MEGA65/open-roms/master/bin/chargen_openroms.rom -o build/open-roms/chargen.rom
+          test "$(wc -c < build/open-roms/kernal.rom)" -eq 8192
+          test "$(wc -c < build/open-roms/basic.rom)" -eq 8192
+          test "$(wc -c < build/open-roms/chargen.rom)" -eq 4096
+      - name: Run Lab 00.03 VICE machine-state qualification
+        run: |
+          make -C labs/00-intro/03-subroutine-stack clean all
+          python3 - <<'PY'
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, "tools")
+          from vice_machine_runner import ViceBinaryMonitorBackend, qualify
+
+          result = qualify(
+              Path("labs/00-intro/03-subroutine-stack/build/subroutine-stack.prg"),
+              expected_memory={0xD020: 0x05, 0xD021: 0x00},
+              backend=ViceBinaryMonitorBackend(),
+          )
+          observed = result["observation"].memory
+          print(f"Lab 00.03 VICE state: D020={observed[0xD020]:02x} D021={observed[0xD021]:02x}")
+          PY
