@@ -73,8 +73,12 @@ jobs:
           sys.path.insert(0, "tools")
           from vice_machine_runner import ViceBinaryMonitorBackend, qualify
 
+          prg = Path("labs/00-intro/03-subroutine-stack/build/subroutine-stack.prg")
+          payload = prg.read_bytes()
+          print(f"Lab 00.03 PRG bytes: {payload.hex()}")
+          print("Lab 00.03 expected code @0810: 20140860a9058d20d0201d0860a9008d21d060")
           result = qualify(
-              Path("labs/00-intro/03-subroutine-stack/build/subroutine-stack.prg"),
+              prg,
               expected_memory={0xD020: 0x05, 0xD021: 0x00},
               backend=ViceBinaryMonitorBackend(rom_dir=Path("build/open-roms")),
           )
