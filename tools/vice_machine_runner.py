@@ -137,7 +137,7 @@ class ViceBinaryMonitorBackend:
         self.expected_addresses = tuple(expected_addresses)
         self.host, self.port = host, port
         self.startup_timeout = startup_timeout
-        self.rom_dir = Path(rom_dir) if rom_dir is not None else None
+        self.rom_dir = Path(rom_dir).resolve() if rom_dir is not None else None
 
     def observe(self, *, binary: str, prg: Path, profile: MachineProfile):
         if profile.video.upper() != "PAL":
