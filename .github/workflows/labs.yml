@@ -76,7 +76,7 @@ jobs:
           result = qualify(
               Path("labs/00-intro/03-subroutine-stack/build/subroutine-stack.prg"),
               expected_memory={0xD020: 0x05, 0xD021: 0x00},
-              backend=ViceBinaryMonitorBackend(),
+              backend=ViceBinaryMonitorBackend(rom_dir=Path("build/open-roms")),
           )
           observed = result["observation"].memory
           print(f"Lab 00.03 VICE state: D020={observed[0xD020]:02x} D021={observed[0xD021]:02x}")
