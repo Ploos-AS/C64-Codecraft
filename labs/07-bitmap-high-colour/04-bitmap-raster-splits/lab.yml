@@ -9,4 +9,4 @@ target:
 verification:
   assemble: true
   deterministic_bytes: true
-  emulator_state: false
+  emulator_state: true
