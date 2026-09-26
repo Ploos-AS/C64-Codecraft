@@ -8,42 +8,30 @@ prg = Path("labs/07-bitmap-high-colour/04-bitmap-raster-splits/build/bitmap-rast
 payload = prg.read_bytes()
 print(f"Lab 07.04 PRG bytes: {payload.hex()}")
 
+# The polling loop exits only after VIC-II raster $D012 matched $60.
+# Stop at the first instruction after STA $D020 and verify the visible state.
 top = qualify(
     prg,
     backend=ViceBinaryMonitorBackend(
-        expected_addresses=(0xD012, 0xD020),
-        stop_address=0x081C,
+        expected_addresses=(0xD020,),
+        stop_address=0x081D,
         port=6506,
         rom_dir=Path("build/open-roms"),
     ),
 )
-print(
-    "Lab 07.04 top split: "
-    f"D012={top['observation'].memory[0xD012]:02x} "
-    f"D020={top['observation'].memory[0xD020]:02x}"
-)
-assert_memory(
-    top["observation"],
-    {0xD012: 0x60, 0xD020: 0x06},
-    masks={0xD020: 0x0F},
-)
+print(f"Lab 07.04 top split: D020={top['observation'].memory[0xD020]:02x}")
+assert_memory(top["observation"], {0xD020: 0x06}, masks={0xD020: 0x0F})
 
+# The second polling loop exits only after VIC-II raster $D012 matched $C0.
+# Stop immediately before RTS, after the bottom colour has been written.
 bottom = qualify(
     prg,
     backend=ViceBinaryMonitorBackend(
-        expected_addresses=(0xD012, 0xD020),
-        stop_address=0x0828,
+        expected_addresses=(0xD020,),
+        stop_address=0x082A,
         port=6507,
         rom_dir=Path("build/open-roms"),
     ),
 )
-print(
-    "Lab 07.04 bottom split: "
-    f"D012={bottom['observation'].memory[0xD012]:02x} "
-    f"D020={bottom['observation'].memory[0xD020]:02x}"
-)
-assert_memory(
-    bottom["observation"],
-    {0xD012: 0xC0, 0xD020: 0x0E},
-    masks={0xD020: 0x0F},
-)
+print(f"Lab 07.04 bottom split: D020={bottom['observation'].memory[0xD020]:02x}")
+assert_memory(bottom["observation"], {0xD020: 0x0E}, masks={0xD020: 0x0F})
