@@ -251,7 +251,8 @@ class ViceBinaryMonitorClient:
                             break
                     sock.sendall(ViceBinaryMonitorProtocol.exit_request(4))
                     entry_hit = False
-                    while True:
+                    entry_stopped = False
+                    while not (entry_hit and entry_stopped):
                         packet = self._packet(sock)
                         packet_id = self._request_id(packet)
                         if packet_id == 4 and packet[7]:
@@ -260,8 +261,8 @@ class ViceBinaryMonitorClient:
                             info = ViceBinaryMonitorProtocol.checkpoint_response(packet)
                             if info["number"] == entry_checkpoint["number"] and info["hit"]:
                                 entry_hit = True
-                        if packet_id == 0xFFFFFFFF and packet[6] == 0x62 and entry_hit:
-                            break
+                        if packet_id == 0xFFFFFFFF and packet[6] == 0x62:
+                            entry_stopped = True
                     checkpoint_request_id, exit_request_id, memory_request_id = 5, 6, 7
                 else:
                     checkpoint_request_id, exit_request_id, memory_request_id = 3, 4, 5
@@ -281,7 +282,8 @@ class ViceBinaryMonitorClient:
 
                 sock.sendall(ViceBinaryMonitorProtocol.exit_request(exit_request_id))
                 target_hit = False
-                while True:
+                target_stopped = False
+                while not (target_hit and target_stopped):
                     packet = self._packet(sock)
                     request_id = self._request_id(packet)
                     if request_id == exit_request_id and packet[7]:
@@ -290,8 +292,8 @@ class ViceBinaryMonitorClient:
                         info = ViceBinaryMonitorProtocol.checkpoint_response(packet)
                         if info["number"] == target_checkpoint["number"] and info["hit"]:
                             target_hit = True
-                    if request_id == 0xFFFFFFFF and packet[6] == 0x62 and target_hit:
-                        break
+                    if request_id == 0xFFFFFFFF and packet[6] == 0x62:
+                        target_stopped = True
 
                 request_id = memory_request_id
                 state_bank_id = banks.get("io", bank_id)
