@@ -219,9 +219,33 @@ class ViceBinaryMonitorClient:
                         f"expected={payload.hex()} observed={loaded.hex()}"
                     )
 
-                # Lab 00.03 layout: $0810 JSR, $0813 RTS, $0814 LDA, $0816 STA D020,\n                # $0819 JSR, $081c RTS, $081d LDA, $081f STA D021, $0822 RTS.\n                # A temporary execution checkpoint gives the runner a deterministic
-                # completion point instead of guessing how long the C64 needs.
-                sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(address, 3))
+                # Optionally gate execution on the lab entry point first. This
+                # prevents a target checkpoint from matching an earlier visit
+                # during BASIC/ROM/autostart before SYS enters the lab.
+                if entry_address is not None:
+                    sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(entry_address, 3))
+                    while True:
+                        packet = self._packet(sock)
+                        if self._request_id(packet) == 3:
+                            if packet[7]:
+                                raise QualificationUnavailable("VICE rejected entry checkpoint")
+                            break
+                    sock.sendall(ViceBinaryMonitorProtocol.exit_request(4))
+                    while True:
+                        packet = self._packet(sock)
+                        if self._request_id(packet) == 4 and packet[7]:
+                            raise QualificationUnavailable("VICE rejected entry monitor exit")
+                        if self._request_id(packet) == 0xFFFFFFFF and packet[6] == 0x62:
+                            break
+                    checkpoint_request_id, exit_request_id, memory_request_id = 5, 6, 7
+                else:
+                    checkpoint_request_id, exit_request_id, memory_request_id = 3, 4, 5
+
+                sock.sendall(
+                    ViceBinaryMonitorProtocol.checkpoint_set_request(
+                        address, checkpoint_request_id
+                    )
+                )
                 while True:
                     packet = self._packet(sock)
                     if self._request_id(packet) == checkpoint_request_id:
@@ -229,17 +253,14 @@ class ViceBinaryMonitorClient:
                             raise QualificationUnavailable("VICE rejected checkpoint")
                         break
 
-                # EXIT resumes emulation until the temporary checkpoint is hit.
                 sock.sendall(ViceBinaryMonitorProtocol.exit_request(exit_request_id))
-                stopped = False
-                while not stopped:
+                while True:
                     packet = self._packet(sock)
                     request_id = self._request_id(packet)
-                    response_type = packet[6]
                     if request_id == exit_request_id and packet[7]:
                         raise QualificationUnavailable("VICE rejected monitor exit")
-                    if request_id == 0xFFFFFFFF and response_type == 0x62:
-                        stopped = True
+                    if request_id == 0xFFFFFFFF and packet[6] == 0x62:
+                        break
 
                 request_id = memory_request_id
                 state_bank_id = banks.get("io", bank_id)
