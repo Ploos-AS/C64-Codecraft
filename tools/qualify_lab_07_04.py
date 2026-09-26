@@ -15,6 +15,7 @@ top = qualify(
     backend=ViceBinaryMonitorBackend(
         expected_addresses=(0xD020,),
         stop_address=0x081C,
+        entry_address=0x0810,
         port=6506,
         rom_dir=Path("build/open-roms"),
     ),
@@ -29,6 +30,7 @@ bottom = qualify(
     backend=ViceBinaryMonitorBackend(
         expected_addresses=(0xD020,),
         stop_address=0x0829,
+        entry_address=0x0810,
         port=6507,
         rom_dir=Path("build/open-roms"),
     ),
