@@ -377,19 +377,6 @@ class ViceBinaryMonitorClient:
                         )
                         break
 
-                sock.sendall(ViceBinaryMonitorProtocol.exit_request(exit_request_id))
-                exit_ack = False
-                stopped = False
-                while not (exit_ack and stopped):
-                    packet = self._packet(sock)
-                    request_id = self._request_id(packet)
-                    if request_id == exit_request_id:
-                        if packet[7]:
-                            raise QualificationUnavailable("VICE rejected monitor exit")
-                        exit_ack = True
-                    elif request_id == 0xFFFFFFFF and packet[6] == 0x62:
-                        stopped = True
-
                 if entry_address is not None:
                     descriptors_request_id = memory_request_id + 1
                     register_request_id = memory_request_id + 2
@@ -401,7 +388,7 @@ class ViceBinaryMonitorClient:
                     while True:
                         packet = self._packet(sock)
                         response_id = self._request_id(packet)
-                        if response_id in (0xFFFFFFFF, exit_request_id):
+                        if response_id == 0xFFFFFFFF:
                             continue
                         if response_id != descriptors_request_id:
                             raise QualificationUnavailable(
@@ -418,35 +405,69 @@ class ViceBinaryMonitorClient:
                         )
                     pc_id, _pc_size = pc_descriptor
 
-                    sock.sendall(
-                        ViceBinaryMonitorProtocol.registers_get_request(register_request_id)
-                    )
-                    while True:
-                        packet = self._packet(sock)
-                        response_id = self._request_id(packet)
-                        if response_id in (0xFFFFFFFF, exit_request_id):
-                            continue
-                        if response_id != register_request_id:
-                            raise QualificationUnavailable(
-                                f"unexpected VICE registers request id {response_id:#010x}"
+                    resume_request_id = exit_request_id
+                    for stop_attempt in range(8):
+                        sock.sendall(ViceBinaryMonitorProtocol.exit_request(resume_request_id))
+                        exit_ack = False
+                        stopped = False
+                        while not (exit_ack and stopped):
+                            packet = self._packet(sock)
+                            response_id = self._request_id(packet)
+                            if response_id == resume_request_id:
+                                if packet[7]:
+                                    raise QualificationUnavailable("VICE rejected monitor exit")
+                                exit_ack = True
+                            elif response_id == 0xFFFFFFFF and packet[6] == 0x62:
+                                stopped = True
+
+                        current_register_request_id = register_request_id + stop_attempt
+                        sock.sendall(
+                            ViceBinaryMonitorProtocol.registers_get_request(
+                                current_register_request_id
                             )
-                        registers = ViceBinaryMonitorProtocol.registers_get_response(
-                            packet, register_request_id
                         )
-                        break
-                    pc = registers.get(pc_id)
-                    if pc is None:
+                        while True:
+                            packet = self._packet(sock)
+                            response_id = self._request_id(packet)
+                            if response_id == 0xFFFFFFFF:
+                                continue
+                            if response_id != current_register_request_id:
+                                raise QualificationUnavailable(
+                                    f"unexpected VICE registers request id {response_id:#010x}"
+                                )
+                            registers = ViceBinaryMonitorProtocol.registers_get_response(
+                                packet, current_register_request_id
+                            )
+                            break
+                        pc = registers.get(pc_id)
+                        if pc is None:
+                            raise QualificationUnavailable(
+                                f"VICE omitted PC register id {pc_id:#04x}"
+                            )
+                        print(
+                            f"VICE stop {stop_attempt + 1}/8 PC={pc:#06x} "
+                            f"expected={address:#06x} register-id={pc_id:#04x}"
+                        )
+                        if pc == address:
+                            break
+                        resume_request_id = register_request_id + 8 + stop_attempt
+                    else:
                         raise QualificationUnavailable(
-                            f"VICE omitted PC register id {pc_id:#04x}"
+                            f"VICE did not stop at target {address:#06x} within 8 stops"
                         )
-                    print(
-                        f"VICE target-stop PC={pc:#06x} expected={address:#06x} "
-                        f"register-id={pc_id:#04x}"
-                    )
-                    if pc != address:
-                        raise QualificationUnavailable(
-                            f"VICE stopped at PC {pc:#06x}, not target {address:#06x}"
-                        )
+                else:
+                    sock.sendall(ViceBinaryMonitorProtocol.exit_request(exit_request_id))
+                    exit_ack = False
+                    stopped = False
+                    while not (exit_ack and stopped):
+                        packet = self._packet(sock)
+                        request_id = self._request_id(packet)
+                        if request_id == exit_request_id:
+                            if packet[7]:
+                                raise QualificationUnavailable("VICE rejected monitor exit")
+                            exit_ack = True
+                        elif request_id == 0xFFFFFFFF and packet[6] == 0x62:
+                            stopped = True
 
                 request_id = memory_request_id
                 state_bank_id = banks.get("io", bank_id)
