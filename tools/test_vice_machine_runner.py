@@ -131,3 +131,9 @@ print(
     "VICE machine-runner contract tests: PASS "
     "(profile, binary, assertions, fail-closed state, backend integration)"
 )
+
+
+def test_binary_monitor_register_response_contract():
+    body = struct.pack("<H", 2) + bytes((3, 0x00)) + struct.pack("<H", 0x1234) + bytes((3, 0x03)) + struct.pack("<H", 0x081C)
+    packet = bytes((0x02, 0x02)) + struct.pack("<I", len(body)) + bytes((0x31, 0x00)) + struct.pack("<I", 77) + body
+    assert ViceBinaryMonitorProtocol.registers_get_response(packet, 77) == {0x00: 0x1234, 0x03: 0x081C}
