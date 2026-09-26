@@ -55,6 +55,7 @@ class ViceBinaryMonitorProtocol:
     REGISTERS_GET = 0x31
     EXIT = 0xAA
     BANKS_AVAILABLE = 0x82
+    REGISTERS_AVAILABLE = 0x83
 
     @classmethod
     def memory_get_request(cls, start: int, end: int, request_id: int = 1, bank_id: int = 0) -> bytes:
@@ -143,6 +144,45 @@ class ViceBinaryMonitorProtocol:
             + bytes((cls.CHECKPOINT_DELETE,))
             + body
         )
+
+    @classmethod
+    def registers_available_request(cls, request_id: int) -> bytes:
+        body = bytes((0x00,))
+        return (
+            bytes((cls.STX, cls.API_VERSION))
+            + struct.pack("<II", len(body), request_id)
+            + bytes((cls.REGISTERS_AVAILABLE,))
+            + body
+        )
+
+    @classmethod
+    def registers_available_response(cls, packet: bytes, request_id: int):
+        if len(packet) < 14 or packet[6] != cls.REGISTERS_AVAILABLE or packet[7]:
+            raise QualificationUnavailable("invalid VICE registers-available response")
+        if struct.unpack_from("<I", packet, 8)[0] != request_id:
+            raise QualificationUnavailable("VICE registers-available request-id mismatch")
+        body_len = struct.unpack_from("<I", packet, 2)[0]
+        body = packet[12:12 + body_len]
+        if len(body) < 2:
+            raise QualificationUnavailable("truncated VICE registers-available response")
+        count = struct.unpack_from("<H", body, 0)[0]
+        offset, registers = 2, {}
+        for _ in range(count):
+            if offset >= len(body):
+                raise QualificationUnavailable("truncated VICE register descriptor")
+            item_size = body[offset]
+            item = body[offset + 1:offset + 1 + item_size]
+            if len(item) != item_size or item_size < 3:
+                raise QualificationUnavailable("invalid VICE register descriptor")
+            register_id = item[0]
+            register_size = item[1]
+            name_len = item[2]
+            if 3 + name_len > len(item):
+                raise QualificationUnavailable("invalid VICE register name")
+            name = item[3:3 + name_len].decode("ascii", "strict")
+            registers[name.upper()] = (register_id, register_size)
+            offset += 1 + item_size
+        return registers
 
     @classmethod
     def registers_get_request(cls, request_id: int) -> bytes:
