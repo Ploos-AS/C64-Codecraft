@@ -49,6 +49,7 @@ class ViceBinaryMonitorProtocol:
     STX = 0x02
     API_VERSION = 0x02
     MEM_GET = 0x01
+    CHECKPOINT_INFO = 0x11
     CHECKPOINT_SET = 0x12
     EXIT = 0xAA
     BANKS_AVAILABLE = 0x82
@@ -111,6 +112,25 @@ class ViceBinaryMonitorProtocol:
             + bytes((cls.CHECKPOINT_SET,))
             + body
         )
+
+    @classmethod
+    def checkpoint_response(cls, packet: bytes, request_id: int | None = None):
+        if len(packet) < 35 or packet[6] != cls.CHECKPOINT_INFO or packet[7]:
+            raise QualificationUnavailable("invalid VICE checkpoint response")
+        response_id = struct.unpack_from("<I", packet, 8)[0]
+        if request_id is not None and response_id != request_id:
+            raise QualificationUnavailable("VICE checkpoint response request-id mismatch")
+        body_len = struct.unpack_from("<I", packet, 2)[0]
+        if body_len < 23 or len(packet) != 12 + body_len:
+            raise QualificationUnavailable("invalid VICE checkpoint response length")
+        body = packet[12:]
+        return {
+            "number": struct.unpack_from("<I", body, 0)[0],
+            "hit": bool(body[4]),
+            "start": struct.unpack_from("<H", body, 5)[0],
+            "end": struct.unpack_from("<H", body, 7)[0],
+            "hit_count": struct.unpack_from("<I", body, 13)[0],
+        }
 
     @classmethod
     def exit_request(cls, request_id: int = 3) -> bytes:
