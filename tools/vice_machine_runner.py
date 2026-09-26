@@ -281,14 +281,18 @@ class ViceBinaryMonitorClient:
                         break
 
                 sock.sendall(ViceBinaryMonitorProtocol.exit_request(exit_request_id))
-                target_hit = False
+                target_hit = entry_address is None
                 target_stopped = False
                 while not (target_hit and target_stopped):
                     packet = self._packet(sock)
                     request_id = self._request_id(packet)
                     if request_id == exit_request_id and packet[7]:
                         raise QualificationUnavailable("VICE rejected monitor exit")
-                    if request_id == 0xFFFFFFFF and packet[6] == ViceBinaryMonitorProtocol.CHECKPOINT_INFO:
+                    if (
+                        entry_address is not None
+                        and request_id == 0xFFFFFFFF
+                        and packet[6] == ViceBinaryMonitorProtocol.CHECKPOINT_INFO
+                    ):
                         info = ViceBinaryMonitorProtocol.checkpoint_response(packet)
                         if info["number"] == target_checkpoint["number"] and info["hit"]:
                             target_hit = True
