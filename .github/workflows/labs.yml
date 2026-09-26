@@ -74,3 +74,5 @@ jobs:
           python3 tools/qualify_lab_00_08.py
           make -C labs/00-intro/09-table-driven-screen clean all
           python3 tools/qualify_lab_00_09.py
+          make -C labs/07-bitmap-high-colour/02-multicolor-bitmap-data clean all
+          python3 tools/qualify_lab_07_02.py
