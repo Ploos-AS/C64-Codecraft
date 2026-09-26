@@ -137,3 +137,11 @@ def test_binary_monitor_register_response_contract():
     body = struct.pack("<H", 2) + bytes((3, 0x00)) + struct.pack("<H", 0x1234) + bytes((3, 0x03)) + struct.pack("<H", 0x081C)
     packet = bytes((0x02, 0x02)) + struct.pack("<I", len(body)) + bytes((0x31, 0x00)) + struct.pack("<I", 77) + body
     assert ViceBinaryMonitorProtocol.registers_get_response(packet, 77) == {0x00: 0x1234, 0x03: 0x081C}
+
+
+def test_binary_monitor_registers_available_contract():
+    pc = bytes((5, 0x03, 16, 2)) + b"PC"
+    a = bytes((4, 0x00, 8, 1)) + b"A"
+    body = struct.pack("<H", 2) + pc + a
+    packet = bytes((0x02, 0x02)) + struct.pack("<I", len(body)) + bytes((0x83, 0x00)) + struct.pack("<I", 91) + body
+    assert ViceBinaryMonitorProtocol.registers_available_response(packet, 91) == {"PC": (0x03, 16), "A": (0x00, 8)}
