@@ -51,6 +51,7 @@ class ViceBinaryMonitorProtocol:
     MEM_GET = 0x01
     CHECKPOINT_INFO = 0x11
     CHECKPOINT_SET = 0x12
+    CHECKPOINT_DELETE = 0x13
     EXIT = 0xAA
     BANKS_AVAILABLE = 0x82
 
@@ -131,6 +132,16 @@ class ViceBinaryMonitorProtocol:
             "end": struct.unpack_from("<H", body, 7)[0],
             "hit_count": struct.unpack_from("<I", body, 13)[0],
         }
+
+    @classmethod
+    def checkpoint_delete_request(cls, checkpoint_number: int, request_id: int) -> bytes:
+        body = struct.pack("<I", checkpoint_number)
+        return (
+            bytes((cls.STX, cls.API_VERSION))
+            + struct.pack("<II", len(body), request_id)
+            + bytes((cls.CHECKPOINT_DELETE,))
+            + body
+        )
 
     @classmethod
     def exit_request(cls, request_id: int = 3) -> bytes:
@@ -239,34 +250,36 @@ class ViceBinaryMonitorClient:
                         f"expected={payload.hex()} observed={loaded.hex()}"
                     )
 
-                # Optionally gate execution on the lab entry point first. This
-                # prevents a target checkpoint from matching an earlier visit
-                # during BASIC/ROM/autostart before SYS enters the lab.
+                # Optionally gate execution on the lab entry point first. The
+                # entry checkpoint is temporary so it cannot catch the wait loop
+                # again after the target checkpoint has been installed.
                 if entry_address is not None:
                     sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(entry_address, 3))
                     while True:
                         packet = self._packet(sock)
                         if self._request_id(packet) == 3:
                             entry_checkpoint = ViceBinaryMonitorProtocol.checkpoint_response(packet, 3)
-                            print(f"VICE entry checkpoint set: {entry_checkpoint}")
                             break
                     sock.sendall(ViceBinaryMonitorProtocol.exit_request(4))
-                    entry_hit = False
-                    entry_stopped = False
-                    while not (entry_hit and entry_stopped):
+                    while True:
                         packet = self._packet(sock)
-                        packet_id = self._request_id(packet)
-                        if packet_id == 4 and packet[7]:
+                        if self._request_id(packet) == 4 and packet[7]:
                             raise QualificationUnavailable("VICE rejected entry monitor exit")
-                        if packet_id == 0xFFFFFFFF and packet[6] == ViceBinaryMonitorProtocol.CHECKPOINT_INFO:
-                            info = ViceBinaryMonitorProtocol.checkpoint_response(packet)
-                            print(f"VICE entry checkpoint event: {info}")
-                            if info["number"] == entry_checkpoint["number"] and info["hit"]:
-                                entry_hit = True
-                        if packet_id == 0xFFFFFFFF and packet[6] == 0x62:
-                            print("VICE entry stopped event")
-                            entry_stopped = True
-                    checkpoint_request_id, exit_request_id, memory_request_id = 5, 6, 7
+                        if self._request_id(packet) == 0xFFFFFFFF and packet[6] == 0x62:
+                            break
+
+                    sock.sendall(
+                        ViceBinaryMonitorProtocol.checkpoint_delete_request(
+                            entry_checkpoint["number"], 5
+                        )
+                    )
+                    while True:
+                        packet = self._packet(sock)
+                        if self._request_id(packet) == 5:
+                            if packet[6] != ViceBinaryMonitorProtocol.CHECKPOINT_DELETE or packet[7]:
+                                raise QualificationUnavailable("VICE rejected entry checkpoint delete")
+                            break
+                    checkpoint_request_id, exit_request_id, memory_request_id = 6, 7, 8
                 else:
                     checkpoint_request_id, exit_request_id, memory_request_id = 3, 4, 5
 
@@ -281,31 +294,16 @@ class ViceBinaryMonitorClient:
                         target_checkpoint = ViceBinaryMonitorProtocol.checkpoint_response(
                             packet, checkpoint_request_id
                         )
-                        if entry_address is not None:
-                            print(f"VICE target checkpoint set: {target_checkpoint}")
                         break
 
                 sock.sendall(ViceBinaryMonitorProtocol.exit_request(exit_request_id))
-                target_hit = entry_address is None
-                target_stopped = False
-                while not (target_hit and target_stopped):
+                while True:
                     packet = self._packet(sock)
                     request_id = self._request_id(packet)
                     if request_id == exit_request_id and packet[7]:
                         raise QualificationUnavailable("VICE rejected monitor exit")
-                    if (
-                        entry_address is not None
-                        and request_id == 0xFFFFFFFF
-                        and packet[6] == ViceBinaryMonitorProtocol.CHECKPOINT_INFO
-                    ):
-                        info = ViceBinaryMonitorProtocol.checkpoint_response(packet)
-                        print(f"VICE target checkpoint event: {info}")
-                        if info["number"] == target_checkpoint["number"] and info["hit"]:
-                            target_hit = True
                     if request_id == 0xFFFFFFFF and packet[6] == 0x62:
-                        if entry_address is not None:
-                            print("VICE target stopped event")
-                        target_stopped = True
+                        break
 
                 request_id = memory_request_id
                 state_bank_id = banks.get("io", bank_id)
