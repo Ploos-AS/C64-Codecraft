@@ -171,12 +171,11 @@ class ViceBinaryMonitorProtocol:
                 raise QualificationUnavailable("truncated VICE register item")
             item_size = body[offset]
             item = body[offset + 1:offset + 1 + item_size]
-            if len(item) != item_size or item_size < 4:
+            if len(item) != item_size or item_size != 3:
                 raise QualificationUnavailable("invalid VICE register item")
             register_id = item[0]
-            register_size = item[1]
-            value = struct.unpack_from("<H", item, 2)[0]
-            registers[register_id] = (register_size, value)
+            value = struct.unpack_from("<H", item, 1)[0]
+            registers[register_id] = value
             offset += 1 + item_size
         return registers
 
