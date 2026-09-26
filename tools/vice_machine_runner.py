@@ -247,15 +247,20 @@ class ViceBinaryMonitorClient:
                     while True:
                         packet = self._packet(sock)
                         if self._request_id(packet) == 3:
-                            if packet[7]:
-                                raise QualificationUnavailable("VICE rejected entry checkpoint")
+                            entry_checkpoint = ViceBinaryMonitorProtocol.checkpoint_response(packet, 3)
                             break
                     sock.sendall(ViceBinaryMonitorProtocol.exit_request(4))
+                    entry_hit = False
                     while True:
                         packet = self._packet(sock)
-                        if self._request_id(packet) == 4 and packet[7]:
+                        packet_id = self._request_id(packet)
+                        if packet_id == 4 and packet[7]:
                             raise QualificationUnavailable("VICE rejected entry monitor exit")
-                        if self._request_id(packet) == 0xFFFFFFFF and packet[6] == 0x62:
+                        if packet_id == 0xFFFFFFFF and packet[6] == ViceBinaryMonitorProtocol.CHECKPOINT_INFO:
+                            info = ViceBinaryMonitorProtocol.checkpoint_response(packet)
+                            if info["number"] == entry_checkpoint["number"] and info["hit"]:
+                                entry_hit = True
+                        if packet_id == 0xFFFFFFFF and packet[6] == 0x62 and entry_hit:
                             break
                     checkpoint_request_id, exit_request_id, memory_request_id = 5, 6, 7
                 else:
@@ -269,17 +274,23 @@ class ViceBinaryMonitorClient:
                 while True:
                     packet = self._packet(sock)
                     if self._request_id(packet) == checkpoint_request_id:
-                        if packet[7]:
-                            raise QualificationUnavailable("VICE rejected checkpoint")
+                        target_checkpoint = ViceBinaryMonitorProtocol.checkpoint_response(
+                            packet, checkpoint_request_id
+                        )
                         break
 
                 sock.sendall(ViceBinaryMonitorProtocol.exit_request(exit_request_id))
+                target_hit = False
                 while True:
                     packet = self._packet(sock)
                     request_id = self._request_id(packet)
                     if request_id == exit_request_id and packet[7]:
                         raise QualificationUnavailable("VICE rejected monitor exit")
-                    if request_id == 0xFFFFFFFF and packet[6] == 0x62:
+                    if request_id == 0xFFFFFFFF and packet[6] == ViceBinaryMonitorProtocol.CHECKPOINT_INFO:
+                        info = ViceBinaryMonitorProtocol.checkpoint_response(packet)
+                        if info["number"] == target_checkpoint["number"] and info["hit"]:
+                            target_hit = True
+                    if request_id == 0xFFFFFFFF and packet[6] == 0x62 and target_hit:
                         break
 
                 request_id = memory_request_id
