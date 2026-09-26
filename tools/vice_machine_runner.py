@@ -391,7 +391,33 @@ class ViceBinaryMonitorClient:
                         stopped = True
 
                 if entry_address is not None:
-                    register_request_id = memory_request_id + 1
+                    descriptors_request_id = memory_request_id + 1
+                    register_request_id = memory_request_id + 2
+                    sock.sendall(
+                        ViceBinaryMonitorProtocol.registers_available_request(
+                            descriptors_request_id
+                        )
+                    )
+                    while True:
+                        packet = self._packet(sock)
+                        response_id = self._request_id(packet)
+                        if response_id in (0xFFFFFFFF, exit_request_id):
+                            continue
+                        if response_id != descriptors_request_id:
+                            raise QualificationUnavailable(
+                                f"unexpected VICE register-descriptor request id {response_id:#010x}"
+                            )
+                        descriptors = ViceBinaryMonitorProtocol.registers_available_response(
+                            packet, descriptors_request_id
+                        )
+                        break
+                    pc_descriptor = descriptors.get("PC")
+                    if pc_descriptor is None:
+                        raise QualificationUnavailable(
+                            f"VICE exposes no PC register; available={sorted(descriptors)}"
+                        )
+                    pc_id, _pc_size = pc_descriptor
+
                     sock.sendall(
                         ViceBinaryMonitorProtocol.registers_get_request(register_request_id)
                     )
@@ -407,8 +433,20 @@ class ViceBinaryMonitorClient:
                         registers = ViceBinaryMonitorProtocol.registers_get_response(
                             packet, register_request_id
                         )
-                        print(f"VICE target-stop registers: {registers}")
                         break
+                    pc = registers.get(pc_id)
+                    if pc is None:
+                        raise QualificationUnavailable(
+                            f"VICE omitted PC register id {pc_id:#04x}"
+                        )
+                    print(
+                        f"VICE target-stop PC={pc:#06x} expected={address:#06x} "
+                        f"register-id={pc_id:#04x}"
+                    )
+                    if pc != address:
+                        raise QualificationUnavailable(
+                            f"VICE stopped at PC {pc:#06x}, not target {address:#06x}"
+                        )
 
                 request_id = memory_request_id
                 state_bank_id = banks.get("io", bank_id)
