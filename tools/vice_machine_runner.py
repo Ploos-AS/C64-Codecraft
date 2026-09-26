@@ -169,7 +169,7 @@ class ViceBinaryMonitorClient:
     def _request_id(packet):
         return struct.unpack_from("<I", packet, 8)[0]
 
-    def run_until(self, address: int, start: int, end: int, prg: Path) -> bytes:
+    def run_until(self, address: int, start: int, end: int, prg: Path, entry_address: int | None = None) -> bytes:
         try:
             with socket.create_connection((self.host, self.port), self.timeout) as sock:
                 sock.settimeout(self.timeout)
@@ -224,24 +224,24 @@ class ViceBinaryMonitorClient:
                 sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(address, 3))
                 while True:
                     packet = self._packet(sock)
-                    if self._request_id(packet) == 3:
+                    if self._request_id(packet) == checkpoint_request_id:
                         if packet[7]:
                             raise QualificationUnavailable("VICE rejected checkpoint")
                         break
 
                 # EXIT resumes emulation until the temporary checkpoint is hit.
-                sock.sendall(ViceBinaryMonitorProtocol.exit_request(4))
+                sock.sendall(ViceBinaryMonitorProtocol.exit_request(exit_request_id))
                 stopped = False
                 while not stopped:
                     packet = self._packet(sock)
                     request_id = self._request_id(packet)
                     response_type = packet[6]
-                    if request_id == 4 and packet[7]:
+                    if request_id == exit_request_id and packet[7]:
                         raise QualificationUnavailable("VICE rejected monitor exit")
                     if request_id == 0xFFFFFFFF and response_type == 0x62:
                         stopped = True
 
-                request_id = 5
+                request_id = memory_request_id
                 state_bank_id = banks.get("io", bank_id)
                 sock.sendall(
                     ViceBinaryMonitorProtocol.memory_get_request(start, end, request_id, state_bank_id)
@@ -249,7 +249,7 @@ class ViceBinaryMonitorClient:
                 while True:
                     packet = self._packet(sock)
                     response_id = self._request_id(packet)
-                    if response_id in (0xFFFFFFFF, 4):
+                    if response_id in (0xFFFFFFFF, exit_request_id):
                         # EXIT may acknowledge after the asynchronous stopped event.
                         continue
                     if response_id != request_id:
@@ -279,12 +279,14 @@ class ViceBinaryMonitorBackend:
         startup_timeout=5.0,
         rom_dir=None,
         stop_address=0x0822,
+        entry_address=None,
     ):
         self.expected_addresses = tuple(expected_addresses)
         self.host, self.port = host, port
         self.startup_timeout = startup_timeout
         self.rom_dir = Path(rom_dir).resolve() if rom_dir is not None else None
         self.stop_address = stop_address
+        self.entry_address = entry_address
 
     def observe(self, *, binary: str, prg: Path, profile: MachineProfile):
         if profile.video.upper() != "PAL":
@@ -329,7 +331,7 @@ class ViceBinaryMonitorBackend:
                         f"{output[-4000:]}"
                     )
                 try:
-                    data = client.run_until(self.stop_address, start, end, prg)
+                    data = client.run_until(self.stop_address, start, end, prg, self.entry_address)
                     memory = {
                         address: data[address - start]
                         for address in self.expected_addresses
