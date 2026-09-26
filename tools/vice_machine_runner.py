@@ -261,12 +261,17 @@ class ViceBinaryMonitorClient:
                             entry_checkpoint = ViceBinaryMonitorProtocol.checkpoint_response(packet, 3)
                             break
                     sock.sendall(ViceBinaryMonitorProtocol.exit_request(4))
-                    while True:
+                    entry_exit_ack = False
+                    entry_stopped = False
+                    while not (entry_exit_ack and entry_stopped):
                         packet = self._packet(sock)
-                        if self._request_id(packet) == 4 and packet[7]:
-                            raise QualificationUnavailable("VICE rejected entry monitor exit")
-                        if self._request_id(packet) == 0xFFFFFFFF and packet[6] == 0x62:
-                            break
+                        request_id = self._request_id(packet)
+                        if request_id == 4:
+                            if packet[7]:
+                                raise QualificationUnavailable("VICE rejected entry monitor exit")
+                            entry_exit_ack = True
+                        elif request_id == 0xFFFFFFFF and packet[6] == 0x62:
+                            entry_stopped = True
 
                     sock.sendall(
                         ViceBinaryMonitorProtocol.checkpoint_delete_request(
@@ -297,13 +302,17 @@ class ViceBinaryMonitorClient:
                         break
 
                 sock.sendall(ViceBinaryMonitorProtocol.exit_request(exit_request_id))
-                while True:
+                exit_ack = False
+                stopped = False
+                while not (exit_ack and stopped):
                     packet = self._packet(sock)
                     request_id = self._request_id(packet)
-                    if request_id == exit_request_id and packet[7]:
-                        raise QualificationUnavailable("VICE rejected monitor exit")
-                    if request_id == 0xFFFFFFFF and packet[6] == 0x62:
-                        break
+                    if request_id == exit_request_id:
+                        if packet[7]:
+                            raise QualificationUnavailable("VICE rejected monitor exit")
+                        exit_ack = True
+                    elif request_id == 0xFFFFFFFF and packet[6] == 0x62:
+                        stopped = True
 
                 request_id = memory_request_id
                 state_bank_id = banks.get("io", bank_id)
