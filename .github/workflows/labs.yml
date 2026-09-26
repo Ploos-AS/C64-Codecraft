@@ -76,3 +76,5 @@ jobs:
           python3 tools/qualify_lab_00_09.py
           make -C labs/07-bitmap-high-colour/02-multicolor-bitmap-data clean all
           python3 tools/qualify_lab_07_02.py
+          make -C labs/07-bitmap-high-colour/04-bitmap-raster-splits clean all
+          python3 tools/qualify_lab_07_04.py
