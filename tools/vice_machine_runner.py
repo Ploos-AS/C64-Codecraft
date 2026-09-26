@@ -52,6 +52,7 @@ class ViceBinaryMonitorProtocol:
     CHECKPOINT_INFO = 0x11
     CHECKPOINT_SET = 0x12
     CHECKPOINT_DELETE = 0x13
+    REGISTERS_GET = 0x31
     EXIT = 0xAA
     BANKS_AVAILABLE = 0x82
 
@@ -142,6 +143,42 @@ class ViceBinaryMonitorProtocol:
             + bytes((cls.CHECKPOINT_DELETE,))
             + body
         )
+
+    @classmethod
+    def registers_get_request(cls, request_id: int) -> bytes:
+        body = bytes((0x00,))
+        return (
+            bytes((cls.STX, cls.API_VERSION))
+            + struct.pack("<II", len(body), request_id)
+            + bytes((cls.REGISTERS_GET,))
+            + body
+        )
+
+    @classmethod
+    def registers_get_response(cls, packet: bytes, request_id: int):
+        if len(packet) < 14 or packet[6] != cls.REGISTERS_GET or packet[7]:
+            raise QualificationUnavailable("invalid VICE registers response")
+        if struct.unpack_from("<I", packet, 8)[0] != request_id:
+            raise QualificationUnavailable("VICE registers response request-id mismatch")
+        body_len = struct.unpack_from("<I", packet, 2)[0]
+        body = packet[12:12 + body_len]
+        if len(body) < 2:
+            raise QualificationUnavailable("truncated VICE registers response")
+        count = struct.unpack_from("<H", body, 0)[0]
+        offset, registers = 2, {}
+        for _ in range(count):
+            if offset >= len(body):
+                raise QualificationUnavailable("truncated VICE register item")
+            item_size = body[offset]
+            item = body[offset + 1:offset + 1 + item_size]
+            if len(item) != item_size or item_size < 4:
+                raise QualificationUnavailable("invalid VICE register item")
+            register_id = item[0]
+            register_size = item[1]
+            value = struct.unpack_from("<H", item, 2)[0]
+            registers[register_id] = (register_size, value)
+            offset += 1 + item_size
+        return registers
 
     @classmethod
     def exit_request(cls, request_id: int = 3) -> bytes:
@@ -313,6 +350,26 @@ class ViceBinaryMonitorClient:
                         exit_ack = True
                     elif request_id == 0xFFFFFFFF and packet[6] == 0x62:
                         stopped = True
+
+                if entry_address is not None:
+                    register_request_id = memory_request_id + 1
+                    sock.sendall(
+                        ViceBinaryMonitorProtocol.registers_get_request(register_request_id)
+                    )
+                    while True:
+                        packet = self._packet(sock)
+                        response_id = self._request_id(packet)
+                        if response_id in (0xFFFFFFFF, exit_request_id):
+                            continue
+                        if response_id != register_request_id:
+                            raise QualificationUnavailable(
+                                f"unexpected VICE registers request id {response_id:#010x}"
+                            )
+                        registers = ViceBinaryMonitorProtocol.registers_get_response(
+                            packet, register_request_id
+                        )
+                        print(f"VICE target-stop registers: {registers}")
+                        break
 
                 request_id = memory_request_id
                 state_bank_id = banks.get("io", bank_id)
