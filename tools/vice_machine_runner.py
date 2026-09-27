@@ -348,28 +348,7 @@ class ViceBinaryMonitorClient:
                             entry_checkpoint = ViceBinaryMonitorProtocol.checkpoint_response(packet, 3)
                             break
 
-                    sock.sendall(ViceBinaryMonitorProtocol.registers_available_request(4))
-                    while True:
-                        packet = self._packet(sock)
-                        response_id = self._request_id(packet)
-                        if response_id == 0xFFFFFFFF:
-                            continue
-                        if response_id != 4:
-                            raise QualificationUnavailable(
-                                f"unexpected VICE entry register-descriptor request id {response_id:#010x}"
-                            )
-                        entry_descriptors = ViceBinaryMonitorProtocol.registers_available_response(
-                            packet, 4
-                        )
-                        break
-                    entry_pc_descriptor = entry_descriptors.get("PC")
-                    if entry_pc_descriptor is None:
-                        raise QualificationUnavailable(
-                            f"VICE exposes no PC register; available={sorted(entry_descriptors)}"
-                        )
-                    entry_pc_id, _entry_pc_size = entry_pc_descriptor
-
-                    entry_resume_request_id = 5
+                    entry_resume_request_id = 4
                     for entry_attempt in range(8):
                         sock.sendall(ViceBinaryMonitorProtocol.exit_request(entry_resume_request_id))
                         entry_exit_ack = False
