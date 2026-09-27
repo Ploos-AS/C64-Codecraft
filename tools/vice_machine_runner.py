@@ -326,9 +326,9 @@ class ViceBinaryMonitorClient:
                         f"expected={payload.hex()} observed={loaded.hex()}"
                     )
 
-                # Optionally gate execution on the lab entry point first. The
-                # entry checkpoint is temporary so it cannot catch the wait loop
-                # again after the target checkpoint has been installed.
+                # Optionally gate execution on the lab entry point first.
+                # Prove the stop is the entry checkpoint, not an unrelated
+                # autostart/ROM stop, before retiring that checkpoint.
                 if entry_address is not None:
                     sock.sendall(ViceBinaryMonitorProtocol.checkpoint_set_request(entry_address, 3))
                     while True:
@@ -336,31 +336,92 @@ class ViceBinaryMonitorClient:
                         if self._request_id(packet) == 3:
                             entry_checkpoint = ViceBinaryMonitorProtocol.checkpoint_response(packet, 3)
                             break
-                    sock.sendall(ViceBinaryMonitorProtocol.exit_request(4))
-                    entry_exit_ack = False
-                    entry_stopped = False
-                    while not (entry_exit_ack and entry_stopped):
-                        packet = self._packet(sock)
-                        request_id = self._request_id(packet)
-                        if request_id == 4:
-                            if packet[7]:
-                                raise QualificationUnavailable("VICE rejected entry monitor exit")
-                            entry_exit_ack = True
-                        elif request_id == 0xFFFFFFFF and packet[6] == 0x62:
-                            entry_stopped = True
 
+                    sock.sendall(ViceBinaryMonitorProtocol.registers_available_request(4))
+                    while True:
+                        packet = self._packet(sock)
+                        response_id = self._request_id(packet)
+                        if response_id == 0xFFFFFFFF:
+                            continue
+                        if response_id != 4:
+                            raise QualificationUnavailable(
+                                f"unexpected VICE entry register-descriptor request id {response_id:#010x}"
+                            )
+                        entry_descriptors = ViceBinaryMonitorProtocol.registers_available_response(
+                            packet, 4
+                        )
+                        break
+                    entry_pc_descriptor = entry_descriptors.get("PC")
+                    if entry_pc_descriptor is None:
+                        raise QualificationUnavailable(
+                            f"VICE exposes no PC register; available={sorted(entry_descriptors)}"
+                        )
+                    entry_pc_id, _entry_pc_size = entry_pc_descriptor
+
+                    entry_resume_request_id = 5
+                    for entry_attempt in range(8):
+                        sock.sendall(ViceBinaryMonitorProtocol.exit_request(entry_resume_request_id))
+                        entry_exit_ack = False
+                        entry_stopped = False
+                        while not (entry_exit_ack and entry_stopped):
+                            packet = self._packet(sock)
+                            response_id = self._request_id(packet)
+                            if response_id == entry_resume_request_id:
+                                if packet[7]:
+                                    raise QualificationUnavailable("VICE rejected entry monitor exit")
+                                entry_exit_ack = True
+                            elif response_id == 0xFFFFFFFF and packet[6] == 0x62:
+                                entry_stopped = True
+
+                        entry_register_request_id = 6 + entry_attempt
+                        sock.sendall(
+                            ViceBinaryMonitorProtocol.registers_get_request(
+                                entry_register_request_id
+                            )
+                        )
+                        while True:
+                            packet = self._packet(sock)
+                            response_id = self._request_id(packet)
+                            if response_id == 0xFFFFFFFF:
+                                continue
+                            if response_id != entry_register_request_id:
+                                raise QualificationUnavailable(
+                                    f"unexpected VICE entry registers request id {response_id:#010x}"
+                                )
+                            entry_registers = ViceBinaryMonitorProtocol.registers_get_response(
+                                packet, entry_register_request_id
+                            )
+                            break
+                        entry_pc = entry_registers.get(entry_pc_id)
+                        if entry_pc is None:
+                            raise QualificationUnavailable(
+                                f"VICE omitted entry PC register id {entry_pc_id:#04x}"
+                            )
+                        print(
+                            f"VICE entry stop {entry_attempt + 1}/8 PC={entry_pc:#06x} "
+                            f"expected={entry_address:#06x}"
+                        )
+                        if entry_pc == entry_address:
+                            break
+                        entry_resume_request_id = 14 + entry_attempt
+                    else:
+                        raise QualificationUnavailable(
+                            f"VICE did not stop at entry {entry_address:#06x} within 8 stops"
+                        )
+
+                    delete_request_id = 22
                     sock.sendall(
                         ViceBinaryMonitorProtocol.checkpoint_delete_request(
-                            entry_checkpoint["number"], 5
+                            entry_checkpoint["number"], delete_request_id
                         )
                     )
                     while True:
                         packet = self._packet(sock)
-                        if self._request_id(packet) == 5:
+                        if self._request_id(packet) == delete_request_id:
                             if packet[6] != ViceBinaryMonitorProtocol.CHECKPOINT_DELETE or packet[7]:
                                 raise QualificationUnavailable("VICE rejected entry checkpoint delete")
                             break
-                    checkpoint_request_id, exit_request_id, memory_request_id = 6, 7, 8
+                    checkpoint_request_id, exit_request_id, memory_request_id = 23, 24, 25
                 else:
                     checkpoint_request_id, exit_request_id, memory_request_id = 3, 4, 5
 
