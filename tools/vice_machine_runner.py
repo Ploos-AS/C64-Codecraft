@@ -146,6 +146,17 @@ class ViceBinaryMonitorProtocol:
         )
 
     @classmethod
+    def stopped_pc(cls, packet: bytes) -> int:
+        if len(packet) < 14 or packet[6] != 0x62 or packet[7]:
+            raise QualificationUnavailable("invalid VICE stopped event")
+        if struct.unpack_from("<I", packet, 8)[0] != 0xFFFFFFFF:
+            raise QualificationUnavailable("VICE stopped event has invalid event id")
+        body_len = struct.unpack_from("<I", packet, 2)[0]
+        if body_len != 2 or len(packet) < 14:
+            raise QualificationUnavailable("invalid VICE stopped-event body")
+        return struct.unpack_from("<H", packet, 12)[0]
+
+    @classmethod
     def registers_available_request(cls, request_id: int) -> bytes:
         body = bytes((0x00,))
         return (
@@ -371,32 +382,8 @@ class ViceBinaryMonitorClient:
                                     raise QualificationUnavailable("VICE rejected entry monitor exit")
                                 entry_exit_ack = True
                             elif response_id == 0xFFFFFFFF and packet[6] == 0x62:
+                                entry_pc = ViceBinaryMonitorProtocol.stopped_pc(packet)
                                 entry_stopped = True
-
-                        entry_register_request_id = 6 + entry_attempt
-                        sock.sendall(
-                            ViceBinaryMonitorProtocol.registers_get_request(
-                                entry_register_request_id
-                            )
-                        )
-                        while True:
-                            packet = self._packet(sock)
-                            response_id = self._request_id(packet)
-                            if response_id == 0xFFFFFFFF:
-                                continue
-                            if response_id != entry_register_request_id:
-                                raise QualificationUnavailable(
-                                    f"unexpected VICE entry registers request id {response_id:#010x}"
-                                )
-                            entry_registers = ViceBinaryMonitorProtocol.registers_get_response(
-                                packet, entry_register_request_id
-                            )
-                            break
-                        entry_pc = entry_registers.get(entry_pc_id)
-                        if entry_pc is None:
-                            raise QualificationUnavailable(
-                                f"VICE omitted entry PC register id {entry_pc_id:#04x}"
-                            )
                         print(
                             f"VICE entry stop {entry_attempt + 1}/8 PC={entry_pc:#06x} "
                             f"expected={entry_address:#06x}"
@@ -479,32 +466,8 @@ class ViceBinaryMonitorClient:
                                     raise QualificationUnavailable("VICE rejected monitor exit")
                                 exit_ack = True
                             elif response_id == 0xFFFFFFFF and packet[6] == 0x62:
+                                pc = ViceBinaryMonitorProtocol.stopped_pc(packet)
                                 stopped = True
-
-                        current_register_request_id = register_request_id + stop_attempt
-                        sock.sendall(
-                            ViceBinaryMonitorProtocol.registers_get_request(
-                                current_register_request_id
-                            )
-                        )
-                        while True:
-                            packet = self._packet(sock)
-                            response_id = self._request_id(packet)
-                            if response_id == 0xFFFFFFFF:
-                                continue
-                            if response_id != current_register_request_id:
-                                raise QualificationUnavailable(
-                                    f"unexpected VICE registers request id {response_id:#010x}"
-                                )
-                            registers = ViceBinaryMonitorProtocol.registers_get_response(
-                                packet, current_register_request_id
-                            )
-                            break
-                        pc = registers.get(pc_id)
-                        if pc is None:
-                            raise QualificationUnavailable(
-                                f"VICE omitted PC register id {pc_id:#04x}"
-                            )
                         print(
                             f"VICE stop {stop_attempt + 1}/8 PC={pc:#06x} "
                             f"expected={address:#06x} register-id={pc_id:#04x}"
