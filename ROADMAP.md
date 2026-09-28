@@ -18,7 +18,7 @@
 - [ ] Qualify pinned/reproducible KickAssembler distribution in OCI/CI
 - [x] Define SceneASM as a first-class optional modern scene assembler without making Codecraft depend on it
 - [ ] Add SceneASM example/qualification when the assembler interface is stable enough for the course gate
-- [ ] Documentation validation
+- [x] Documentation validation pipeline implemented (runner qualification pending)
 - [ ] GitHub Pages build
 - [ ] PDF/EPUB build
 - [x] Foundation CI/OCI gates green
