@@ -20,7 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install publishing dependency
-        run: python3 -m pip install --disable-pip-version-check 'Markdown==3.9'\n      - name: Validate sources\n        run: python3 tools/publish.py check
+        run: python3 -m pip install --disable-pip-version-check 'Markdown==3.9'
+      - name: Validate sources
+        run: python3 tools/publish.py check
       - name: Build site
         run: python3 tools/publish.py site
       - uses: actions/upload-pages-artifact@v3
