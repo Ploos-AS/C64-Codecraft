@@ -29,6 +29,17 @@ jobs:
         run: |
           ! git ls-files | grep -E '^(build|dist|site-generated)/'
 
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate canonical course sources
+        run: make docs-check
+      - name: Build publication manifest
+        run: make publication-manifest
+      - name: Ensure generated manifest is not tracked
+        run: test -f build/publication-manifest.json
+
   m0-assembler-equivalence:
     runs-on: ubuntu-latest
     steps:
