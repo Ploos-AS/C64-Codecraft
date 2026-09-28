@@ -47,13 +47,17 @@ def main() -> None:
         print(f"publication sources: PASS ({len(data['no'])} NO / {len(data['en'])} EN)")
         return
     if args.command == "book":
-        if shutil.which("pandoc") is None:\n            raise SystemExit("book build requires pandoc")\n        if shutil.which("ebook-convert") is None:\n            raise SystemExit("book build requires Calibre ebook-convert for Kindle/AZW3")
+        if shutil.which("pandoc") is None:
+            raise SystemExit("book build requires pandoc")
+        if shutil.which("ebook-convert") is None:
+            raise SystemExit("book build requires Calibre ebook-convert for Kindle/AZW3")
         out = ROOT / "build/books"
         out.mkdir(parents=True, exist_ok=True)
         for lang in LANGS:
             sources = [str(ROOT / p) for p in data[lang]]
             base = out / f"C64-Codecraft-{lang.upper()}"
-            metadata = ROOT / f"book/metadata-{lang}.yaml"\n            cover = ROOT / f"book/cover-{lang}.png"
+            metadata = ROOT / f"book/metadata-{lang}.yaml"
+            cover = ROOT / f"book/cover-{lang}.png"
             common = ["pandoc", "--standalone", "--toc", "--toc-depth=3",
                       "--metadata-file", str(metadata)]
             epub = str(base) + ".epub"
@@ -75,7 +79,10 @@ def main() -> None:
             subprocess.run(common + pdf_sources + ["--pdf-engine=xelatex", "-o", pdf], check=True)
             print(str(base.relative_to(ROOT)) + ".{epub,azw3,pdf}")
         return
-    if args.command == "site":\n        if markdown is None:\n            raise SystemExit("site build requires Python package: markdown")\n        out = ROOT / "build/site"
+    if args.command == "site":
+        if markdown is None:
+            raise SystemExit("site build requires Python package: markdown")
+        out = ROOT / "build/site"
         if out.exists():
             shutil.rmtree(out)
         out.mkdir(parents=True)
