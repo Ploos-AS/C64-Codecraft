@@ -17,7 +17,11 @@ jobs:
           sudo apt-get install -y pandoc texlive-xetex calibre epubcheck
       - name: Validate sources
         run: python3 tools/publish.py check
-      - name: Build EPUB and PDF
+      - name: Require production covers
+        run: |
+          test -s book/cover-no.png
+          test -s book/cover-en.png
+      - name: Build EPUB Kindle and PDF
         run: python3 tools/publish.py book
       - name: Verify artifacts
         run: |
@@ -25,6 +29,14 @@ jobs:
           test -s build/books/C64-Codecraft-NO.azw3\n          test -s build/books/C64-Codecraft-NO.pdf
           test -s build/books/C64-Codecraft-EN.epub
           test -s build/books/C64-Codecraft-EN.azw3\n          test -s build/books/C64-Codecraft-EN.pdf
+      - name: Validate embedded covers
+        run: |
+          unzip -l build/books/C64-Codecraft-NO.epub | grep -Ei 'cover.*\.(png|jpg|jpeg)'
+          unzip -l build/books/C64-Codecraft-EN.epub | grep -Ei 'cover.*\.(png|jpg|jpeg)'
+          ebook-meta build/books/C64-Codecraft-NO.azw3 | grep -i 'cover'
+          ebook-meta build/books/C64-Codecraft-EN.azw3 | grep -i 'cover'
+          pdfinfo build/books/C64-Codecraft-NO.pdf | grep -E '^Pages:[[:space:]]+[1-9]'
+          pdfinfo build/books/C64-Codecraft-EN.pdf | grep -E '^Pages:[[:space:]]+[1-9]'
       - name: Validate localized ebook metadata
         run: |
           ebook-meta build/books/C64-Codecraft-NO.epub | grep -F "C64 Codecraft"
