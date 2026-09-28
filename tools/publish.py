@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate canonical course sources and emit deterministic publication manifests."""
 from __future__ import annotations
-import argparse, html, json, re, shutil\n\ntry:\n    import markdown\nexcept ImportError:\n    markdown = None
+import argparse, html, json, re, shutil, subprocess\n\ntry:\n    import markdown\nexcept ImportError:\n    markdown = None
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,12 +34,26 @@ def validate() -> dict[str, list[str]]:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("command", choices=("check", "manifest", "site"))
+    ap.add_argument("command", choices=("check", "manifest", "site", "book"))
     ap.add_argument("--out", default="build/publication-manifest.json")
     args = ap.parse_args()
     data = validate()
     if args.command == "check":
         print(f"publication sources: PASS ({len(data['no'])} NO / {len(data['en'])} EN)")
+        return
+    if args.command == "book":
+        if shutil.which("pandoc") is None:
+            raise SystemExit("book build requires pandoc")
+        out = ROOT / "build/books"
+        out.mkdir(parents=True, exist_ok=True)
+        for lang in LANGS:
+            sources = [str(ROOT / p) for p in data[lang]]
+            base = out / f"C64-Codecraft-{lang.upper()}"
+            title = "C64 Codecraft — From Zero to Demo Coder"
+            common = ["pandoc", "--standalone", "--toc", "--metadata", f"title={title}", "--metadata", f"lang={lang}"]
+            subprocess.run(common + sources + ["-o", str(base) + ".epub"], check=True)
+            subprocess.run(common + sources + ["--pdf-engine=xelatex", "-o", str(base) + ".pdf"], check=True)
+            print(str(base.relative_to(ROOT)) + ".{epub,pdf}")
         return
     if args.command == "site":\n        if markdown is None:\n            raise SystemExit("site build requires Python package: markdown")\n        out = ROOT / "build/site"
         if out.exists():
