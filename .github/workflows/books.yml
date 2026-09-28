@@ -1,0 +1,31 @@
+name: Books
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  books:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install publishing toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex
+      - name: Validate sources
+        run: python3 tools/publish.py check
+      - name: Build EPUB and PDF
+        run: python3 tools/publish.py book
+      - name: Verify artifacts
+        run: |
+          test -s build/books/C64-Codecraft-NO.epub
+          test -s build/books/C64-Codecraft-NO.pdf
+          test -s build/books/C64-Codecraft-EN.epub
+          test -s build/books/C64-Codecraft-EN.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: c64-codecraft-books
+          path: build/books/
