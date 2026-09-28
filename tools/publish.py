@@ -48,15 +48,26 @@ def main() -> None:
         for lang in LANGS:
             sources = [str(ROOT / p) for p in data[lang]]
             base = out / f"C64-Codecraft-{lang.upper()}"
-            metadata = ROOT / f"book/metadata-{lang}.yaml"
+            metadata = ROOT / f"book/metadata-{lang}.yaml"\n            cover = ROOT / f"book/cover-{lang}.png"
             common = ["pandoc", "--standalone", "--toc", "--toc-depth=3",
                       "--metadata-file", str(metadata)]
             epub = str(base) + ".epub"
             kindle = str(base) + ".azw3"
             pdf = str(base) + ".pdf"
-            subprocess.run(common + sources + ["--css", str(ROOT / "book/epub.css"), "-o", epub], check=True)
+            ebook_args = common + sources + ["--css", str(ROOT / "book/epub.css")]
+            if cover.exists():
+                ebook_args += ["--epub-cover-image", str(cover)]
+            subprocess.run(ebook_args + ["-o", epub], check=True)
             subprocess.run(["ebook-convert", epub, kindle], check=True)
-            subprocess.run(common + sources + ["--pdf-engine=xelatex", "-o", pdf], check=True)
+            pdf_sources = sources
+            if cover.exists():
+                cover_md = out / f".cover-{lang}.md"
+                cover_md.write_text(
+                    f"\\begin{{titlepage}}\\centering\\includegraphics[width=\\paperwidth,height=\\paperheight,keepaspectratio]{{{cover}}}\\end{{titlepage}}\\clearpage\n",
+                    encoding="utf-8",
+                )
+                pdf_sources = [str(cover_md)] + sources
+            subprocess.run(common + pdf_sources + ["--pdf-engine=xelatex", "-o", pdf], check=True)
             print(str(base.relative_to(ROOT)) + ".{epub,azw3,pdf}")
         return
     if args.command == "site":\n        if markdown is None:\n            raise SystemExit("site build requires Python package: markdown")\n        out = ROOT / "build/site"
