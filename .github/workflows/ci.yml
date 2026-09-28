@@ -78,17 +78,7 @@ jobs:
               exit 1
             }
             test -s /tmp/vice-loaded.bin
-            python3 - <<'"'"'PY'"'"'
-from pathlib import Path
-data = Path("/tmp/vice-loaded.bin").read_bytes()
-# VICE monitor save includes the selected C64 memory range.
-# The smoke program at $0810 must begin LDA #$06 / STA $D020 /
-# LDA #$0E / STA $D021 / RTS.
-needle = bytes.fromhex("a9068d20d0a90e8d21d060")
-if needle not in data:
-    raise SystemExit(f"expected machine-code state not found: {data.hex()}")
-print("VICE M0.1 state smoke: PASS")
-PY
+            python3 /work/tests/vice/verify_state.py
           '
 
   m0-tooling:
