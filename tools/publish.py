@@ -48,10 +48,9 @@ def main() -> None:
         for lang in LANGS:
             sources = [str(ROOT / p) for p in data[lang]]
             base = out / f"C64-Codecraft-{lang.upper()}"
-            title = "C64 Codecraft — From Zero to Demo Coder"
+            metadata = ROOT / f"book/metadata-{lang}.yaml"
             common = ["pandoc", "--standalone", "--toc", "--toc-depth=3",
-                      "--metadata-file", str(ROOT / "book/metadata.yaml"),
-                      "--metadata", f"lang={lang}"]
+                      "--metadata-file", str(metadata)]
             epub = str(base) + ".epub"
             kindle = str(base) + ".azw3"
             pdf = str(base) + ".pdf"
