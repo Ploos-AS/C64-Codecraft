@@ -1,0 +1,13 @@
+title: "C64 Codecraft"
+subtitle: "Fra null til demokoder"
+author:
+  - "Ploos AS"
+publisher: "Ploos AS"
+lang: "nb-NO"
+rights: "Kursdokumentasjon lisensieres under Creative Commons; se lisensinformasjonen i repositoriet."
+toc: true
+toc-depth: 3
+documentclass: book
+papersize: a4
+geometry:
+  - margin=24mm
