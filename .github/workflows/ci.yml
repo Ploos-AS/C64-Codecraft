@@ -19,12 +19,45 @@ jobs:
           test -f course/en/00-intro/README.md
           test -f course/no/00-intro/README.md
           test -f examples/hello-64tass/main.asm
+          test -f tests/vice/hello.mon
           test -f tools/c64cc
       - name: Shell syntax
         run: sh -n tools/c64cc
       - name: Ensure generated output is not tracked
         run: |
           ! git ls-files | grep -E '^(build|dist|site-generated)/'
+
+  m0-vice-state:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build full qualified toolbox
+        run: docker build -f container/Dockerfile.full -t c64-codecraft:full .
+      - name: Assemble M0 program
+        run: |
+          mkdir -p build
+          docker run --rm -v "$PWD:/work" c64-codecraft:full \
+            64tass --cbm-prg -o /work/build/hello.prg /work/examples/hello-64tass/main.asm
+      - name: Execute VICE monitor smoke test
+        run: |
+          docker run --rm -v "$PWD:/work" c64-codecraft:full sh -ec '
+            x64sc -console -sounddev dummy -moncommands /work/tests/vice/hello.mon >/tmp/vice.log 2>&1 || {
+              cat /tmp/vice.log
+              exit 1
+            }
+            test -s /tmp/vice-loaded.bin
+            python3 - <<'"'"'PY'"'"'
+from pathlib import Path
+data = Path("/tmp/vice-loaded.bin").read_bytes()
+# VICE monitor save includes the selected C64 memory range.
+# The smoke program at $0810 must begin LDA #$06 / STA $D020 /
+# LDA #$0E / STA $D021 / RTS.
+needle = bytes.fromhex("a9068d20d0a90e8d21d060")
+if needle not in data:
+    raise SystemExit(f"expected machine-code state not found: {data.hex()}")
+print("VICE M0.1 state smoke: PASS")
+PY
+          '
 
   m0-tooling:
     runs-on: ubuntu-latest
@@ -33,4 +66,4 @@ jobs:
       - name: M0 tooling status
         run: |
           sh tools/c64cc help
-          echo "Assembler/VICE qualification is tracked as the next M0 gate."
+          echo "64tass and VICE execution/state qualification are CI gates."
