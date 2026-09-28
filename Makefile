@@ -1,9 +1,11 @@
-.PHONY: help doctor example
+.PHONY: help doctor example docs-check publication-manifest
 
 help:
 	@echo "C64 Codecraft M0"
-	@echo "  make doctor   inspect toolchain"
-	@echo "  make example  assemble M0 smoke example"
+	@echo "  make doctor                inspect toolchain"
+	@echo "  make example               assemble M0 smoke example"
+	@echo "  make docs-check            validate canonical NO/EN course sources"
+	@echo "  make publication-manifest  emit deterministic source manifest"
 
 doctor:
 	sh tools/c64cc doctor
@@ -11,3 +13,9 @@ doctor:
 example:
 	mkdir -p build
 	64tass --cbm-prg -o build/hello.prg examples/hello-64tass/main.asm
+
+docs-check:
+	python3 tools/publish.py check
+
+publication-manifest:
+	python3 tools/publish.py manifest
