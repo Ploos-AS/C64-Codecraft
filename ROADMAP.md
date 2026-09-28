@@ -13,7 +13,9 @@
 - [x] Build minimal and full OCI toolboxes
 - [x] Assemble first 64tass example
 - [ ] Run first automated VICE execution/state smoke test (M0.1; CI implementation added, qualification pending green run)
-- [ ] Add direct ACME and KickAssembler examples/qualification
+- [x] Add direct ACME example and byte-equivalence CI gate
+- [x] Add direct KickAssembler example
+- [ ] Qualify pinned/reproducible KickAssembler distribution in OCI/CI
 - [x] Define SceneASM as a first-class optional modern scene assembler without making Codecraft depend on it
 - [ ] Add SceneASM example/qualification when the assembler interface is stable enough for the course gate
 - [ ] Documentation validation
