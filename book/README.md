@@ -21,3 +21,7 @@ Tags matching `v*` build the complete NO/EN EPUB, Kindle/AZW3 and PDF set and at
 ## Localization and covers
 
 Publication metadata is localized in `metadata-no.yaml` and `metadata-en.yaml`. Course Markdown remains format-neutral. Cover artwork will be maintained as publishing assets and must be usable by EPUB, Kindle/AZW3 and PDF without creating format-specific copies of course content.
+
+### Cover filenames
+
+The publication pipeline recognizes `book/cover-no.png` and `book/cover-en.png`. When present, the localized image is embedded as the EPUB cover, propagated into the Kindle/AZW3 conversion, and used as the PDF front page. Builds remain possible without covers so source/toolchain qualification does not depend on artwork being present.
