@@ -42,4 +42,4 @@ Generated GitHub Pages, PDF and EPUB editions are built from the same Markdown s
 
 ## Status
 
-M0 — foundation and toolchain qualification in progress.
+M0 — foundation and toolchain qualification in progress. CI qualification is authoritative for emulator/toolchain gates.
