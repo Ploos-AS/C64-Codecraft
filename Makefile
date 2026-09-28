@@ -20,5 +20,4 @@ docs-check:
 publication-manifest:
 	python3 tools/publish.py manifest
 
-site:
-	python3 tools/publish.py site
+site:\n\tpython3 -m pip install --disable-pip-version-check -r book/requirements.txt\n\tpython3 tools/publish.py site
