@@ -14,7 +14,7 @@ jobs:
       - name: Install publishing toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex calibre
+          sudo apt-get install -y pandoc texlive-xetex calibre epubcheck
       - name: Validate sources
         run: python3 tools/publish.py check
       - name: Build EPUB and PDF
@@ -25,6 +25,14 @@ jobs:
           test -s build/books/C64-Codecraft-NO.azw3\n          test -s build/books/C64-Codecraft-NO.pdf
           test -s build/books/C64-Codecraft-EN.epub
           test -s build/books/C64-Codecraft-EN.azw3\n          test -s build/books/C64-Codecraft-EN.pdf
+      - name: Validate EPUB packages
+        run: |
+          epubcheck build/books/C64-Codecraft-NO.epub
+          epubcheck build/books/C64-Codecraft-EN.epub
+      - name: Validate PDF structure
+        run: |
+          pdfinfo build/books/C64-Codecraft-NO.pdf >/dev/null
+          pdfinfo build/books/C64-Codecraft-EN.pdf >/dev/null
       - uses: actions/upload-artifact@v4
         with:
           name: c64-codecraft-books
