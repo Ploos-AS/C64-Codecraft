@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """Validate canonical course sources and emit deterministic publication manifests."""
 from __future__ import annotations
-import argparse, html, json, re, shutil, subprocess\n\ntry:\n    import markdown\nexcept ImportError:\n    markdown = None
+import argparse, html, json, re, shutil, subprocess
+
+try:
+    import markdown
+except ImportError:
+    markdown = None
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
