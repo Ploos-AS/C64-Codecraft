@@ -17,3 +17,7 @@ CI produces the six files as a build artifact. A release workflow may later atta
 ## Tagged releases
 
 Tags matching `v*` build the complete NO/EN EPUB, Kindle/AZW3 and PDF set and attach it to the matching GitHub Release together with `SHA256SUMS`. Release publication must only be considered qualified after the workflow has completed successfully for a real tag.
+
+## Localization and covers
+
+Publication metadata is localized in `metadata-no.yaml` and `metadata-en.yaml`. Course Markdown remains format-neutral. Cover artwork will be maintained as publishing assets and must be usable by EPUB, Kindle/AZW3 and PDF without creating format-specific copies of course content.
