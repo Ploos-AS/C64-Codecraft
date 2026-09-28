@@ -49,11 +49,13 @@ def main() -> None:
             sources = [str(ROOT / p) for p in data[lang]]
             base = out / f"C64-Codecraft-{lang.upper()}"
             title = "C64 Codecraft — From Zero to Demo Coder"
-            common = ["pandoc", "--standalone", "--toc", "--metadata", f"title={title}", "--metadata", f"lang={lang}"]
+            common = ["pandoc", "--standalone", "--toc", "--toc-depth=3",
+                      "--metadata-file", str(ROOT / "book/metadata.yaml"),
+                      "--metadata", f"lang={lang}"]
             epub = str(base) + ".epub"
             kindle = str(base) + ".azw3"
             pdf = str(base) + ".pdf"
-            subprocess.run(common + sources + ["-o", epub], check=True)
+            subprocess.run(common + sources + ["--css", str(ROOT / "book/epub.css"), "-o", epub], check=True)
             subprocess.run(["ebook-convert", epub, kindle], check=True)
             subprocess.run(common + sources + ["--pdf-engine=xelatex", "-o", pdf], check=True)
             print(str(base.relative_to(ROOT)) + ".{epub,azw3,pdf}")
