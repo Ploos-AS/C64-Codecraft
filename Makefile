@@ -1,4 +1,4 @@
-.PHONY: help doctor example docs-check publication-manifest site
+.PHONY: help doctor example docs-check publication-manifest site book
 
 help:
 	@echo "C64 Codecraft M0"
@@ -21,3 +21,6 @@ publication-manifest:
 	python3 tools/publish.py manifest
 
 site:\n\tpython3 -m pip install --disable-pip-version-check -r book/requirements.txt\n\tpython3 tools/publish.py site
+
+book:
+	python3 tools/publish.py book
