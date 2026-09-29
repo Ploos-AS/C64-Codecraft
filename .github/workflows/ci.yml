@@ -59,27 +59,22 @@ jobs:
           test -f examples/hello-kickassembler/main.asm
           echo "KickAssembler source is present; jar acquisition/version pinning remains the qualification gate."
 
-  m0-vice-state:
+  m0-vice-installation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build full qualified toolbox
         run: docker build -f container/Dockerfile.full -t c64-codecraft:full .
-      - name: Assemble M0 program
+      - name: Verify VICE is installed without redistributing ROMs
         run: |
-          mkdir -p build
-          docker run --rm -v "$PWD:/work" c64-codecraft:full \
-            64tass --cbm-prg -o /work/build/hello.prg /work/examples/hello-64tass/main.asm
-      - name: Execute VICE monitor smoke test
-        run: |
-          docker run --rm -v "$PWD:/work" c64-codecraft:full sh -ec '
-            x64sc -console -sounddev dummy -moncommands /work/tests/vice/hello.mon >/tmp/vice.log 2>&1 || {
-              cat /tmp/vice.log
-              exit 1
-            }
-            test -s /tmp/vice-loaded.bin
-            python3 /work/tests/vice/verify_state.py
+          docker run --rm c64-codecraft:full sh -ec '
+            x64sc -version
+            test ! -e /usr/share/vice/C64/kernal-901227-03.bin
           '
+      - name: Document full runtime gate
+        run: |
+          echo "Full VICE execution requires user-supplied legal C64 system ROMs."
+          echo "Public CI intentionally does not download or redistribute those ROMs."
 
   m0-tooling:
     runs-on: ubuntu-latest
