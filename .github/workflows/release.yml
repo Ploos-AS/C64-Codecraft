@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  books:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install publishing toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex calibre epubcheck librsvg2-bin poppler-utils
+      - name: Validate canonical sources
+        run: python3 tools/publish.py check
+      - name: Build EPUB, Kindle and PDF
+        run: python3 tools/publish.py book
+      - name: Create SHA-256 manifest
+        run: |
+          cd build/books
+          sha256sum C64-Codecraft-* > SHA256SUMS
+      - name: Verify complete release set
+        run: |
+          test -s build/books/C64-Codecraft-NO.epub
+          test -s build/books/C64-Codecraft-NO.azw3
+          test -s build/books/C64-Codecraft-NO.pdf
+          test -s build/books/C64-Codecraft-EN.epub
+          test -s build/books/C64-Codecraft-EN.azw3
+          test -s build/books/C64-Codecraft-EN.pdf
+          test -s build/books/SHA256SUMS
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1 || \
+            gh release create "${GITHUB_REF_NAME}" --title "C64 Codecraft ${GITHUB_REF_NAME}" --generate-notes
+          gh release upload "${GITHUB_REF_NAME}" build/books/* --clobber

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2560" viewBox="0 0 1600 2560">
+<rect width="1600" height="2560" fill="#080808"/>
+<g font-family="DejaVu Sans Mono, monospace" text-anchor="middle">
+<text x="800" y="390" fill="#eee8d5" font-size="330" font-weight="700" letter-spacing="18">C64</text>
+<defs><linearGradient id="rainbow" x1="0" x2="1"><stop offset="0" stop-color="#d94b44"/><stop offset=".2" stop-color="#e58b3c"/><stop offset=".4" stop-color="#e3cf55"/><stop offset=".6" stop-color="#67a85b"/><stop offset=".8" stop-color="#4c8fb5"/><stop offset="1" stop-color="#8a62a8"/></linearGradient></defs>
+<text x="800" y="660" fill="url(#rainbow)" font-size="205" font-weight="700" letter-spacing="4">CODECRAFT</text>
+<text x="800" y="835" fill="#eee8d5" font-size="62">From Zero to Demo Coder</text>
+<text x="800" y="1015" fill="#c9c5b8" font-size="31">Learn 6510 assembly, graphics, sound and the demoscene on the C64 – step by step</text>
+</g>
+<g opacity=".95">
+<rect x="130" y="1300" width="1340" height="18" fill="#d94b44"/><rect x="130" y="1330" width="1340" height="18" fill="#e58b3c"/>
+<rect x="130" y="1360" width="1340" height="18" fill="#e3cf55"/><rect x="130" y="1390" width="1340" height="18" fill="#67a85b"/>
+<rect x="130" y="1420" width="1340" height="18" fill="#4c8fb5"/><rect x="130" y="1450" width="1340" height="18" fill="#8a62a8"/>
+</g>
+<g font-family="DejaVu Sans Mono, monospace" text-anchor="middle">
+<text x="800" y="2180" fill="#eee8d5" font-size="54" font-weight="700">Ploos AS</text>
+<text x="800" y="2350" fill="#8e8b82" font-size="26" letter-spacing="5">LEARN   CREATE   SHARE   THE DEMOSCENE LIVES</text>
+</g>
+</svg>

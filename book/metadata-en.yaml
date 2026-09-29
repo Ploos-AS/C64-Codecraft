@@ -1,0 +1,13 @@
+title: "C64 Codecraft"
+subtitle: "From Zero to Demo Coder"
+author:
+  - "Ploos AS"
+publisher: "Ploos AS"
+lang: "en"
+rights: "Course documentation is licensed under Creative Commons; see repository licensing information."
+toc: true
+toc-depth: 3
+documentclass: book
+papersize: a4
+geometry:
+  - margin=24mm

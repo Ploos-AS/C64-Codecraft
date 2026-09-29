@@ -15,7 +15,7 @@ Alpine is qualified first. Debian slim is the fallback if compatibility or maint
 
 - 64tass
 - ACME
-- KickAssembler + Java runtime
+- KickAssembler + Java runtime (external JAR; see `docs/KICKASSEMBLER.md` for provenance/qualification policy)
 - ca65
 - VICE/x64sc
 - Exomizer

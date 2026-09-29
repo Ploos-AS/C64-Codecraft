@@ -10,7 +10,7 @@ C64 Codecraft is a machine-code/assembly course for absolute beginners. It start
 - **Hardware first:** understand the 6510, VIC-II, SID, CIA, memory system and timing.
 - **Scene credible:** teach techniques, constraints and tools that transfer directly to real C64 demo development.
 - **No Codecraft programming framework, runtime or private assembly dialect.**
-- **Use real tools directly:** 64tass, ACME, KickAssembler, ca65, VICE and established scene utilities.
+- **Use real tools directly:** 64tass, ACME, KickAssembler, ca65, SceneASM, VICE and established scene utilities.
 - **Cycles matter from the beginning.** Timing, code size, addressing choices and memory layout are introduced as the relevant concepts appear.
 - **Markdown is the source of truth.**
 - **Editor independent:** VSCodium is recommended, not required.
@@ -26,9 +26,13 @@ By the advanced material, students should be comfortable reading and writing ord
 
 ## Toolchain
 
-64tass is the initial canonical teaching assembler. ACME and KickAssembler are first-class scene-oriented alternatives, with ca65 also supported.
+64tass is the initial canonical teaching assembler. ACME and KickAssembler are first-class established scene-oriented alternatives, with ca65 also supported.
+
+SceneASM is a first-class modern scene-oriented alternative as it matures. Codecraft will qualify it against the same machine-code and C64 hardware expectations rather than teaching a Codecraft-specific dialect. 64tass remains the baseline so the course does not depend on SceneASM.
 
 VICE/x64sc is the reference emulator for automated qualification. Native VICE monitor commands and workflows are part of the course.
+
+C64Scene SDK may be introduced in later advanced material as an optional production layer. Students first learn the machine, ordinary 6510 assembly and direct hardware programming; the SDK is never a prerequisite or a substitute for understanding the C64.
 
 ## Reproducibility
 
@@ -38,4 +42,4 @@ Generated GitHub Pages, PDF and EPUB editions are built from the same Markdown s
 
 ## Status
 
-M0 — foundation and toolchain qualification in progress.
+M0 — foundation and toolchain qualification in progress. CI qualification is authoritative for emulator/toolchain gates.

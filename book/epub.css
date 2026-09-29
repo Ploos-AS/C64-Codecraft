@@ -1,0 +1,8 @@
+body { font-family: sans-serif; line-height: 1.55; }
+code, pre { font-family: monospace; }
+pre { white-space: pre-wrap; padding: 0.8em; border: 1px solid #aaa; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #aaa; padding: 0.35em; vertical-align: top; }
+h1 { page-break-before: always; }
+h1:first-of-type { page-break-before: avoid; }
+img { max-width: 100%; height: auto; }

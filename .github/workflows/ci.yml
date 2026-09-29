@@ -19,12 +19,62 @@ jobs:
           test -f course/en/00-intro/README.md
           test -f course/no/00-intro/README.md
           test -f examples/hello-64tass/main.asm
+          test -f examples/hello-acme/main.asm
+          test -f examples/hello-kickassembler/main.asm
+          test -f tests/vice/hello.mon
           test -f tools/c64cc
       - name: Shell syntax
         run: sh -n tools/c64cc
       - name: Ensure generated output is not tracked
         run: |
           ! git ls-files | grep -E '^(build|dist|site-generated)/'
+
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate canonical course sources
+        run: make docs-check
+      - name: Build publication manifest
+        run: make publication-manifest
+      - name: Ensure generated manifest is not tracked
+        run: test -f build/publication-manifest.json
+
+  m0-assembler-equivalence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build full qualified toolbox
+        run: docker build -f container/Dockerfile.full -t c64-codecraft:full .
+      - name: Build 64tass and ACME smoke programs
+        run: |
+          mkdir -p build
+          docker run --rm -v "$PWD:/work" c64-codecraft:full sh -ec '
+            64tass --cbm-prg -o /work/build/hello-64tass.prg /work/examples/hello-64tass/main.asm
+            acme -f cbm -o /work/build/hello-acme.prg /work/examples/hello-acme/main.asm
+            cmp /work/build/hello-64tass.prg /work/build/hello-acme.prg
+          '
+      - name: Record KickAssembler qualification contract
+        run: |
+          test -f examples/hello-kickassembler/main.asm
+          echo "KickAssembler source is present; jar acquisition/version pinning remains the qualification gate."
+
+  m0-vice-installation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build full qualified toolbox
+        run: docker build -f container/Dockerfile.full -t c64-codecraft:full .
+      - name: Verify VICE is installed without redistributing ROMs
+        run: |
+          docker run --rm c64-codecraft:full sh -ec '
+            x64sc -version
+            test ! -e /usr/share/vice/C64/kernal-901227-03.bin
+          '
+      - name: Document full runtime gate
+        run: |
+          echo "Full VICE execution requires user-supplied legal C64 system ROMs."
+          echo "Public CI intentionally does not download or redistribute those ROMs."
 
   m0-tooling:
     runs-on: ubuntu-latest
@@ -33,4 +83,4 @@ jobs:
       - name: M0 tooling status
         run: |
           sh tools/c64cc help
-          echo "Assembler/VICE qualification is tracked as the next M0 gate."
+          echo "64tass and VICE execution/state qualification are CI gates."

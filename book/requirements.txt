@@ -1,0 +1,2 @@
+# Publishing-only dependencies
+Markdown==3.9
