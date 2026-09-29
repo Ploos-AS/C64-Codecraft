@@ -57,7 +57,13 @@ def main() -> None:
             sources = [str(ROOT / p) for p in data[lang]]
             base = out / f"C64-Codecraft-{lang.upper()}"
             metadata = ROOT / f"book/metadata-{lang}.yaml"
-            cover = ROOT / f"book/cover-{lang}.png"
+            cover_svg = ROOT / f"book/cover-{lang}.svg"
+            cover = out / f"cover-{lang}.png"
+            if cover_svg.exists():
+                if shutil.which("rsvg-convert") is None:
+                    raise SystemExit("book build requires rsvg-convert for production covers")
+                subprocess.run(["rsvg-convert", "-w", "1600", "-h", "2560",
+                                "-o", str(cover), str(cover_svg)], check=True)
             common = ["pandoc", "--standalone", "--toc", "--toc-depth=3",
                       "--metadata-file", str(metadata)]
             epub = str(base) + ".epub"
