@@ -27,7 +27,7 @@ def validate() -> dict[str, list[str]]:
         result[lang] = rel
         for p in items:
             text = p.read_text(encoding="utf-8")
-            if not re.search(r"(?m)^#\\s+\\S", text):
+            if not re.search(r"(?m)^#\s+\S", text):
                 errors.append(f"{p.relative_to(ROOT)}: missing top-level heading")
     no_keys = [Path(x).parent.name for x in result["no"]]
     en_keys = [Path(x).parent.name for x in result["en"]]
